@@ -1,9 +1,11 @@
-package de.thm.mixit;
+package de.thm.mixit.ui.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+
+import de.thm.mixit.R;
 
 public class MainActivity extends Activity {
     @Override
