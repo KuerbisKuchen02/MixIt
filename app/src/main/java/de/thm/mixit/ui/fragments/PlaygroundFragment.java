@@ -21,7 +21,7 @@ import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 
 public class PlaygroundFragment extends Fragment {
-    private final static String TAG = PlaygroundFragment.class.getName();
+    private final static String TAG = PlaygroundFragment.class.getSimpleName();
 
     private ArrayList<TextView> elements;
     private FrameLayout playground;
@@ -61,7 +61,7 @@ public class PlaygroundFragment extends Fragment {
         playground.addView(newElement);
 
         if(BuildConfig.DEBUG){
-            Log.d(TAG, "new element " + text + " has been created");
+            Log.d(TAG, "new element " + text + " has been added to playground");
         }
 
         newElement.setOnTouchListener(new View.OnTouchListener() {
@@ -89,6 +89,10 @@ public class PlaygroundFragment extends Fragment {
                             playground.removeView(other);
                             elements.remove(v);
                             elements.remove(other);
+                            if(BuildConfig.DEBUG){
+                                Log.d(TAG, "combining elements " + ((TextView) v).getText() +
+                                        " and " + ((TextView) other).getText());
+                            }
 
                             addElementToPlayground("<combined element>", v.getX(), v.getY());
                         }
