@@ -46,7 +46,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.openai.java)
     implementation(libs.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
