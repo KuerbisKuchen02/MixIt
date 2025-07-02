@@ -18,6 +18,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        if (BuildConfig.DEBUG) Log.d(TAG, BuildConfig.API_KEY);
+        if (BuildConfig.DEBUG) Log.d(TAG, BuildConfig.apiKey);
     }
 }
