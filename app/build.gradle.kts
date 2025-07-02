@@ -11,6 +11,14 @@ android {
         buildConfig = true
     }
 
+    packaging {
+        resources {
+            pickFirsts += listOf(
+                "META-INF/DEPENDENCIES"
+            )
+        }
+    }
+
     defaultConfig {
         applicationId = "de.thm.mixit"
         minSdk = 24
