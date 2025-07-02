@@ -37,6 +37,13 @@ public class PlaygroundFragment extends Fragment {
         return playground;
     }
 
+    public void removeAllElements(){
+        playground.removeAllViews();
+        if(BuildConfig.DEBUG){
+            Log.d(TAG, "All elements have been removed from playground");
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public TextView addElementToPlayground(String text, float x, float y) {
         TextView newElement = (TextView) inflater.inflate(R.layout.text_item_element, playground, false);
