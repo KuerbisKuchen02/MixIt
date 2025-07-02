@@ -82,7 +82,7 @@ public class PlaygroundFragment extends Fragment {
                         v.setY(event.getRawY() + dY);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        View other = checkOverlap(v);
+                        View other = checkOverlap((TextView) v);
                         if(other != null){
                             // TODO combine elements
                             playground.removeView(v);
@@ -110,7 +110,7 @@ public class PlaygroundFragment extends Fragment {
     }
 
 
-    private View checkOverlap(View draggedView) {
+    private View checkOverlap(TextView draggedView) {
         Rect draggedRect = new Rect();
         draggedView.getHitRect(draggedRect);
 
@@ -126,7 +126,8 @@ public class PlaygroundFragment extends Fragment {
             if (Rect.intersects(draggedRect, otherRect)) {
                 // Overlap detected
                 if(BuildConfig.DEBUG) {
-                    Log.d("Overlap", "Dragged view overlaps with: " + other);
+                    Log.d("Overlap", "Dragged element (" + draggedView.getText() +
+                            ") overlaps with: " + ((TextView) other).getText());
                 }
                 return other;
             }
