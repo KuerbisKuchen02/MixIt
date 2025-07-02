@@ -11,7 +11,7 @@ import de.thm.mixit.BuildConfig;
 
 public class ElementRemoteDataSource {
     private final static OpenAIClientAsync client = new OpenAIOkHttpClientAsync.Builder()
-            .apiKey(BuildConfig.apiKey)
+            .apiKey(BuildConfig.API_KEY)
             .build();
 
     private final static String SYSTEM_PROMPT =

@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        if (BuildConfig.DEBUG) Log.d(TAG, BuildConfig.apiKey);
+        if (BuildConfig.DEBUG) Log.d(TAG, BuildConfig.API_KEY);
 
 //        Example usage of ElementRemoteDataSource
 //        ElementRemoteDataSource.combine("Erde", "Wasser", response -> {
