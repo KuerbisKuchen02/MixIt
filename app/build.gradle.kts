@@ -7,6 +7,10 @@ android {
     namespace = "de.thm.mixit"
     compileSdk = 36
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "de.thm.mixit"
         minSdk = 24
@@ -34,6 +38,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    secrets {
+        defaultPropertiesFileName = "local.defaults.properties"
     }
 }
 
