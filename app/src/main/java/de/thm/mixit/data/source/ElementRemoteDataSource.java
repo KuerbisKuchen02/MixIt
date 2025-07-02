@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
 
-public class ElementRemote {
+public class ElementRemoteDataSource {
     private final static OpenAIClientAsync client = new OpenAIOkHttpClientAsync.Builder()
             .apiKey(BuildConfig.apiKey)
             .build();
