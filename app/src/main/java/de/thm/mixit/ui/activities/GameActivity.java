@@ -42,5 +42,7 @@ public class GameActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction().hide(arcade_fragment).commit();
             }
         }
+
+        Log.i(TAG, "GameActivity was created");
     }
 }
