@@ -29,7 +29,8 @@ public class PlaygroundFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
+            @Nullable Bundle savedInstanceState) {
         elements = new ArrayList<>();
         this.inflater = inflater;
         this.playground = (FrameLayout) inflater.inflate(R.layout.view_playground, null,
@@ -46,7 +47,8 @@ public class PlaygroundFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     public TextView addElementToPlayground(String text, float x, float y) {
-        TextView newElement = (TextView) inflater.inflate(R.layout.text_item_element, playground, false);
+        TextView newElement = (TextView) inflater.inflate(R.layout.text_item_element, 
+                playground, false);
         newElement.setText(text);
 
         if(x == -1 && y == -1){
