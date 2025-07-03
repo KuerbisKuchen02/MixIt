@@ -6,11 +6,16 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 
 /**
- * Represents a Recipe or Combination of two inputs to create a new element.
- * Also contains a reference to an {@link ElementEntity}
+ * Represents a Combination of two inputs to create a new element. Contains one composite
+ * primary-key. Can contain a reference to one {@link ElementEntity}
+ * <p>
+ * {@code inputA} First part of the primary-key.
+ * <br>
+ * {@code inputB} Second part of the primary-key.
+ * <br>
+ * {@code outputId} Foreign-Key which contains a reference to one {@link ElementEntity}.
  *
  * @author Justin Wolek
- * @version 1.0.0
  */
 @Entity(
         tableName = "recipes",
@@ -32,6 +37,14 @@ public class RecipeEntity {
 
     public int outputId;
 
+    /**
+     * Constructor for a new RecipeEntity. The composite-key made up from {@code inputA} and
+     * {@code inputB} must be unique.
+     *
+     * @param inputA First part of the primary-key.
+     * @param inputB Second part of the primary-key.
+     * @param outputId Foreign-Key which contains a reference to one {@link ElementEntity}.
+     */
     public RecipeEntity(@NonNull String inputA, @NonNull String inputB, int outputId) {
         this.inputA = inputA;
         this.inputB = inputB;

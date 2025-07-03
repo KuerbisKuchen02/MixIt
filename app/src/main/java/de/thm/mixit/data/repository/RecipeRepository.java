@@ -17,7 +17,6 @@ import de.thm.mixit.data.source.ICallback;
  * data operations to a {@link RecipeLocalDataSource}.
  *
  * @author Justin Wolek
- * @version 1.0.0
  */
 public class RecipeRepository {
     private final RecipeLocalDataSource localDataSource;
@@ -90,7 +89,6 @@ public class RecipeRepository {
         }
         localDataSource.insertRecipe(recipe);
     }
-
 
     /**
      * Deletes all RecipeEntity records.

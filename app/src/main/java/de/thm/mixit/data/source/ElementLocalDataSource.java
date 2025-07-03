@@ -8,8 +8,12 @@ import de.thm.mixit.data.daos.ElementDAO;
 import de.thm.mixit.data.entities.ElementEntity;
 
 /**
+ * Local data source for accessing and modifying {@link ElementEntity} data.
+ * <p>
+ * This class handles all interactions with the local Room database related to
+ * elements, including asynchronous reads and writes using a background thread.
+ *
  * @author Justin Wolek
- * @version 1.0.0
  */
 public class ElementLocalDataSource {
     private final ElementDAO elementDAO;
@@ -18,7 +22,7 @@ public class ElementLocalDataSource {
     /**
      * Constructs a new {@code ElementLocalDataSource} with the given {@link ElementDAO}.
      * @param elementDAO The Data Access Object used to perform database operation
-     *                   on ElementEntity objects.
+     *                   on {@link ElementEntity} objects.
      */
     public ElementLocalDataSource(ElementDAO elementDAO) {
         this.elementDAO = elementDAO;
@@ -28,7 +32,7 @@ public class ElementLocalDataSource {
      * Asynchronously retrieves all ElementEntity records from the database.
      * <p>
      * The query runs on a background thread, and the results are delivered
-     * via the provided {@link Callback} interface once loading is complete.
+     * via the provided {@link ICallback} interface once loading is complete.
      *
      * @param callback A callback to retrieve the list of {@link ElementEntity} objects when
      *                 loading the data is done.
@@ -46,7 +50,7 @@ public class ElementLocalDataSource {
      * The query runs on a background thread, and the result is delivered
      * via the provided {@link ICallback} once the data is loaded.
      *
-     * @param id       The ID of the element to find.
+     * @param id The ID of the element to find.
      * @param callback The callback to receive the found ElementEntity.
      */
     public void findById(int id, ICallback<ElementEntity> callback) {

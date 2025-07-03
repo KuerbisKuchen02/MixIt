@@ -5,10 +5,15 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 /**
- * Represents an Element and contains two Strings representing the name and emojis.
+ * Represents one Element inside the database
+ * <p>
+ * {@code id} The primary key. Is automatically generated
+ * <br>
+ * {@code output} A String representing the element's name.
+ * <br>
+ * {@code emoji} A String containing one or more emojis.
  *
  * @author Justin Wolek
- * @version 1.0.0
  */
 @Entity(tableName = "elements")
 public class ElementEntity {
@@ -21,6 +26,12 @@ public class ElementEntity {
     @ColumnInfo(name = "emoji")
     public String emoji;
 
+    /**
+     * Constructor for a new ElementEntity. {@code id} is automatically generated.
+     *
+     * @param output A String representing the element's name.
+     * @param emoji A String containing one or more emojis.
+     */
     public ElementEntity(String output, String emoji) {
         this.output = output;
         this.emoji = emoji;
