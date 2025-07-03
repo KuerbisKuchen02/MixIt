@@ -11,6 +11,14 @@ android {
         buildConfig = true
     }
 
+    packaging {
+        resources {
+            pickFirsts += listOf(
+                "META-INF/DEPENDENCIES"
+            )
+        }
+    }
+
     defaultConfig {
         applicationId = "de.thm.mixit"
         minSdk = 24
@@ -46,7 +54,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.openai.java)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.fragment)
