@@ -5,6 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:background="@drawable/background_item"
-    android:padding="2dp"
-    android:textColor="@color/color_element_text_color"
-    android:textSize="@dimen/medium" />
+    android:paddingLeft="3dp"
+    android:paddingTop="2dp"
+    android:paddingRight="3dp"
+    android:paddingBottom="2dp"
+    android:textColor="@color/black"
+    android:textSize="@dimen/text_size_medium" />

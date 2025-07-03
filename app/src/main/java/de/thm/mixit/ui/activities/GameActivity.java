@@ -21,12 +21,6 @@ public class GameActivity extends Activity {
         View v = playground.onCreateView(LayoutInflater.from(this), null,
                 savedInstanceState);
         setContentView(v);
-
-        playground.addElementToPlayground("\uD83D\uDD25 Feuer", 100, 100);
-        playground.addElementToPlayground("\uD83D\uDCA7 Wasser", 100, 150);
-        playground.addElementToPlayground("\uD83C\uDF0D Erde", 100, 200);
-        playground.addElementToPlayground("\uD83C\uDF2C\uFE0F Luft", 100, 250);
-
     }
 
 }
