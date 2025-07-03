@@ -4,13 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_arcade"
         android:name="de.thm.mixit.ui.fragments.ArcadeFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         tools:layout="@layout/fragment_arcade" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_playground"
+        android:name="de.thm.mixit.ui.fragments.PlaygroundFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        tools:layout="@layout/fragment_playground" />
 
 </LinearLayout>
