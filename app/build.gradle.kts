@@ -11,6 +11,14 @@ android {
         buildConfig = true
     }
 
+    packaging {
+        resources {
+            pickFirsts += listOf(
+                "META-INF/DEPENDENCIES"
+            )
+        }
+    }
+
     defaultConfig {
         applicationId = "de.thm.mixit"
         minSdk = 24
@@ -46,9 +54,13 @@ android {
 }
 
 dependencies {
-
+    val room_version = "2.7.2"
+    implementation("androidx.room:room-runtime:${room_version}")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation(libs.openai.java)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.fragment)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

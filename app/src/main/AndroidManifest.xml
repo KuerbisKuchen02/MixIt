@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.GameActivity" android:exported="true" />
+        <activity android:name=".ui.activities.GameActivity"/>
 
     </application>
 
