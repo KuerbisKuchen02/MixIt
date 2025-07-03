@@ -18,7 +18,7 @@ import androidx.room.Index;
  * @author Justin Wolek
  */
 @Entity(
-        tableName = "recipes",
+        tableName = "combinations",
         primaryKeys = {"inputA", "inputB"},
         foreignKeys = @ForeignKey(
                 entity = ElementEntity.class,
@@ -28,7 +28,7 @@ import androidx.room.Index;
         ),
         indices = {@Index(value = {"outputId"})}
 )
-public class RecipeEntity {
+public class CombinationEntity {
     @NonNull
     public String inputA;
 
@@ -38,14 +38,14 @@ public class RecipeEntity {
     public int outputId;
 
     /**
-     * Constructor for a new RecipeEntity. The composite-key made up from {@code inputA} and
+     * Constructor for a new CombinationEntity. The composite-key made up from {@code inputA} and
      * {@code inputB} must be unique.
      *
      * @param inputA First part of the primary-key.
      * @param inputB Second part of the primary-key.
      * @param outputId Foreign-Key which contains a reference to one {@link ElementEntity}.
      */
-    public RecipeEntity(@NonNull String inputA, @NonNull String inputB, int outputId) {
+    public CombinationEntity(@NonNull String inputA, @NonNull String inputB, int outputId) {
         this.inputA = inputA;
         this.inputB = inputB;
         this.outputId = outputId;

@@ -6,10 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import de.thm.mixit.data.daos.CombinationDAO;
 import de.thm.mixit.data.daos.ElementDAO;
-import de.thm.mixit.data.daos.RecipeDAO;
 import de.thm.mixit.data.entities.ElementEntity;
-import de.thm.mixit.data.entities.RecipeEntity;
+import de.thm.mixit.data.entities.CombinationEntity;
 
 /**
  * Abstract Room database class
@@ -19,7 +19,7 @@ import de.thm.mixit.data.entities.RecipeEntity;
  * @author Justin Wolek
  * @version 1.0.0
  */
-@Database(entities = {ElementEntity.class, RecipeEntity.class}, version = 2, exportSchema = false)
+@Database(entities = {ElementEntity.class, CombinationEntity.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase db;
 
@@ -46,5 +46,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ElementDAO elementDAO();
 
-    public abstract RecipeDAO recipeDAO();
+    public abstract CombinationDAO combinationDAO();
 }
