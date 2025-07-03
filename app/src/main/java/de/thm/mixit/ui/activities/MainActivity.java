@@ -3,12 +3,8 @@ package de.thm.mixit.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
-import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 
 public class MainActivity extends Activity {
@@ -23,13 +19,13 @@ public class MainActivity extends Activity {
 
     public void onEndlessGameButtonClicked(View v) {
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra("isArcade", false);
+        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, false);
         startActivity(intent);
     }
 
     public void onArcadeButtonClicked(View view) {
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra("isArcade", true);
+        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
         startActivity(intent);
     }
 
