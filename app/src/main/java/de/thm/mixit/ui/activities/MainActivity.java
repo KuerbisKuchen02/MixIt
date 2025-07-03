@@ -1,12 +1,11 @@
 package de.thm.mixit.ui.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
+import android.view.View;
 import androidx.annotation.Nullable;
-
-import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 
 public class MainActivity extends Activity {
@@ -16,13 +15,31 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main);
+        Log.i(TAG, "MainActivity was created");
+    }
 
-        if (BuildConfig.DEBUG) Log.d(TAG, BuildConfig.API_KEY);
+    public void onEndlessGameButtonClicked(View v) {
+        Log.i(TAG, "Endless Game Button was clicked.");
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, false);
+        startActivity(intent);
+    }
 
-//        Example usage of ElementRemoteDataSource
-//        ElementRemoteDataSource.combine("Erde", "Wasser", response -> {
-//            System.out.println("New Element: " + response);
-//        });
+    public void onArcadeButtonClicked(View view) {
+        Log.i(TAG, "Arcade Button was clicked.");
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
+        startActivity(intent);
+    }
+
+    public void onAchievementsButtonClicked(View view) {
+        Log.i(TAG, "Achievements Button was clicked.");
+        // TODO implement when Achievement Activity is added
+    }
+
+    public void onSettingsButtonClicked(View view) {
+        Log.i(TAG, "Settings Button was clicked.");
+        // TODO implement when Setting Activity is added
     }
 }

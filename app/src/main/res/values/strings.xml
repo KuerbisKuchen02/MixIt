@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MixIt</string>
+    <string name="main_menu_button_endless">Freies Spiel</string>
+    <string name="main_menu_button_arcade">Arcade</string>
+    <string name="main_menu_button_achievemnets">Achievements</string>
+    <string name="main_menu_button_settings">Settings</string>
 </resources>

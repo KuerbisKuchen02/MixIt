@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.openai.java)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.fragment)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
