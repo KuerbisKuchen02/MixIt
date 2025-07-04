@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.thm.mixit.R;
@@ -17,9 +18,11 @@ public class ElementRecyclerViewAdapter extends
         RecyclerView.Adapter<ElementRecyclerViewAdapter.ElementViewHolder> {
 
     private List<ElementEntity> elements;
+    private final List<ElementEntity> filteredElements;
 
     public ElementRecyclerViewAdapter(List<ElementEntity> elements) {
-        this.elements = elements;
+        this.elements = new ArrayList<>(elements);
+        this.filteredElements = new ArrayList<>(elements);
     }
 
     @NonNull
@@ -33,17 +36,37 @@ public class ElementRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ElementViewHolder holder, int position) {
-        ElementEntity element = elements.get(position);
+        ElementEntity element = filteredElements.get(position);
         holder.textView.setText(element.toString());
     }
 
     @Override
     public int getItemCount() {
-        return elements.size();
+        return filteredElements.size();
     }
 
     public void setElements(List<ElementEntity> elements) {
         this.elements = elements;
+        this.filteredElements.clear();
+        this.filteredElements.addAll(elements);
+    }
+
+    // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
+    public void filter(String query) {
+        filteredElements.clear();
+        String q = query.toLowerCase().trim();
+        if (q.isEmpty()) {
+            filteredElements.addAll(elements);
+            notifyDataSetChanged();
+            return;
+        }
+
+        for (ElementEntity element : elements) {
+            if (element.toString().toLowerCase().contains(q)) {
+                filteredElements.add(element);
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class ElementViewHolder extends RecyclerView.ViewHolder {

@@ -1,6 +1,8 @@
 package de.thm.mixit.ui.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +28,7 @@ import java.util.List;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
 public class ItemListFragment extends Fragment {
@@ -44,6 +47,9 @@ public class ItemListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        ElementRepository.create(requireContext()).getAll((elements) ->
+                new Handler(Looper.getMainLooper()).post(() -> setElements(elements)));
+
         RecyclerView recyclerView = view.findViewById(R.id.recycler_game_item_list);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
         layoutManager.setFlexWrap(FlexWrap.WRAP);
@@ -58,17 +64,31 @@ public class ItemListFragment extends Fragment {
                 android.R.id.text1, elements);
         textView.setAdapter(arrayAdapter);
 
+        textView.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (BuildConfig.DEBUG) Log.d(TAG, "Apply filter for String: " + s);
+                recyclerViewAdapter.filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        });
+
         return view;
     }
 
     public void setElements(List<ElementEntity> elements) {
-        if (BuildConfig.DEBUG) Log.d(TAG, "Update elements");
         this.elements = elements;
         // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
         recyclerViewAdapter.setElements(elements);
         arrayAdapter.addAll(elements);
         recyclerViewAdapter.notifyDataSetChanged();
         arrayAdapter.notifyDataSetChanged();
+        if (BuildConfig.DEBUG) Log.d(TAG, "Loaded " + elements.size() + " Elements");
     }
 
 }
