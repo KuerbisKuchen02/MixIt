@@ -1,5 +1,6 @@
 package de.thm.mixit.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,18 +39,16 @@ public class ItemListFragment extends Fragment {
 
     private ElementRecyclerViewAdapter recyclerViewAdapter;
     private ArrayAdapter<ElementEntity> arrayAdapter;
-    private List<ElementEntity> elements = new ArrayList<>();
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        List<ElementEntity> elements = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-
-        ElementRepository.create(requireContext()).getAll((elements) ->
-                new Handler(Looper.getMainLooper()).post(() -> setElements(elements)));
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_game_item_list);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
@@ -70,6 +70,13 @@ public class ItemListFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "Apply filter for String: " + s);
                 recyclerViewAdapter.filter(s.toString());
+                if (s.toString().isEmpty()) {
+                    textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_search,
+                            0, 0, 0);
+                } else {
+                    textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_search,
+                            0, R.drawable.ic_outline_cancel, 0);
+                }
             }
 
             @Override
@@ -78,11 +85,23 @@ public class ItemListFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         });
 
+        textView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getX() >= textView.getWidth() - textView.getTotalPaddingEnd()) {
+                    textView.setText("");
+                }
+            }
+            return false;
+        });
+
+        // TODO: Move to ViewModel
+        ElementRepository.create(requireContext()).getAll((list) ->
+                new Handler(Looper.getMainLooper()).post(() -> setElements(list)));
+
         return view;
     }
 
     public void setElements(List<ElementEntity> elements) {
-        this.elements = elements;
         // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
         recyclerViewAdapter.setElements(elements);
         arrayAdapter.addAll(elements);

@@ -31,6 +31,12 @@ public class ElementRecyclerViewAdapter extends
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.text_item_element, parent, false);
         view.setBackgroundResource(R.drawable.background_item);
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) params).setMargins(16, 16, 16, 16);
+        }
+        view.setLayoutParams(params);
+        view.requestLayout();
         return new ElementViewHolder(view);
     }
 
