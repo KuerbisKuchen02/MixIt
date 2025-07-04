@@ -14,6 +14,10 @@ import java.util.List;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.ElementEntity;
 
+/**
+ * Filterable recycler view adapter for element entities
+ * @author Josia Menger
+ */
 public class ElementRecyclerViewAdapter extends
         RecyclerView.Adapter<ElementRecyclerViewAdapter.ElementViewHolder> {
 
