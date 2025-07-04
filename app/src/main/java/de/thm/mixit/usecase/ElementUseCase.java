@@ -44,31 +44,34 @@ public class ElementUseCase {
                     combination -> {
                 // If a combination exists, retrieve the output element
                 if (combination != null) {
-                    Log.d(TAG, "combination found: " + combination.inputA + " + "
-                            + combination.inputB + " with outputId: " + combination.outputId);
+                    Log.d(TAG, "Combination found for element: "
+                            + combination.inputA + " + " + combination.inputB
+                            + " with outputId: " + combination.outputId);
                     elementRepository.findById(combination.outputId, callback::accept);
                 } else {
-                    Log.d(TAG, "No combination found for: " + element1.output
-                            + " + " + element2.output);
+                    Log.d(TAG, "No combination found for combination: "
+                            + element1.output + " + " + element2.output);
                     // If no combination exists, generate a new element
                     elementRepository.generateNew(element1, element2, newElement -> {
-                        Log.d(TAG, "Generated new element: " + newElement.output
-                                + " with emoji: " + newElement.emoji);
+                        Log.d(TAG, "Generated new element: "
+                                + newElement.emoji + " " + newElement.output);
                         // Check if the new element already exists in the repository
                         elementRepository.findByName(newElement.output,
                                 existingElement -> {
                             // If the element exists, return it via the callback
                             if (existingElement != null) {
                                 Log.d(TAG, "Element already exists: "
-                                        + existingElement.output);
+                                        + existingElement.emoji + " " + existingElement.output);
                                 combinationRepository.insertCombination(new CombinationEntity(
                                         element1.output, element2.output, existingElement.id),
                                         c -> {
+                                    Log.d(TAG, "Combination inserted for existing element: "
+                                            + element1.output + " + " + element2.output);
                                     callback.accept(existingElement);
                                 });
                             } else {
                                 Log.d(TAG, "Element does not exist, inserting new element: "
-                                        + newElement.output);
+                                        + newElement.emoji + " " + newElement.output);
                                 // If the element does not exist, insert
                                 // it and create a new combination
                                 elementRepository.insertElement(newElement,
@@ -78,6 +81,8 @@ public class ElementUseCase {
                                     combinationRepository.insertCombination(new CombinationEntity(
                                             element1.output, element2.output, insertedElement.id),
                                             c -> {
+                                        Log.d(TAG, "Combination inserted for: "
+                                                + element1.output + " + " + element2.output);
                                         callback.accept(insertedElement);
                                     });
                                 });
