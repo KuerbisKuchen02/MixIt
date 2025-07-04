@@ -28,10 +28,20 @@ public interface ElementDAO {
      * Returns one {@link ElementEntity} which has a specific {@code id}.
      *
      * @param id The id the {@link ElementEntity} must have.
-     * @return One {@link ElementEntity} which satisfies the condition or {@code null} if none does.
+     * @return One {@link ElementEntity} which satisfies the condition
+     * or {@code null} if none does.
      */
     @Query("SELECT * FROM elements WHERE id LIKE :id")
     public ElementEntity findById(int id);
+
+    /**
+     * Returns one {@link ElementEntity} which has a specific {@code name}.
+     *
+     * @param name The name the {@link ElementEntity} must have.
+     * @return One {@link ElementEntity} which
+     */
+    @Query("SELECT * FROM elements WHERE LOWER(output) = LOWER(:name)")
+    public ElementEntity findByName(String name);
 
     /**
      * Inserts one {@link ElementEntity} into the database.
@@ -39,7 +49,7 @@ public interface ElementDAO {
      * @param element ElementEntity to insert into the database.
      */
     @Insert
-    public void insertElement(ElementEntity element);
+    public long insertElement(ElementEntity element);
 
     /**
      * Deletes all {@link ElementEntity}'s from the database.
