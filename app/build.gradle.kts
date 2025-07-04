@@ -8,6 +8,7 @@ android {
     compileSdk = 36
 
     buildFeatures {
+        dataBinding = true
         buildConfig = true
     }
 
@@ -54,12 +55,16 @@ android {
 }
 
 dependencies {
+    implementation(libs.recyclerview)
     val room_version = "2.7.2"
     implementation("androidx.room:room-runtime:${room_version}")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation(libs.openai.java)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.constraintlayout)
+    implementation(libs.flexbox)
+    implementation(libs.fragment)
     implementation(libs.fragment)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
