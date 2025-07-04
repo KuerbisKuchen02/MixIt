@@ -29,7 +29,8 @@ public interface CombinationDAO {
      *
      * @param inputA The first input string.
      * @param inputB The second input string.
-     * @return One {@link CombinationEntity} which satisfies the condition or {@code null} if none does.
+     * @return One {@link CombinationEntity} which satisfies
+     * the condition or {@code null} if none does.
      */
     @Query("SELECT * FROM combinations WHERE inputA LIKE :inputA AND inputB LIKE :inputB LIMIT 1")
     public CombinationEntity findByCombination(String inputA, String inputB);

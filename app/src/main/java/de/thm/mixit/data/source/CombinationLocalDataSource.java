@@ -55,7 +55,8 @@ public class CombinationLocalDataSource {
      * @param inputB The second input string.
      * @param callback The callback to receive the found CombinationEntity.
      */
-    public void findByCombination(String inputA, String inputB, ICallback<CombinationEntity> callback) {
+    public void findByCombination(String inputA, String inputB,
+                                  ICallback<CombinationEntity> callback) {
         executor.execute(() -> {
             CombinationEntity combination = combinationDAO.findByCombination(inputA, inputB);
             callback.onDataLoaded(combination);
@@ -67,7 +68,8 @@ public class CombinationLocalDataSource {
      *
      * @param combination The CombinationEntity to insert.
      */
-    public void insertCombination(CombinationEntity combination, Consumer<CombinationEntity> callback) {
+    public void insertCombination(CombinationEntity combination,
+                                  Consumer<CombinationEntity> callback) {
         executor.execute(() -> {
             combinationDAO.insertCombination(combination);
             callback.accept(combination);
@@ -78,6 +80,6 @@ public class CombinationLocalDataSource {
      * Asynchronously deletes all CombinationEntity records from the database.
      */
     public void deleteAll() {
-        executor.execute(() -> combinationDAO.deleteAll());
+        executor.execute(combinationDAO::deleteAll);
     }
 }

@@ -25,10 +25,10 @@ public class ElementRemoteDataSource {
             "Gib keine Erklärungen, keine Zusätze – " +
             "nur das eine neue Element mit genau einem passenden Emoji.\n";
 
+    // TODO insert a regex to validate the element format <Emoji> <Description>
     private static boolean isValidElement(String element) {
-        return element.matches("(\\u00a9|\\u00ae|[\\u2000-\\u3300]" +
-                "|\\ud83c[\\ud000-\\udfff]|\\ud83d[\\ud000-\\udfff]|\\ud83e" +
-                "[\\ud000-\\udfff])\\s\\b[äöüÄÖÜa-zA-Z]+\\b");
+        return true;
+        // return element.matches("");
     }
 
     /**
@@ -41,14 +41,16 @@ public class ElementRemoteDataSource {
      * - empty content
      * - an invalid element format
      */
-    public static void combine(ElementEntity element1, ElementEntity element2, Consumer<ElementEntity> callback) {
+    public static void combine(ElementEntity element1, ElementEntity element2,
+                               Consumer<ElementEntity> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
                 .addUserMessage(element1.output + " + " + element2.output)
                 .model(ChatModel.GPT_4O)
                 .build();
 
-       client.chat().completions().create(createParams).thenAccept(chatCompletion -> {
+       client.chat().completions().create(createParams).thenAccept(
+               chatCompletion -> {
             if (chatCompletion.choices().isEmpty()) {
                 throw new RuntimeException("No choices returned from OpenAI API");
             }

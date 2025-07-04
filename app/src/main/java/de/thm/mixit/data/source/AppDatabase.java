@@ -19,7 +19,8 @@ import de.thm.mixit.data.entities.CombinationEntity;
  * @author Justin Wolek
  * @version 1.0.0
  */
-@Database(entities = {ElementEntity.class, CombinationEntity.class}, version = 3, exportSchema = false)
+@Database(entities = {ElementEntity.class, CombinationEntity.class},
+        version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase db;
 

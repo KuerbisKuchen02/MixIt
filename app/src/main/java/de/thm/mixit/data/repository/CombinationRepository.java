@@ -56,14 +56,16 @@ public class CombinationRepository {
     /**
      * Finds a {@link CombinationEntity} by a combination of two input strings.
      * <p>
-     * The input strings are alphabetically ordered to ensure consistent lookups since combinations
+     * The input strings are alphabetically ordered
+     * to ensure consistent lookups since combinations
      * are always stored in alphabetical order.
      *
      * @param inputA   The first input string of the combination.
      * @param inputB   The second input string of the combination.
      * @param callback The callback to receive the found {@link CombinationEntity}.
      */
-    public void findByCombination(String inputA, String inputB, ICallback<CombinationEntity> callback) {
+    public void findByCombination(String inputA, String inputB,
+                                  ICallback<CombinationEntity> callback) {
         // Words of combination are always saved in alphabetical order.
         if (inputA.compareTo(inputB) > 0) {
             String temp = inputA;
@@ -81,7 +83,8 @@ public class CombinationRepository {
      *
      * @param combination The CombinationEntity to insert.
      */
-    public void insertCombination(CombinationEntity combination, Consumer<CombinationEntity> callback) {
+    public void insertCombination(CombinationEntity combination,
+                                  Consumer<CombinationEntity> callback) {
         // Order alphabetically when necessary
         if (combination.inputA.compareTo(combination.inputB) > 0) {
             String temp = combination.inputA;
