@@ -8,6 +8,7 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
+import de.thm.mixit.data.entities.ElementEntity;
 
 public class ElementRemoteDataSource {
     private final static OpenAIClientAsync client = new OpenAIOkHttpClientAsync.Builder()
@@ -24,17 +25,26 @@ public class ElementRemoteDataSource {
             "Gib keine Erklärungen, keine Zusätze – " +
             "nur das eine neue Element mit genau einem passenden Emoji.\n";
 
+    private static boolean isValidElement(String element) {
+        return element.matches("(\\u00a9|\\u00ae|[\\u2000-\\u3300]" +
+                "|\\ud83c[\\ud000-\\udfff]|\\ud83d[\\ud000-\\udfff]|\\ud83e" +
+                "[\\ud000-\\udfff])\\s\\b[äöüÄÖÜa-zA-Z]+\\b");
+    }
+
     /**
      * Combines two elements using the OpenAI API and returns the result via a callback.
      * @param element1 - the first element to combine
      * @param element2 - the second element to combine
      * @param callback - a callback that will be called with the result of the combination
-     * @throws RuntimeException if the OpenAI API returns no choices or empty content
+     * @throws RuntimeException if the OpenAI API returns:
+     * - no choices
+     * - empty content
+     * - an invalid element format
      */
-    public static void combine(String element1, String element2, Consumer<String> callback) {
+    public static void combine(ElementEntity element1, ElementEntity element2, Consumer<ElementEntity> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
-                .addUserMessage(element1 + " + " + element2)
+                .addUserMessage(element1.output + " + " + element2.output)
                 .model(ChatModel.GPT_4O)
                 .build();
 
@@ -46,7 +56,16 @@ public class ElementRemoteDataSource {
             if (chatCompletion.choices().get(0).message().content().isEmpty())
                 throw new RuntimeException("Empty content returned from OpenAI API");
 
-            callback.accept(chatCompletion.choices().get(0).message().content().get());
+            String content = chatCompletion.choices().get(0).message().content().get();
+
+            if (!isValidElement(content)) {
+                throw new RuntimeException("Invalid element format: " + content);
+            }
+
+            String emoji = content.substring(0, content.indexOf(' '));
+            String name = content.substring(content.indexOf(' ') + 1);
+
+            callback.accept(new ElementEntity(name, emoji));
         });
     }
 }
