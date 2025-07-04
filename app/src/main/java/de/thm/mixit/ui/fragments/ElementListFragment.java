@@ -33,9 +33,15 @@ import de.thm.mixit.data.entities.ElementEntity;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
-public class ItemListFragment extends Fragment {
+/**
+ *
+ * Fragment class that provides a searchable list of {@link ElementEntity}.
+ *
+ * @author Josia Menger
+ */
+public class ElementListFragment extends Fragment {
 
-    private static final String TAG = ItemListFragment.class.getSimpleName();
+    private static final String TAG = ElementListFragment.class.getSimpleName();
 
     private ElementRecyclerViewAdapter recyclerViewAdapter;
     private ArrayAdapter<ElementEntity> arrayAdapter;
@@ -50,6 +56,7 @@ public class ItemListFragment extends Fragment {
         List<ElementEntity> elements = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        // Setup element list
         RecyclerView recyclerView = view.findViewById(R.id.recycler_game_item_list);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
         layoutManager.setFlexWrap(FlexWrap.WRAP);
@@ -59,6 +66,7 @@ public class ItemListFragment extends Fragment {
         recyclerViewAdapter = new ElementRecyclerViewAdapter(elements);
         recyclerView.setAdapter(recyclerViewAdapter);
 
+        // Setup search bar
         AutoCompleteTextView textView = view.findViewById(R.id.auto_text_game_item_list_search);
         arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, elements);
@@ -88,6 +96,7 @@ public class ItemListFragment extends Fragment {
         textView.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 if (event.getX() >= textView.getWidth() - textView.getTotalPaddingEnd()) {
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Pressed cancel button inside search");
                     textView.setText("");
                 }
             }
@@ -95,18 +104,19 @@ public class ItemListFragment extends Fragment {
         });
 
         // TODO: Move to ViewModel
-        ElementRepository.create(requireContext()).getAll((list) ->
-                new Handler(Looper.getMainLooper()).post(() -> setElements(list)));
+        ElementRepository.create(requireContext()).getAll(this::setElements);
 
         return view;
     }
 
+    // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
     public void setElements(List<ElementEntity> elements) {
-        // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
         recyclerViewAdapter.setElements(elements);
         arrayAdapter.addAll(elements);
-        recyclerViewAdapter.notifyDataSetChanged();
-        arrayAdapter.notifyDataSetChanged();
+        new Handler(Looper.getMainLooper()).post(() -> {
+            recyclerViewAdapter.notifyDataSetChanged();
+            arrayAdapter.notifyDataSetChanged();
+        });
         if (BuildConfig.DEBUG) Log.d(TAG, "Loaded " + elements.size() + " Elements");
     }
 

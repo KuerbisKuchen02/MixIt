@@ -51,13 +51,25 @@ public class ElementRecyclerViewAdapter extends
         return filteredElements.size();
     }
 
+
+    /**
+     * Set the elements to the new list and reset the filter
+     * @param elements new elements
+     */
     public void setElements(List<ElementEntity> elements) {
         this.elements = elements;
         this.filteredElements.clear();
         this.filteredElements.addAll(elements);
     }
 
-    // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
+    /**
+     * Filter elements by a string (case insensitive)
+     * <p>
+     * if the query is empty or only contains whitespaces the complete list is shown
+     * <p>
+     * FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
+     * @param query String to filter by
+     */
     public void filter(String query) {
         filteredElements.clear();
         String q = query.toLowerCase().trim();
