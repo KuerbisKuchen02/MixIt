@@ -63,7 +63,7 @@ public class ElementListFragment extends Fragment {
         layoutManager.setJustifyContent(JustifyContent.CENTER);
         layoutManager.setAlignItems(AlignItems.FLEX_START);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new ElementRecyclerViewAdapter(elements);
+        recyclerViewAdapter = new ElementRecyclerViewAdapter(elements, this::onClickElement);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         // Setup search bar
@@ -118,6 +118,20 @@ public class ElementListFragment extends Fragment {
             arrayAdapter.notifyDataSetChanged();
         });
         if (BuildConfig.DEBUG) Log.d(TAG, "Loaded " + elements.size() + " Elements");
+    }
+
+    /**
+     * Callback function for the onClick event of the element cards inside the list
+     * <p>
+     * The position parameter always depends on the current filter
+     * and does not correspond to the index in the complete list.
+     *
+     * @param element The element that was clicked
+     * @param position The positon of the element in the current view
+     */
+    public void onClickElement(ElementEntity element, int position) {
+        if (BuildConfig.DEBUG) Log.d(TAG, "Clicked on element: " + position);
+        // TODO: Insert element in playground
     }
 
 }

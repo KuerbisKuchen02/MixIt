@@ -19,10 +19,23 @@ public class ElementRecyclerViewAdapter extends
 
     private List<ElementEntity> elements;
     private final List<ElementEntity> filteredElements;
+    private final OnElementClickListener listener;
 
-    public ElementRecyclerViewAdapter(List<ElementEntity> elements) {
+    public interface OnElementClickListener {
+        void onElementClick(ElementEntity element, int positon);
+    }
+
+    /**
+     * Create a new ElementRecyclerViewAdapter
+     *
+     * @param elements Element list to show
+     * @param listener Callback method to call when an element card is clicked
+     */
+    public ElementRecyclerViewAdapter(List<ElementEntity> elements,
+                                      OnElementClickListener listener) {
         this.elements = new ArrayList<>(elements);
         this.filteredElements = new ArrayList<>(elements);
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,7 +56,7 @@ public class ElementRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ElementViewHolder holder, int position) {
         ElementEntity element = filteredElements.get(position);
-        holder.textView.setText(element.toString());
+        holder.bind(element, position, listener);
     }
 
     @Override
@@ -91,9 +104,14 @@ public class ElementRecyclerViewAdapter extends
 
         TextView textView;
 
-        public ElementViewHolder(@NonNull View itemView) {
+        ElementViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text_item_element);
+        }
+
+        void bind(ElementEntity element, int positon, OnElementClickListener listener) {
+            textView.setText(element.toString());
+            itemView.setOnClickListener(v -> listener.onElementClick(element, positon));
         }
     }
 }
