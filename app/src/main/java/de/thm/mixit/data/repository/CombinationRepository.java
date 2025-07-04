@@ -3,6 +3,7 @@ package de.thm.mixit.data.repository;
 import android.content.Context;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.CombinationDAO;
 import de.thm.mixit.data.entities.CombinationEntity;
@@ -80,14 +81,14 @@ public class CombinationRepository {
      *
      * @param combination The CombinationEntity to insert.
      */
-    public void insertCombination(CombinationEntity combination) {
+    public void insertCombination(CombinationEntity combination, Consumer<CombinationEntity> callback) {
         // Order alphabetically when necessary
         if (combination.inputA.compareTo(combination.inputB) > 0) {
             String temp = combination.inputA;
             combination.inputA = combination.inputB;
             combination.inputB = temp;
         }
-        localDataSource.insertCombination(combination);
+        localDataSource.insertCombination(combination, callback);
     }
 
     /**
