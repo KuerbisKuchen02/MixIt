@@ -28,12 +28,13 @@ variables:
 
 # Packages installation before running script
 before_script:
+  # debug memory printouts
   - df -h
   - du -xh /builds | sort -rh
   - du -xh /dev/vdc1 | sort -rh
   - du -sh ~/.gradle || true
   - du -sh /builds || true
-  # - rm -rfv /cache/
+  # - rm -rfv /cache/swt-mt-ss25
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
 
