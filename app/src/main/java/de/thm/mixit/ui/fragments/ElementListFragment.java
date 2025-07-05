@@ -128,6 +128,7 @@ public class ElementListFragment extends Fragment {
     // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
     public void setElements(List<ElementEntity> elements) {
         recyclerViewAdapter.setElements(elements);
+        arrayAdapter.clear();
         arrayAdapter.addAll(elements);
         new Handler(Looper.getMainLooper()).post(() -> {
             recyclerViewAdapter.notifyDataSetChanged();
