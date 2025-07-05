@@ -23,4 +23,12 @@
         android:layout_weight="4"
         tools:layout="@layout/fragment_playground" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="de.thm.mixit.ui.fragments.ElementListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        tools:layout="@layout/fragment_item_list" />
+
 </LinearLayout>

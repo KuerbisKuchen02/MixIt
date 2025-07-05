@@ -23,6 +23,9 @@ import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 
 public class PlaygroundFragment extends Fragment{
+    public final static String BUNDLE_ELEMENT = "BUNDLE_ELEMENT";
+    public final static String ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND =
+            "ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND";
     private final static String TAG = PlaygroundFragment.class.getSimpleName();
     // TODO do you need list of elements for game state? every element is also saved in playground
     private ArrayList<TextView> elements;
@@ -54,9 +57,23 @@ public class PlaygroundFragment extends Fragment{
                     Log.d(TAG, "open element list fragment");
                 });
 
+        getParentFragmentManager().setFragmentResultListener(ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND,
+                getViewLifecycleOwner(),
+                ((requestKey, result) ->
+                        addElementToPlayground(result.getString(BUNDLE_ELEMENT))
+                ));
+
         return playground;
     }
 
+    /**
+     * Adds new item as TextView with param text to playground at a free place
+     * @param text Element text with icon an description
+     * @return The new element as TextView item on the playground
+     */
+    public TextView addElementToPlayground(String text) {
+        return addElementToPlayground(text, -1, -1);
+    }
 
     /**
      * Adds new item as TextView with param text to playground at position x, y.

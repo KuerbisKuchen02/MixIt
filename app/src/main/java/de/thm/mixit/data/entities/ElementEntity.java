@@ -1,5 +1,6 @@
 package de.thm.mixit.data.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -35,5 +36,11 @@ public class ElementEntity {
     public ElementEntity(String output, String emoji) {
         this.output = output;
         this.emoji = emoji;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return emoji + " " + output;
     }
 }
