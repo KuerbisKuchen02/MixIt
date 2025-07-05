@@ -52,7 +52,7 @@ public class ElementRepository {
      * @param element2 The second ElementEntity to combine.
      * @param callback A callback to receive the newly generated ElementEntity.
      */
-    public void generateNew(ElementEntity element1, ElementEntity element2,
+    public void generateNew(String element1, String element2,
                             Consumer<ElementEntity> callback) {
         // TODO - implement error handling for remote data source
         ElementRemoteDataSource.combine(element1, element2, callback);

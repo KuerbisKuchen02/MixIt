@@ -37,10 +37,10 @@ public class ElementUseCase {
          * @param element2 The second element to combine.
          * @param callback A callback to receive the resulting ElementEntity.
          */
-        public void getElement(ElementEntity element1, ElementEntity element2,
+        public void getElement(String element1, String element2,
                                Consumer<ElementEntity> callback) {
             // Check if there is already a combination for the two elements
-            combinationRepository.findByCombination(element1.output, element2.output,
+            combinationRepository.findByCombination(element1, element2,
                     combination -> {
                 // If a combination exists, retrieve the output element
                 if (combination != null) {
@@ -50,7 +50,7 @@ public class ElementUseCase {
                     elementRepository.findById(combination.outputId, callback::accept);
                 } else {
                     Log.d(TAG, "No combination found for combination: "
-                            + element1.output + " + " + element2.output);
+                            + element1 + " + " + element2);
                     // If no combination exists, generate a new element
                     elementRepository.generateNew(element1, element2, newElement -> {
                         Log.d(TAG, "Generated new element: "
@@ -63,10 +63,10 @@ public class ElementUseCase {
                                 Log.d(TAG, "Element already exists: "
                                         + existingElement.emoji + " " + existingElement.output);
                                 combinationRepository.insertCombination(new CombinationEntity(
-                                        element1.output, element2.output, existingElement.id),
+                                        element1, element2, existingElement.id),
                                         c -> {
                                     Log.d(TAG, "Combination inserted for existing element: "
-                                            + element1.output + " + " + element2.output);
+                                            + element1 + " + " + element2);
                                     callback.accept(existingElement);
                                 });
                             } else {
@@ -79,10 +79,10 @@ public class ElementUseCase {
                                     Log.d(TAG, "Inserted new element with ID: "
                                             + insertedElement.id);
                                     combinationRepository.insertCombination(new CombinationEntity(
-                                            element1.output, element2.output, insertedElement.id),
+                                            element1, element2, insertedElement.id),
                                             c -> {
                                         Log.d(TAG, "Combination inserted for: "
-                                                + element1.output + " + " + element2.output);
+                                                + element1 + " + " + element2);
                                         callback.accept(insertedElement);
                                     });
                                 });

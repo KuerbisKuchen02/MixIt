@@ -41,11 +41,11 @@ public class ElementRemoteDataSource {
      * - empty content
      * - an invalid element format
      */
-    public static void combine(ElementEntity element1, ElementEntity element2,
+    public static void combine(String element1, String element2,
                                Consumer<ElementEntity> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
-                .addUserMessage(element1.output + " + " + element2.output)
+                .addUserMessage(element1 + " + " + element2)
                 .model(ChatModel.GPT_4O)
                 .build();
 
