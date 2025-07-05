@@ -3,6 +3,8 @@ package de.thm.mixit.ui.fragments;
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
+import de.thm.mixit.usecase.ElementUseCase;
 
 public class PlaygroundFragment extends Fragment{
     public final static String BUNDLE_ELEMENT = "BUNDLE_ELEMENT";
@@ -99,7 +102,10 @@ public class PlaygroundFragment extends Fragment{
         newElement.setY(y);
 
         elements.add(newElement);
-        playground.addView(newElement);
+
+        new Handler(Looper.getMainLooper()).post(() -> {;
+            playground.addView(newElement);
+        });
 
         if(BuildConfig.DEBUG){
             Log.d(TAG, "new element " + text + " has been added to playground");
@@ -131,14 +137,27 @@ public class PlaygroundFragment extends Fragment{
                             if(other != null){
                                 removeElement(v);
                                 removeElement(other);
-                                // TODO combine elements
-                                if(BuildConfig.DEBUG){
-                                    Log.d(TAG, "combining elements " +
-                                            ((TextView) v).getText() +" and " +
-                                            ((TextView) other).getText());
-                                }
-                                addElementToPlayground("<combined element>", v.getX(),
-                                        v.getY());
+
+                                ElementUseCase elementUseCase = new ElementUseCase(requireContext());
+
+                                elementUseCase.getElement(
+                                        ((TextView) v).getText().toString(),
+                                        ((TextView) other).getText().toString(),
+                                        newElement -> {
+                                            if (newElement != null) {
+                                                addElementToPlayground(newElement.toString(),
+                                                        v.getX(), v.getY());
+
+                                                Bundle result = new Bundle();
+                                                result.putString(ElementListFragment.BUNDLE_NEW_ELEMENT, newElement.toString());
+                                                getParentFragmentManager()
+                                                        .setFragmentResult(ElementListFragment.ARGUMENT_ELEMENT_TO_LIST, result);
+                                            } else {
+                                                Log.e(TAG, "Failed to create new element from " +
+                                                        "combination of " + ((TextView) v).getText() +
+                                                        " and " + ((TextView) other).getText());
+                                            }
+                                        });
                             }
                         }
 

@@ -41,10 +41,18 @@ import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
  */
 public class ElementListFragment extends Fragment {
 
+    public final static String ARGUMENT_ELEMENT_TO_LIST =
+            "ARGUMENT_ELEMENT_TO_LIST";
+
+    public final static String BUNDLE_NEW_ELEMENT =
+            "BUNDLE_NEW_ELEMENT";
+
     private static final String TAG = ElementListFragment.class.getSimpleName();
 
     private ElementRecyclerViewAdapter recyclerViewAdapter;
     private ArrayAdapter<ElementEntity> arrayAdapter;
+
+    private ElementRepository elementRepository;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -60,7 +68,7 @@ public class ElementListFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_game_item_list);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
         layoutManager.setFlexWrap(FlexWrap.WRAP);
-        layoutManager.setJustifyContent(JustifyContent.CENTER);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
         layoutManager.setAlignItems(AlignItems.FLEX_START);
         recyclerView.setLayoutManager(layoutManager);
         recyclerViewAdapter = new ElementRecyclerViewAdapter(elements, this::onClickElement);
@@ -104,7 +112,15 @@ public class ElementListFragment extends Fragment {
         });
 
         // TODO: Move to ViewModel
-        ElementRepository.create(requireContext()).getAll(this::setElements);
+        elementRepository = ElementRepository.create(requireContext());
+
+        elementRepository.getAll(this::setElements);
+
+        getParentFragmentManager().setFragmentResultListener(ARGUMENT_ELEMENT_TO_LIST,
+                getViewLifecycleOwner(),
+                ((requestKey, result) ->
+                        elementRepository.getAll(this::setElements)
+                ));
 
         return view;
     }
