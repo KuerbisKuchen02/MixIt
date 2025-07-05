@@ -131,7 +131,12 @@ public class ElementListFragment extends Fragment {
      */
     public void onClickElement(ElementEntity element, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Clicked on element: " + position);
-        // TODO: Insert element in playground
+        // FIXME: bundle should properly include the element object instead of only the string
+        //        requires ElementEntity to implement serializable or parcelable
+        Bundle result = new Bundle();
+        result.putString(PlaygroundFragment.BUNDLE_ELEMENT, element.toString());
+        getParentFragmentManager()
+                .setFragmentResult(PlaygroundFragment.ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND, result);
     }
 
 }
