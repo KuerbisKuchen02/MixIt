@@ -10,6 +10,15 @@ import java.util.function.Consumer;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entities.ElementEntity;
 
+/**
+ * Remote data source for accessing and combining elements using the OpenAI API.
+ * <p>
+ * This class handles the interaction with the OpenAI API to generate new elements
+ * by combining two existing elements. It uses asynchronous calls to ensure that
+ * the UI remains responsive while waiting for the API response.
+ *
+ * @author Jonathan Hildebrandt
+ */
 public class ElementRemoteDataSource {
     private final static OpenAIClientAsync client = new OpenAIOkHttpClientAsync.Builder()
             .apiKey(BuildConfig.API_KEY)
