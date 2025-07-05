@@ -34,7 +34,6 @@ public class PlaygroundFragment extends Fragment{
     public final static String ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND =
             "ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND";
     private final static String TAG = PlaygroundFragment.class.getSimpleName();
-    // TODO do you need list of elements for game state? every element is also saved in playground
     private FrameLayout playground;
     private LayoutInflater inflater;
     private FloatingActionButton clearElementsButton;
