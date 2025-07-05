@@ -56,6 +56,10 @@ before_script:
   # Not necessary, but just for surity
   - chmod +x ./gradlew
 
+after_script:
+  - echo "Bereinige temporäre Dateien"
+  - rm -rf build/ tmp/ .cache/
+
 # Make Project
 BuildAndPackageApp:
   tags: 
