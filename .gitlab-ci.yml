@@ -29,10 +29,9 @@ variables:
 # Packages installation before running script
 before_script:
   # debug memory printouts
+  - echo "Disk usage before build:"
   - df -h
-  - du -xh /builds | sort -rh | head -20
-  - du -sh ~/.gradle || true
-  - du -sh /builds || true
+  - du -xh /builds | sort -rh | head -20 || true
   # - rm -rfv /cache/swt-mt-ss25
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
@@ -63,10 +62,11 @@ before_script:
   - chmod +x ./gradlew
 
 after_script:
-  - echo "Clean temporary data"
-  - rm -rf build/ tmp/ .cache/
+  - echo "Cleaning up:"
+  - find build/ tmp/ .cache/ -print
+  - rm -rvf build/ tmp/ .cache/
+  - echo "Disk usage after cleanup:"
   - df -h
-  - du -sh ~/.gradle || true
   - du -sh /builds || true
 
 # Make Project
