@@ -4,21 +4,22 @@
     android:id="@+id/layout_playground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/white">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_clear_elements"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
         android:contentDescription="clear playground"
-        app:backgroundTint="@color/red"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
         app:fabSize="auto"
         app:icon="@drawable/ic_broom_24px"
-        app:shapeAppearanceOverlay="@style/button_playground_fab"
         app:srcCompat="@drawable/ic_broom_24px" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,13 +27,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginRight="@dimen/distance_to_border"
+        android:layout_marginEnd="@dimen/distance_to_border"
         android:layout_marginBottom="@dimen/distance_to_border"
         android:clickable="true"
         android:contentDescription="open element list"
-        app:shapeAppearanceOverlay="@style/button_playground_fab"
         app:backgroundTint="@color/green"
-        app:elevation="5dp"
+        app:elevation="3dp"
         app:fabSize="auto"
         app:icon="@drawable/ic_plus"
         app:srcCompat="@drawable/ic_plus" />

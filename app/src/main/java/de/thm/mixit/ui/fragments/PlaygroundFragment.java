@@ -1,6 +1,8 @@
 package de.thm.mixit.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,14 +17,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
+import de.thm.mixit.data.entities.ElementEntity;
 import de.thm.mixit.usecase.ElementUseCase;
 
 public class PlaygroundFragment extends Fragment{
@@ -31,7 +35,6 @@ public class PlaygroundFragment extends Fragment{
             "ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND";
     private final static String TAG = PlaygroundFragment.class.getSimpleName();
     // TODO do you need list of elements for game state? every element is also saved in playground
-    private ArrayList<TextView> elements;
     private FrameLayout playground;
     private LayoutInflater inflater;
     private FloatingActionButton clearElementsButton;
@@ -42,10 +45,9 @@ public class PlaygroundFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
             @Nullable Bundle savedInstanceState) {
-        elements = new ArrayList<>();
 
         this.inflater = inflater;
-        this.playground = (FrameLayout) inflater.inflate(R.layout.fragment_playground, null,
+        this.playground = (FrameLayout) inflater.inflate(R.layout.fragment_playground, container,
                 false);
 
         clearElementsButton = playground.findViewById(R.id.button_clear_elements);
@@ -101,9 +103,7 @@ public class PlaygroundFragment extends Fragment{
         newElement.setX(x);
         newElement.setY(y);
 
-        elements.add(newElement);
-
-        new Handler(Looper.getMainLooper()).post(() -> {;
+        new Handler(Looper.getMainLooper()).post(() -> {
             playground.addView(newElement);
         });
 
@@ -135,38 +135,49 @@ public class PlaygroundFragment extends Fragment{
                         if (!overlapsWithDeleteButton(v)){
                             View other = checkOverlap((TextView) v);
                             if(other != null){
-                                removeElement(v);
-                                removeElement(other);
-
-                                ElementUseCase elementUseCase = new ElementUseCase(requireContext());
-
+                                ElementUseCase elementUseCase = new ElementUseCase(
+                                        requireContext());
                                 elementUseCase.getElement(
                                         ((TextView) v).getText().toString(),
                                         ((TextView) other).getText().toString(),
-                                        newElement -> {
-                                            if (newElement != null) {
-                                                addElementToPlayground(newElement.toString(),
-                                                        v.getX(), v.getY());
-
-                                                Bundle result = new Bundle();
-                                                result.putString(ElementListFragment.BUNDLE_NEW_ELEMENT, newElement.toString());
-                                                getParentFragmentManager()
-                                                        .setFragmentResult(ElementListFragment.ARGUMENT_ELEMENT_TO_LIST, result);
-                                            } else {
-                                                Log.e(TAG, "Failed to create new element from " +
-                                                        "combination of " + ((TextView) v).getText() +
-                                                        " and " + ((TextView) other).getText());
-                                            }
-                                        });
+                                        combinationCallback(v, other));
                             }
                         }
-
                         return true;
 
                     default:
                         return false;
                 }
             }
+
+            private Consumer<ElementEntity> combinationCallback(View v, View other){
+                return newElement-> {
+                    try {
+                        if (newElement != null) {
+                            addElementToPlayground(newElement.toString(),
+                                    v.getX(), v.getY());
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                removeElement(v);
+                                removeElement(other);
+                            });
+
+                            Bundle result = new Bundle();
+                            result.putString(ElementListFragment.BUNDLE_NEW_ELEMENT,
+                                    newElement.toString());
+                            getParentFragmentManager().setFragmentResult(
+                                    ElementListFragment.ARGUMENT_ELEMENT_TO_LIST, result);
+                        } else {
+                            Log.e(TAG, "Failed to create new element from " +
+                                    "combination of " + ((TextView) v).getText() +
+                                    " and " + ((TextView) other).getText());
+                        }
+                    } catch (Exception e){
+                        Log.e(TAG, "while requesting new element " +
+                                ", exception occured");
+                    }
+                };
+            }
+
         });
         return newElement;
     }
@@ -183,11 +194,11 @@ public class PlaygroundFragment extends Fragment{
     /**
      * style buttons differently when an item is picked up
      */
+    @SuppressLint("ResourceAsColor")
     private void whenItemIsPickedUp(){
         clearElementsButton.setImageResource(R.drawable.ic_remove_24px);
-        // TODO resizing is not optimal, because i think this uses literal pixels
-        clearElementsButton.setCustomSize(clearElementsButton.getSize() + 230);
-        clearElementsButton.requestLayout();
+        int color = ContextCompat.getColor(requireContext(), R.color.red);
+        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
         clearElementsButton.setAlpha(0.8f);
         showElementListButton.setClickable(false);
 
@@ -198,9 +209,9 @@ public class PlaygroundFragment extends Fragment{
      */
     private void whenItemIsDropped(){
         clearElementsButton.setImageResource(R.drawable.ic_broom_24px);
-        clearElementsButton.setSize(FloatingActionButton.SIZE_AUTO);
         clearElementsButton.requestLayout();
         clearElementsButton.setAlpha(1f);
+        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
         showElementListButton.setClickable(true);
     }
 
@@ -227,7 +238,6 @@ public class PlaygroundFragment extends Fragment{
 
     private void removeElement(View v){
         playground.removeView(v);
-        elements.remove(v);
         if(BuildConfig.DEBUG){
             if(v instanceof TextView){
                 Log.d(TAG, "element " + ((TextView) v).getText() + " has been removed");
