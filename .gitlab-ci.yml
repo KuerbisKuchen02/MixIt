@@ -29,11 +29,11 @@ variables:
 # Packages installation before running script
 before_script:
   - df -h
-  - du -xh /cache | sort -rh | head -20
-  - du -xh /builds | sort -rh | head -40
+  - du -xh /builds | sort -rh
+  - du -xh /dev/vdc1 | sort -rh
   - du -sh ~/.gradle || true
   - du -sh /builds || true
-  - rm -rfv /cache/
+  # - rm -rfv /cache/
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
 
