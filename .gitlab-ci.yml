@@ -28,6 +28,11 @@ variables:
 
 # Packages installation before running script
 before_script:
+  # debug memory printouts
+  - echo "Disk usage before build:"
+  - df -h
+  - du -xh /builds | sort -rh | head -20 || true
+  # - rm -rfv /cache/swt-mt-ss25
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
 
@@ -57,8 +62,12 @@ before_script:
   - chmod +x ./gradlew
 
 after_script:
-  - echo "Bereinige temporäre Dateien"
-  - rm -rf build/ tmp/ .cache/
+  - echo "Cleaning up:"
+  - find build/ tmp/ .cache/ -print
+  - rm -rvf build/ tmp/ .cache/
+  - echo "Disk usage after cleanup:"
+  - df -h
+  - du -sh /builds || true
 
 # Make Project
 BuildAndPackageApp:
@@ -70,6 +79,7 @@ BuildAndPackageApp:
     - ./gradlew -Pci --console=plain :app:assemble
     - ./gradlew -Pci --console=plain :app:bundle
   artifacts:
+    expire_in: 1 day
     paths:
       - app/build/outputs/
 
@@ -86,6 +96,7 @@ UnitTests:
   coverage: '/Total.+([0-9]{1,3}%)/'
   artifacts:
     when: always
+    expire_in: 1 day
     paths:
       - ./**/build/reports/coverage/test/debug/index.html
       - ./**build/test-results/testDebugUnitTest/Test-*.xml
@@ -104,6 +115,7 @@ StaticCodeAnalysis:
     - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
   artifacts:
     when: always
+    expire_in: 1 day
     paths:
       - app/lint/reports/lint-results-debug.html
     expose_as: "lint-report"
@@ -115,9 +127,12 @@ CreateRelease:
     - alpine
   rules:
     - if: '$CI_COMMIT_TAG'
-  before_script:
-    - apk --no-cache add glab
   script:
+    - apk --no-cache add glab
+    - ./gradlew -Pci --console=plain :app:assemble
+    - ./gradlew -Pci --console=plain :app:bundle
     - echo "Creating a new release..."
     - glab auth login --hostname  git.thm.de --token $GL_ACCESS_TOKEN
-    - glab release create $CI_COMMIT_TAG --notes "Release with the binary https://git.thm.de/jdmn23/test/-/jobs/artifacts/$CI_COMMIT_REF_NAME/download?job=BuildAndPackageApp"
+    - glab release create $CI_COMMIT_TAG
+    - glab release upload $CI_COMMIT_TAG '/app/build/outputs/#Release binaries'
+
