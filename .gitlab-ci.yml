@@ -30,8 +30,7 @@ variables:
 before_script:
   # debug memory printouts
   - df -h
-  - du -xh /builds | sort -rh
-  - du -xh /dev/vdc1 | sort -rh
+  - du -xh /builds | sort -rh | head -20
   - du -sh ~/.gradle || true
   - du -sh /builds || true
   # - rm -rfv /cache/swt-mt-ss25
