@@ -3,6 +3,7 @@ package de.thm.mixit.data.source;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.CombinationDAO;
 import de.thm.mixit.data.entities.CombinationEntity;
@@ -54,7 +55,8 @@ public class CombinationLocalDataSource {
      * @param inputB The second input string.
      * @param callback The callback to receive the found CombinationEntity.
      */
-    public void findByCombination(String inputA, String inputB, ICallback<CombinationEntity> callback) {
+    public void findByCombination(String inputA, String inputB,
+                                  ICallback<CombinationEntity> callback) {
         executor.execute(() -> {
             CombinationEntity combination = combinationDAO.findByCombination(inputA, inputB);
             callback.onDataLoaded(combination);
@@ -66,14 +68,18 @@ public class CombinationLocalDataSource {
      *
      * @param combination The CombinationEntity to insert.
      */
-    public void insertCombination(CombinationEntity combination) {
-        executor.execute(() -> combinationDAO.insertCombination(combination));
+    public void insertCombination(CombinationEntity combination,
+                                  Consumer<CombinationEntity> callback) {
+        executor.execute(() -> {
+            combinationDAO.insertCombination(combination);
+            callback.accept(combination);
+        });
     }
 
     /**
      * Asynchronously deletes all CombinationEntity records from the database.
      */
     public void deleteAll() {
-        executor.execute(() -> combinationDAO.deleteAll());
+        executor.execute(combinationDAO::deleteAll);
     }
 }

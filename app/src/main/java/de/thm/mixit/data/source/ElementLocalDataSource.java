@@ -3,6 +3,7 @@ package de.thm.mixit.data.source;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.ElementDAO;
 import de.thm.mixit.data.entities.ElementEntity;
@@ -61,18 +62,37 @@ public class ElementLocalDataSource {
     }
 
     /**
+     * Asynchronously finds an ElementEntity by its name.
+     *
+     * @param name The name of the element to find.
+     * @param callback The callback to receive the found ElementEntity.
+     */
+    public void findByName(String name, Consumer<ElementEntity> callback) {
+        executor.execute(() -> {
+            ElementEntity element = elementDAO.findByName(name);
+            callback.accept(element);
+        });
+    }
+
+    /**
      * Asynchronously inserts an ElementEntity into the database.
      *
      * @param element The ElementEntity to insert.
      */
-    public void insertElement(ElementEntity element) {
-        executor.execute(() -> elementDAO.insertElement(element));
+    public void insertElement(ElementEntity element, Consumer<ElementEntity> callback) {
+        executor.execute(() -> {
+            long outputId = elementDAO.insertElement(element);
+
+            ElementEntity newElement = elementDAO.findById((int) outputId);
+
+            callback.accept(newElement);
+        });
     }
 
     /**
      * Asynchronously deletes all ElementEntity records from the database.
      */
     public void deleteAll() {
-        executor.execute(() -> elementDAO.deleteAll());
+        executor.execute(elementDAO::deleteAll);
     }
 }

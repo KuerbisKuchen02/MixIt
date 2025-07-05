@@ -35,11 +35,11 @@ public class CombinationEntity {
     @NonNull
     public String inputB;
 
-    public int outputId;
+    public Integer outputId;
 
     /**
-     * Constructor for a new CombinationEntity. The composite-key made up from {@code inputA} and
-     * {@code inputB} must be unique.
+     * Constructor for a new CombinationEntity.
+     * The composite-key made up from {@code inputA} and {@code inputB} must be unique.
      *
      * @param inputA First part of the primary-key.
      * @param inputB Second part of the primary-key.

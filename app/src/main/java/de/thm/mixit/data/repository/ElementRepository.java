@@ -3,11 +3,13 @@ package de.thm.mixit.data.repository;
 import android.content.Context;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.ElementDAO;
 import de.thm.mixit.data.entities.ElementEntity;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
+import de.thm.mixit.data.source.ElementRemoteDataSource;
 import de.thm.mixit.data.source.ICallback;
 
 /**
@@ -44,6 +46,29 @@ public class ElementRepository {
     }
 
     /**
+     * Generates a new ElementEntity by combining two existing elements.
+     *
+     * @param element1 The first ElementEntity to combine.
+     * @param element2 The second ElementEntity to combine.
+     * @param callback A callback to receive the newly generated ElementEntity.
+     */
+    public void generateNew(String element1, String element2,
+                            Consumer<ElementEntity> callback) {
+        // TODO - implement error handling for remote data source
+        ElementRemoteDataSource.combine(element1, element2, callback);
+    }
+
+    /**
+     * Finds an ElementEntity by its name asynchronously.
+     *
+     * @param name The name of the ElementEntity to find.
+     * @param callback The callback to receive the found ElementEntity.
+     */
+    public void findByName(String name, Consumer<ElementEntity> callback) {
+        localDataSource.findByName(name, callback);
+    }
+
+    /**
      * Retrieves all ElementEntity objects asynchronously.
      *
      * @param callback The callback to receive the list of all elements.
@@ -67,8 +92,8 @@ public class ElementRepository {
      *
      * @param element The ElementEntity to insert.
      */
-    public void insertElement(ElementEntity element) {
-        localDataSource.insertElement(element);
+    public void insertElement(ElementEntity element, Consumer<ElementEntity> callback) {
+        localDataSource.insertElement(element, callback);
     }
 
     /**

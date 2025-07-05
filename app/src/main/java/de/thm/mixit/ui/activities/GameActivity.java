@@ -35,7 +35,8 @@ public class GameActivity extends AppCompatActivity {
         if (!isArcade) {
             Log.i(TAG, "GameActivity is hiding arcade fragment.");
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment arcade_fragment = fragmentManager.findFragmentById(R.id.fragment_container_arcade);
+            Fragment arcade_fragment = fragmentManager
+                    .findFragmentById(R.id.fragment_container_arcade);
             if (arcade_fragment == null) {
                 Log.e(TAG, "Error, arcade fragment reference is null!");
             } else {
