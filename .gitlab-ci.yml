@@ -30,9 +30,10 @@ variables:
 before_script:
   - df -h
   - du -xh /cache | sort -rh | head -20
+  - du -xh /builds | sort -rh | head -40
   - du -sh ~/.gradle || true
   - du -sh /builds || true
-  - rm -rf /cache/swt-mt-ss25/teama
+  - rm -rfv /cache/
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
 
