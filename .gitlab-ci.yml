@@ -28,6 +28,9 @@ variables:
 
 # Packages installation before running script
 before_script:
+  - df -h
+  - du -sh ~/.gradle || true
+  - du -sh /builds || true
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
 
@@ -59,6 +62,9 @@ before_script:
 after_script:
   - echo "Clean temporary data"
   - rm -rf build/ tmp/ .cache/
+  - df -h
+  - du -sh ~/.gradle || true
+  - du -sh /builds || true
 
 # Make Project
 BuildAndPackageApp:
