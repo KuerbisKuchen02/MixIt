@@ -26,14 +26,6 @@ variables:
   # when the script was last modified for latest compileSdkVersion, it was which is written down below
   ANDROID_SDK_TOOLS: "13114758"
 
-
-# Doesnt seem to work here :(
-cache: 
-  key: "$CI_PIPELINE_ID"
-  paths:
-    - ./.gradle/
-    - ./app/build/
-
 # Packages installation before running script
 before_script:
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
