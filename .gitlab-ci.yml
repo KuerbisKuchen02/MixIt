@@ -32,6 +32,7 @@ before_script:
   - du -xh /cache | sort -rh | head -20
   - du -sh ~/.gradle || true
   - du -sh /builds || true
+  - rm -rf /cache/swt-mt-ss25/teama
   # Install jdk and glip compatibility libraries for glib (https://stackoverflow.com/a/75207901)
   - apk --no-cache add wget gcompat libstdc++ openjdk17
 
