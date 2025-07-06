@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
 public class PlaygroundFragment extends Fragment{
@@ -149,7 +149,7 @@ public class PlaygroundFragment extends Fragment{
                 }
             }
 
-            private Consumer<ElementEntity> combinationCallback(View v, View other){
+            private Consumer<Element> combinationCallback(View v, View other){
                 return newElement-> {
                     try {
                         if (newElement != null) {

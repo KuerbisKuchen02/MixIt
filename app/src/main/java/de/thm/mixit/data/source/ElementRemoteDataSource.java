@@ -8,7 +8,7 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Element;
 
 /**
  * Remote data source for accessing and combining elements using the OpenAI API.
@@ -51,7 +51,7 @@ public class ElementRemoteDataSource {
      * - an invalid element format
      */
     public static void combine(String element1, String element2,
-                               Consumer<ElementEntity> callback) {
+                               Consumer<Element> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
                 .addUserMessage(element1 + " + " + element2)
@@ -76,7 +76,7 @@ public class ElementRemoteDataSource {
             String emoji = content.substring(0, content.indexOf(' '));
             String name = content.substring(content.indexOf(' ') + 1);
 
-            callback.accept(new ElementEntity(name, emoji));
+            callback.accept(new Element(name, emoji));
         });
     }
 }

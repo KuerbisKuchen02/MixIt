@@ -29,13 +29,13 @@ import java.util.List;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
 /**
  *
- * Fragment class that provides a searchable list of {@link ElementEntity}.
+ * Fragment class that provides a searchable list of {@link Element}.
  *
  * @author Josia Menger
  */
@@ -50,7 +50,7 @@ public class ElementListFragment extends Fragment {
     private static final String TAG = ElementListFragment.class.getSimpleName();
 
     private ElementRecyclerViewAdapter recyclerViewAdapter;
-    private ArrayAdapter<ElementEntity> arrayAdapter;
+    private ArrayAdapter<Element> arrayAdapter;
 
     private ElementRepository elementRepository;
 
@@ -61,7 +61,7 @@ public class ElementListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        List<ElementEntity> elements = new ArrayList<>();
+        List<Element> elements = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Setup element list
@@ -126,7 +126,7 @@ public class ElementListFragment extends Fragment {
     }
 
     // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
-    public void setElements(List<ElementEntity> elements) {
+    public void setElements(List<Element> elements) {
         recyclerViewAdapter.setElements(elements);
         arrayAdapter.clear();
         arrayAdapter.addAll(elements);
@@ -146,7 +146,7 @@ public class ElementListFragment extends Fragment {
      * @param element The element that was clicked
      * @param position The positon of the element in the current view
      */
-    public void onClickElement(ElementEntity element, int position) {
+    public void onClickElement(Element element, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Clicked on element: " + position);
         // FIXME: bundle should properly include the element object instead of only the string
         //        requires ElementEntity to implement serializable or parcelable

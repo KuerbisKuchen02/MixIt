@@ -49,9 +49,9 @@ public class ElementUseCase {
      * @param callback A callback to be executed after the combination is inserted.
      */
     private void insertCombination(String element1, String element2,
-                                   ElementEntity outputElement,
-                                   Consumer<ElementEntity> callback) {
-        combinationRepository.insertCombination(new CombinationEntity(
+                                   Element outputElement,
+                                   Consumer<Element> callback) {
+        combinationRepository.insertCombination(new Combination(
                         element1, element2, outputElement.id),
                 c -> {
                     Log.d(TAG, "Combination inserted for: "
@@ -70,8 +70,8 @@ public class ElementUseCase {
      * @param newElement The newly generated ElementEntity to be processed.
      * @param callback A callback to be executed with the resulting ElementEntity.
      */
-    private void handleGenerateNew(String element1, String element2, ElementEntity newElement,
-                                   Consumer<ElementEntity> callback) {
+    private void handleGenerateNew(String element1, String element2, Element newElement,
+                                   Consumer<Element> callback) {
         Log.d(TAG, "Generated new element: "
                 + newElement.emoji + " " + newElement.output);
 
@@ -111,7 +111,7 @@ public class ElementUseCase {
      * @param callback A callback to receive the resulting ElementEntity.
      */
     public void getElement(String element1, String element2,
-                           Consumer<ElementEntity> callback) {
+                           Consumer<Element> callback) {
         // Check if there is already a combination for the two elements
         combinationRepository.findByCombination(element1, element2,
                 combination -> {

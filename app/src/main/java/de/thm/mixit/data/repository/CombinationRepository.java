@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.CombinationDAO;
-import de.thm.mixit.data.entities.CombinationEntity;
+import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.CombinationLocalDataSource;
 import de.thm.mixit.data.source.ICallback;
@@ -49,12 +49,12 @@ public class CombinationRepository {
      *
      * @param callback The callback to receive the list of all combinations.
      */
-    public void getAll(ICallback<List<CombinationEntity>> callback) {
+    public void getAll(ICallback<List<Combination>> callback) {
         localDataSource.getAll(callback);
     }
 
     /**
-     * Finds a {@link CombinationEntity} by a combination of two input strings.
+     * Finds a {@link Combination} by a combination of two input strings.
      * <p>
      * The input strings are alphabetically ordered
      * to ensure consistent lookups since combinations
@@ -62,10 +62,11 @@ public class CombinationRepository {
      *
      * @param inputA   The first input string of the combination.
      * @param inputB   The second input string of the combination.
-     * @param callback The callback to receive the found {@link CombinationEntity}.
+     * @param callback The callback to receive the found
+     * {@link Combination}.
      */
     public void findByCombination(String inputA, String inputB,
-                                  ICallback<CombinationEntity> callback) {
+                                  ICallback<Combination> callback) {
         // Words of combination are always saved in alphabetical order.
         if (inputA.compareTo(inputB) > 0) {
             String temp = inputA;
@@ -83,8 +84,8 @@ public class CombinationRepository {
      *
      * @param combination The CombinationEntity to insert.
      */
-    public void insertCombination(CombinationEntity combination,
-                                  Consumer<CombinationEntity> callback) {
+    public void insertCombination(Combination combination,
+                                  Consumer<Combination> callback) {
         // Order alphabetically when necessary
         if (combination.inputA.compareTo(combination.inputB) > 0) {
             String temp = combination.inputA;

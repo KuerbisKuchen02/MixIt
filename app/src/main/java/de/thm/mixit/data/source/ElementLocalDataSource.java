@@ -6,10 +6,10 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.ElementDAO;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Element;
 
 /**
- * Local data source for accessing and modifying {@link ElementEntity} data.
+ * Local data source for accessing and modifying {@link Element} data.
  * <p>
  * This class handles all interactions with the local Room database related to
  * elements, including asynchronous reads and writes using a background thread.
@@ -23,7 +23,7 @@ public class ElementLocalDataSource {
     /**
      * Constructs a new {@code ElementLocalDataSource} with the given {@link ElementDAO}.
      * @param elementDAO The Data Access Object used to perform database operation
-     *                   on {@link ElementEntity} objects.
+     *                   on {@link Element} objects.
      */
     public ElementLocalDataSource(ElementDAO elementDAO) {
         this.elementDAO = elementDAO;
@@ -35,12 +35,12 @@ public class ElementLocalDataSource {
      * The query runs on a background thread, and the results are delivered
      * via the provided {@link ICallback} interface once loading is complete.
      *
-     * @param callback A callback to retrieve the list of {@link ElementEntity} objects when
+     * @param callback A callback to retrieve the list of {@link Element} objects when
      *                 loading the data is done.
      */
-    public void getAll(ICallback<List<ElementEntity>> callback) {
+    public void getAll(ICallback<List<Element>> callback) {
         executor.execute(() -> {
-            List<ElementEntity> elements = elementDAO.getAll();
+            List<Element> elements = elementDAO.getAll();
             callback.onDataLoaded(elements);
         });
     }
@@ -54,9 +54,9 @@ public class ElementLocalDataSource {
      * @param id The ID of the element to find.
      * @param callback The callback to receive the found ElementEntity.
      */
-    public void findById(int id, ICallback<ElementEntity> callback) {
+    public void findById(int id, ICallback<Element> callback) {
         executor.execute(() -> {
-            ElementEntity element = elementDAO.findById(id);
+            Element element = elementDAO.findById(id);
             callback.onDataLoaded(element);
         });
     }
@@ -67,9 +67,9 @@ public class ElementLocalDataSource {
      * @param name The name of the element to find.
      * @param callback The callback to receive the found ElementEntity.
      */
-    public void findByName(String name, Consumer<ElementEntity> callback) {
+    public void findByName(String name, Consumer<Element> callback) {
         executor.execute(() -> {
-            ElementEntity element = elementDAO.findByName(name);
+            Element element = elementDAO.findByName(name);
             callback.accept(element);
         });
     }
@@ -79,11 +79,11 @@ public class ElementLocalDataSource {
      *
      * @param element The ElementEntity to insert.
      */
-    public void insertElement(ElementEntity element, Consumer<ElementEntity> callback) {
+    public void insertElement(Element element, Consumer<Element> callback) {
         executor.execute(() -> {
             long outputId = elementDAO.insertElement(element);
 
-            ElementEntity newElement = elementDAO.findById((int) outputId);
+            Element newElement = elementDAO.findById((int) elementId);
 
             callback.accept(newElement);
         });

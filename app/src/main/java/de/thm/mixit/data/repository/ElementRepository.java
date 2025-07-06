@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.ElementDAO;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
@@ -53,7 +53,7 @@ public class ElementRepository {
      * @param callback A callback to receive the newly generated ElementEntity.
      */
     public void generateNew(String element1, String element2,
-                            Consumer<ElementEntity> callback) {
+                            Consumer<Element> callback) {
         // TODO - implement error handling for remote data source
         ElementRemoteDataSource.combine(element1, element2, callback);
     }
@@ -64,7 +64,7 @@ public class ElementRepository {
      * @param name The name of the ElementEntity to find.
      * @param callback The callback to receive the found ElementEntity.
      */
-    public void findByName(String name, Consumer<ElementEntity> callback) {
+    public void findByName(String name, Consumer<Element> callback) {
         localDataSource.findByName(name, callback);
     }
 
@@ -73,17 +73,17 @@ public class ElementRepository {
      *
      * @param callback The callback to receive the list of all elements.
      */
-    public void getAll(ICallback<List<ElementEntity>> callback) {
+    public void getAll(ICallback<List<Element>> callback) {
         localDataSource.getAll(callback);
     }
 
     /**
-     * Finds a {@link ElementEntity} by its id.
+     * Finds a {@link Element} by its id.
      *
-     * @param id The id of the {@link ElementEntity}.
-     * @param callback The callback to receive the found {@link ElementEntity}.
+     * @param id The id of the {@link Element}.
+     * @param callback The callback to receive the found {@link Element}.
      */
-    public void findById(int id, ICallback<ElementEntity> callback) {
+    public void findById(int id, ICallback<Element> callback) {
        localDataSource.findById(id, callback);
     }
 
@@ -92,7 +92,7 @@ public class ElementRepository {
      *
      * @param element The ElementEntity to insert.
      */
-    public void insertElement(ElementEntity element, Consumer<ElementEntity> callback) {
+    public void insertElement(Element element, Consumer<Element> callback) {
         localDataSource.insertElement(element, callback);
     }
 

@@ -17,7 +17,7 @@ import androidx.room.PrimaryKey;
  * @author Justin Wolek
  */
 @Entity(tableName = "elements")
-public class ElementEntity {
+public class Element {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
