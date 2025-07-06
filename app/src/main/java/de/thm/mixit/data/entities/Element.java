@@ -21,8 +21,8 @@ public class Element {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    @ColumnInfo(name = "output")
-    public String output;
+    @ColumnInfo(name = "name")
+    public String name;
 
     @ColumnInfo(name = "emoji")
     public String emoji;
@@ -30,17 +30,17 @@ public class Element {
     /**
      * Constructor for a new ElementEntity. {@code id} is automatically generated.
      *
-     * @param output A String representing the element's name.
+     * @param name A String representing the element's name.
      * @param emoji A String containing one or more emojis.
      */
-    public ElementEntity(String output, String emoji) {
-        this.output = output;
+    public Element(String name, String emoji) {
+        this.name = name;
         this.emoji = emoji;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return emoji + " " + output;
+        return emoji + " " + name;
     }
 }

@@ -5,8 +5,8 @@ import android.util.Log;
 
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.entities.CombinationEntity;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 
@@ -73,20 +73,20 @@ public class ElementUseCase {
     private void handleGenerateNew(String element1, String element2, Element newElement,
                                    Consumer<Element> callback) {
         Log.d(TAG, "Generated new element: "
-                + newElement.emoji + " " + newElement.output);
+                + newElement.emoji + " " + newElement.name);
 
         // Check if the new element already exists in the repository
-        elementRepository.findByName(newElement.output,
+        elementRepository.findByName(newElement.name,
                 existingElement -> {
                     // If the element exists, return it via the callback
                     if (existingElement != null) {
                         Log.d(TAG, "Element already exists: "
-                                + existingElement.emoji + " " + existingElement.output);
+                                + existingElement.emoji + " " + existingElement.name);
 
                         insertCombination(element1, element2, existingElement, callback);
                     } else {
                         Log.d(TAG, "Element does not exist, inserting new element: "
-                                + newElement.emoji + " " + newElement.output);
+                                + newElement.emoji + " " + newElement.name);
 
                         // If the element does not exist, insert
                         // it and create a new combination
