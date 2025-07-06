@@ -29,6 +29,11 @@ import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
+/**
+ * Fragment class that provides a playground to place, move and combine {@link Element} freely.
+ *
+ * @author Oliver Schlalos
+ */
 public class PlaygroundFragment extends Fragment{
     public final static String BUNDLE_ELEMENT = "BUNDLE_ELEMENT";
     public final static String ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND =
