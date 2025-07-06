@@ -109,9 +109,11 @@ public class ElementUseCase {
      * @param element1 The first element to combine.
      * @param element2 The second element to combine.
      * @param callback A callback to receive the resulting ElementEntity.
+     *
+     * @throws RuntimeException If an error occurs during the operation.
      */
     public void getElement(String element1, String element2,
-                           Consumer<Element> callback) {
+                           Consumer<Element> callback) throws RuntimeException {
         // Check if there is already a combination for the two elements
         combinationRepository.findByCombination(element1, element2,
                 combination -> {

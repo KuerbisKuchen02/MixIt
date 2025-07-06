@@ -136,10 +136,16 @@ public class PlaygroundFragment extends Fragment{
                             if(other != null){
                                 ElementUseCase elementUseCase = new ElementUseCase(
                                         requireContext());
-                                elementUseCase.getElement(
-                                        ((TextView) v).getText().toString(),
-                                        ((TextView) other).getText().toString(),
-                                        combinationCallback(v, other));
+
+                                try {
+                                    elementUseCase.getElement(
+                                            ((TextView) v).getText().toString(),
+                                            ((TextView) other).getText().toString(),
+                                            combinationCallback(v, other));
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error while combining elements: "
+                                            + e.getMessage());
+                                }
                             }
                         }
                         return true;
