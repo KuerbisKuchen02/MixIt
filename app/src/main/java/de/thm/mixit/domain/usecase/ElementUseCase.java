@@ -129,9 +129,7 @@ public class ElementUseCase {
                                 + element1 + " + " + element2);
 
                         elementRepository.generateNew(element1, element2,
-                                newElement -> {
-                            handleGenerateNew(element1, element2, newElement, callback);
-                        });
+                                newElement -> handleGenerateNew(element1, element2, newElement, callback));
                     }
                 });
     }
