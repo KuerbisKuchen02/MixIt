@@ -94,7 +94,7 @@ public class PlaygroundFragment extends Fragment{
      */
     @SuppressLint("ClickableViewAccessibility")
     public TextView addElementToPlayground(String text, float x, float y) {
-        TextView newElement = (TextView) inflater.inflate(R.layout.text_item_element, 
+        TextView newElement = (TextView) inflater.inflate(R.layout.item_element_chip,
                 playground, false);
         newElement.setText(text);
 

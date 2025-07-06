@@ -46,7 +46,7 @@ public class ElementRecyclerViewAdapter extends
     @Override
     public ElementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.text_item_element, parent, false);
+                R.layout.item_element_chip, parent, false);
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (params instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) params).setMargins(16, 16, 16, 16);
