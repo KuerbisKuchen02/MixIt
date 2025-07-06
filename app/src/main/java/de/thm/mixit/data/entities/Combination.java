@@ -7,13 +7,13 @@ import androidx.room.Index;
 
 /**
  * Represents a Combination of two inputs to create a new element. Contains one composite
- * primary-key. Can contain a reference to one {@link ElementEntity}
+ * primary-key. Can contain a reference to one {@link Element}
  * <p>
  * {@code inputA} First part of the primary-key.
  * <br>
  * {@code inputB} Second part of the primary-key.
  * <br>
- * {@code outputId} Foreign-Key which contains a reference to one {@link ElementEntity}.
+ * {@code outputId} Foreign-Key which contains a reference to one {@link Element}.
  *
  * @author Justin Wolek
  */
@@ -21,14 +21,14 @@ import androidx.room.Index;
         tableName = "combinations",
         primaryKeys = {"inputA", "inputB"},
         foreignKeys = @ForeignKey(
-                entity = ElementEntity.class,
+                entity = Element.class,
                 parentColumns = "id",
                 childColumns = "outputId",
                 onDelete = ForeignKey.CASCADE
         ),
         indices = {@Index(value = {"outputId"})}
 )
-public class CombinationEntity {
+public class Combination {
     @NonNull
     public String inputA;
 
@@ -43,11 +43,17 @@ public class CombinationEntity {
      *
      * @param inputA First part of the primary-key.
      * @param inputB Second part of the primary-key.
-     * @param outputId Foreign-Key which contains a reference to one {@link ElementEntity}.
+     * @param outputId Foreign-Key which contains a reference to one {@link Element}.
      */
-    public CombinationEntity(@NonNull String inputA, @NonNull String inputB, int outputId) {
+    public Combination(@NonNull String inputA, @NonNull String inputB, int outputId) {
         this.inputA = inputA;
         this.inputB = inputB;
         this.outputId = outputId;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return inputA + " + " + inputB + " -> " + outputId;
     }
 }

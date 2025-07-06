@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Element;
 
 /**
  * Filterable recycler view adapter for element entities
@@ -21,12 +21,12 @@ import de.thm.mixit.data.entities.ElementEntity;
 public class ElementRecyclerViewAdapter extends
         RecyclerView.Adapter<ElementRecyclerViewAdapter.ElementViewHolder> {
 
-    private List<ElementEntity> elements;
-    private final List<ElementEntity> filteredElements;
+    private List<Element> elements;
+    private final List<Element> filteredElements;
     private final OnElementClickListener listener;
 
     public interface OnElementClickListener {
-        void onElementClick(ElementEntity element, int positon);
+        void onElementClick(Element element, int positon);
     }
 
     /**
@@ -35,7 +35,7 @@ public class ElementRecyclerViewAdapter extends
      * @param elements Element list to show
      * @param listener Callback method to call when an element card is clicked
      */
-    public ElementRecyclerViewAdapter(List<ElementEntity> elements,
+    public ElementRecyclerViewAdapter(List<Element> elements,
                                       OnElementClickListener listener) {
         this.elements = new ArrayList<>(elements);
         this.filteredElements = new ArrayList<>(elements);
@@ -46,8 +46,7 @@ public class ElementRecyclerViewAdapter extends
     @Override
     public ElementViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.text_item_element, parent, false);
-        view.setBackgroundResource(R.drawable.background_item);
+                R.layout.item_element_chip, parent, false);
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (params instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) params).setMargins(16, 16, 16, 16);
@@ -59,7 +58,7 @@ public class ElementRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ElementViewHolder holder, int position) {
-        ElementEntity element = filteredElements.get(position);
+        Element element = filteredElements.get(position);
         holder.bind(element, position, listener);
     }
 
@@ -73,7 +72,7 @@ public class ElementRecyclerViewAdapter extends
      * Set the elements to the new list and reset the filter
      * @param elements new elements
      */
-    public void setElements(List<ElementEntity> elements) {
+    public void setElements(List<Element> elements) {
         this.elements = elements;
         this.filteredElements.clear();
         this.filteredElements.addAll(elements);
@@ -96,7 +95,7 @@ public class ElementRecyclerViewAdapter extends
             return;
         }
 
-        for (ElementEntity element : elements) {
+        for (Element element : elements) {
             if (element.toString().toLowerCase().contains(q)) {
                 filteredElements.add(element);
             }
@@ -113,7 +112,7 @@ public class ElementRecyclerViewAdapter extends
             textView = itemView.findViewById(R.id.text_item_element);
         }
 
-        void bind(ElementEntity element, int positon, OnElementClickListener listener) {
+        void bind(Element element, int positon, OnElementClickListener listener) {
             textView.setText(element.toString());
             itemView.setOnClickListener(v -> listener.onElementClick(element, positon));
         }

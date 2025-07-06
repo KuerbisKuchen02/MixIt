@@ -11,6 +11,12 @@ import androidx.fragment.app.Fragment;
 
 import de.thm.mixit.R;
 
+/**
+ * Fragment class which holds information for the arcade game mode.
+ *
+ * @author Jannik Heimann
+ */
+
 public class ArcadeFragment extends Fragment {
 
     @Nullable

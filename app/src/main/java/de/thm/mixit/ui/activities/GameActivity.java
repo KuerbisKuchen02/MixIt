@@ -12,6 +12,16 @@ import java.util.Objects;
 
 import de.thm.mixit.R;
 
+/**
+ * Activity for the main view of the game.
+ * <p>
+ * This Activity contains 3 Fragments, Playground, ElementList and Arcade.
+ * The Arcade Fragment can be visible or hidden depending on the selected game mode.
+ * </p>
+ *
+ * @author Jannik Heimann
+ */
+
 public class GameActivity extends AppCompatActivity {
 
     public static final String EXTRA_IS_ARCADE = "isArcade";
@@ -26,7 +36,7 @@ public class GameActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_IS_ARCADE)) {
-            isArcade = intent.getExtras().getBoolean(EXTRA_IS_ARCADE);
+            isArcade = Objects.requireNonNull(intent.getExtras()).getBoolean(EXTRA_IS_ARCADE);
         } else {
             Log.w(TAG, "GameActivity received Intent without the " + EXTRA_IS_ARCADE
                     + " Extra attribute, default value is " + isArcade);

@@ -1,12 +1,12 @@
-package de.thm.mixit.usecase;
+package de.thm.mixit.domain.usecase;
 
 import android.content.Context;
 import android.util.Log;
 
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.entities.CombinationEntity;
-import de.thm.mixit.data.entities.ElementEntity;
+import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 
@@ -49,9 +49,9 @@ public class ElementUseCase {
      * @param callback A callback to be executed after the combination is inserted.
      */
     private void insertCombination(String element1, String element2,
-                                   ElementEntity outputElement,
-                                   Consumer<ElementEntity> callback) {
-        combinationRepository.insertCombination(new CombinationEntity(
+                                   Element outputElement,
+                                   Consumer<Element> callback) {
+        combinationRepository.insertCombination(new Combination(
                         element1, element2, outputElement.id),
                 c -> {
                     Log.d(TAG, "Combination inserted for: "
@@ -70,23 +70,23 @@ public class ElementUseCase {
      * @param newElement The newly generated ElementEntity to be processed.
      * @param callback A callback to be executed with the resulting ElementEntity.
      */
-    private void handleGenerateNew(String element1, String element2, ElementEntity newElement,
-                                   Consumer<ElementEntity> callback) {
+    private void handleGenerateNew(String element1, String element2, Element newElement,
+                                   Consumer<Element> callback) {
         Log.d(TAG, "Generated new element: "
-                + newElement.emoji + " " + newElement.output);
+                + newElement.emoji + " " + newElement.name);
 
         // Check if the new element already exists in the repository
-        elementRepository.findByName(newElement.output,
+        elementRepository.findByName(newElement.name,
                 existingElement -> {
                     // If the element exists, return it via the callback
                     if (existingElement != null) {
                         Log.d(TAG, "Element already exists: "
-                                + existingElement.emoji + " " + existingElement.output);
+                                + existingElement.emoji + " " + existingElement.name);
 
                         insertCombination(element1, element2, existingElement, callback);
                     } else {
                         Log.d(TAG, "Element does not exist, inserting new element: "
-                                + newElement.emoji + " " + newElement.output);
+                                + newElement.emoji + " " + newElement.name);
 
                         // If the element does not exist, insert
                         // it and create a new combination
@@ -109,9 +109,11 @@ public class ElementUseCase {
      * @param element1 The first element to combine.
      * @param element2 The second element to combine.
      * @param callback A callback to receive the resulting ElementEntity.
+     *
+     * @throws RuntimeException If an error occurs during the operation.
      */
     public void getElement(String element1, String element2,
-                           Consumer<ElementEntity> callback) {
+                           Consumer<Element> callback) throws RuntimeException {
         // Check if there is already a combination for the two elements
         combinationRepository.findByCombination(element1, element2,
                 combination -> {
@@ -129,9 +131,7 @@ public class ElementUseCase {
                                 + element1 + " + " + element2);
 
                         elementRepository.generateNew(element1, element2,
-                                newElement -> {
-                            handleGenerateNew(element1, element2, newElement, callback);
-                        });
+                                newElement -> handleGenerateNew(element1, element2, newElement, callback));
                     }
                 });
     }

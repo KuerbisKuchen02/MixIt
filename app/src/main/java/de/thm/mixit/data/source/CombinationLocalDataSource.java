@@ -5,11 +5,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.CombinationDAO;
-import de.thm.mixit.data.entities.CombinationEntity;
+import de.thm.mixit.data.daos.CombinationDao;
+import de.thm.mixit.data.entities.Combination;
 
 /**
- * Local data source for accessing and modifying {@link CombinationEntity} data.
+ * Local data source for accessing and modifying {@link Combination} data.
  * <p>
  * This class handles all interactions with the local Room database related to
  * combinations, including asynchronous reads and writes using a background thread.
@@ -17,15 +17,15 @@ import de.thm.mixit.data.entities.CombinationEntity;
  * @author Justin Wolek
  */
 public class CombinationLocalDataSource {
-    private final CombinationDAO combinationDAO;
+    private final CombinationDao combinationDAO;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     /**
-     * Constructs a new {@code CombinationLocalDataSource} with the given {@link CombinationDAO}.
+     * Constructs a new {@code CombinationLocalDataSource} with the given {@link CombinationDao}.
      * @param combinationDAO The Data Access Object used to perform database operation
-     *                   on {@link CombinationEntity} objects.
+     *                   on {@link Combination} objects.
      */
-    public CombinationLocalDataSource(CombinationDAO combinationDAO) {
+    public CombinationLocalDataSource(CombinationDao combinationDAO) {
         this.combinationDAO = combinationDAO;
     }
 
@@ -35,12 +35,12 @@ public class CombinationLocalDataSource {
      * The query runs on a background thread, and the results are delivered
      * via the provided {@link ICallback} interface once loading is complete.
      *
-     * @param callback A callback to retrieve the list of {@link CombinationEntity} objects when
+     * @param callback A callback to retrieve the list of {@link Combination} objects when
      *                 loading the data is done.
      */
-    public void getAll(ICallback<List<CombinationEntity>> callback) {
+    public void getAll(ICallback<List<Combination>> callback) {
         executor.execute(() -> {
-            List<CombinationEntity> combinations = combinationDAO.getAll();
+            List<Combination> combinations = combinationDAO.getAll();
             callback.onDataLoaded(combinations);
         });
     }
@@ -56,9 +56,9 @@ public class CombinationLocalDataSource {
      * @param callback The callback to receive the found CombinationEntity.
      */
     public void findByCombination(String inputA, String inputB,
-                                  ICallback<CombinationEntity> callback) {
+                                  ICallback<Combination> callback) {
         executor.execute(() -> {
-            CombinationEntity combination = combinationDAO.findByCombination(inputA, inputB);
+            Combination combination = combinationDAO.findByCombination(inputA, inputB);
             callback.onDataLoaded(combination);
         });
     }
@@ -68,8 +68,8 @@ public class CombinationLocalDataSource {
      *
      * @param combination The CombinationEntity to insert.
      */
-    public void insertCombination(CombinationEntity combination,
-                                  Consumer<CombinationEntity> callback) {
+    public void insertCombination(Combination combination,
+                                  Consumer<Combination> callback) {
         executor.execute(() -> {
             combinationDAO.insertCombination(combination);
             callback.accept(combination);

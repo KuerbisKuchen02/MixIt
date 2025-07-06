@@ -8,6 +8,19 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import de.thm.mixit.R;
 
+/**
+ * Activity for the main menu.
+ * <p>
+ * This Activity contains the MixIt icon and 4 Buttons.
+ * Endless -> Starts the GameActivity in endless mode.
+ * Arcade -> Starts the GameActivity in arcade mode.
+ * Achievements -> Starts the AchievementsActivity. (Not implemented yet)
+ * Settings _> Starts the SettingsActivity. (Not implemented yet)
+ * </p>
+ *
+ * @author Jannik Heimann
+ */
+
 public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
