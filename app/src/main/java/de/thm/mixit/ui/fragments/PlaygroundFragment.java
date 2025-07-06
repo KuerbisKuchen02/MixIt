@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.ElementEntity;
-import de.thm.mixit.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.ElementUseCase;
 
 public class PlaygroundFragment extends Fragment{
     public final static String BUNDLE_ELEMENT = "BUNDLE_ELEMENT";

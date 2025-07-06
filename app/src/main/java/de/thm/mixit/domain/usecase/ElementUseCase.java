@@ -1,4 +1,4 @@
-package de.thm.mixit.usecase;
+package de.thm.mixit.domain.usecase;
 
 import android.content.Context;
 import android.util.Log;
