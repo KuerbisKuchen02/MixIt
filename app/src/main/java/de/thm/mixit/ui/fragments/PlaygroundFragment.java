@@ -112,10 +112,10 @@ public class PlaygroundFragment extends Fragment{
         });
 
         if(BuildConfig.DEBUG){
-            Log.d(TAG, "new element " + text + " has been added to playground");
+            Log.d(TAG, "new element " + text + " has been added to playground at " + x + ", " + y);
         }
 
-        newElement.setOnTouchListener(new View.OnTouchListener() {
+        View.OnTouchListener elementOnTouchListener = new View.OnTouchListener() {
             float dX, dY;
 
             @Override
@@ -141,7 +141,9 @@ public class PlaygroundFragment extends Fragment{
                             if(other != null){
                                 ElementUseCase elementUseCase = new ElementUseCase(
                                         requireContext());
-
+                                // while combining disable onTouchListener
+                                v.setOnTouchListener((dummy, e) -> false);
+                                other.setOnTouchListener((dummy, e) -> false);
                                 try {
                                     elementUseCase.getElement(
                                             ((TextView) v).getText().toString(),
@@ -177,6 +179,8 @@ public class PlaygroundFragment extends Fragment{
                             getParentFragmentManager().setFragmentResult(
                                     ElementListFragment.ARGUMENT_ELEMENT_TO_LIST, result);
                         } else {
+                            v.setOnTouchListener(this);
+                            other.setOnTouchListener(this);
                             Log.e(TAG, "Failed to create new element from " +
                                     "combination of " + ((TextView) v).getText() +
                                     " and " + ((TextView) other).getText());
@@ -188,7 +192,9 @@ public class PlaygroundFragment extends Fragment{
                 };
             }
 
-        });
+        };
+
+        newElement.setOnTouchListener(elementOnTouchListener);
         return newElement;
     }
 
@@ -204,7 +210,6 @@ public class PlaygroundFragment extends Fragment{
     /**
      * style buttons differently when an item is picked up
      */
-    @SuppressLint("ResourceAsColor")
     private void whenItemIsPickedUp(){
         clearElementsButton.setImageResource(R.drawable.ic_remove_24px);
         int color = ContextCompat.getColor(requireContext(), R.color.red);
