@@ -5,7 +5,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.CombinationDAO;
+import de.thm.mixit.data.daos.CombinationDao;
 import de.thm.mixit.data.entities.Combination;
 
 /**
@@ -17,15 +17,15 @@ import de.thm.mixit.data.entities.Combination;
  * @author Justin Wolek
  */
 public class CombinationLocalDataSource {
-    private final CombinationDAO combinationDAO;
+    private final CombinationDao combinationDAO;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     /**
-     * Constructs a new {@code CombinationLocalDataSource} with the given {@link CombinationDAO}.
+     * Constructs a new {@code CombinationLocalDataSource} with the given {@link CombinationDao}.
      * @param combinationDAO The Data Access Object used to perform database operation
      *                   on {@link Combination} objects.
      */
-    public CombinationLocalDataSource(CombinationDAO combinationDAO) {
+    public CombinationLocalDataSource(CombinationDao combinationDAO) {
         this.combinationDAO = combinationDAO;
     }
 

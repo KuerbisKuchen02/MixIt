@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.CombinationDAO;
+import de.thm.mixit.data.daos.CombinationDao;
 import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.CombinationLocalDataSource;
@@ -40,7 +40,7 @@ public class CombinationRepository {
      */
     public static CombinationRepository create(Context context) {
         AppDatabase db = AppDatabase.getInstance(context);
-        CombinationDAO dao = db.combinationDAO();
+        CombinationDao dao = db.combinationDAO();
         return new CombinationRepository(new CombinationLocalDataSource(dao));
     }
 

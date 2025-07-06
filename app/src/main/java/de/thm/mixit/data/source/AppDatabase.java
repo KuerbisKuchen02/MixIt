@@ -6,8 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import de.thm.mixit.data.daos.CombinationDAO;
-import de.thm.mixit.data.daos.ElementDAO;
+import de.thm.mixit.data.daos.CombinationDao;
+import de.thm.mixit.data.daos.ElementDao;
 import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.entities.Element;
 
@@ -45,7 +45,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return db;
     }
 
-    public abstract ElementDAO elementDAO();
+    public abstract ElementDao elementDAO();
 
-    public abstract CombinationDAO combinationDAO();
+    public abstract CombinationDao combinationDAO();
 }

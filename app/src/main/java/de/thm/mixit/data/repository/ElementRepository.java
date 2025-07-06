@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.ElementDAO;
+import de.thm.mixit.data.daos.ElementDao;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
@@ -41,7 +41,7 @@ public class ElementRepository {
      */
     public static ElementRepository create(Context context) {
         AppDatabase db = AppDatabase.getInstance(context);
-        ElementDAO dao = db.elementDAO();
+        ElementDao dao = db.elementDAO();
         return new ElementRepository(new ElementLocalDataSource(dao));
     }
 

@@ -5,7 +5,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.ElementDAO;
+import de.thm.mixit.data.daos.ElementDao;
 import de.thm.mixit.data.entities.Element;
 
 /**
@@ -17,15 +17,15 @@ import de.thm.mixit.data.entities.Element;
  * @author Justin Wolek
  */
 public class ElementLocalDataSource {
-    private final ElementDAO elementDAO;
+    private final ElementDao elementDAO;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     /**
-     * Constructs a new {@code ElementLocalDataSource} with the given {@link ElementDAO}.
+     * Constructs a new {@code ElementLocalDataSource} with the given {@link ElementDao}.
      * @param elementDAO The Data Access Object used to perform database operation
      *                   on {@link Element} objects.
      */
-    public ElementLocalDataSource(ElementDAO elementDAO) {
+    public ElementLocalDataSource(ElementDao elementDAO) {
         this.elementDAO = elementDAO;
     }
 
@@ -81,7 +81,7 @@ public class ElementLocalDataSource {
      */
     public void insertElement(Element element, Consumer<Element> callback) {
         executor.execute(() -> {
-            long outputId = elementDAO.insertElement(element);
+            long elementId = elementDAO.insertElement(element);
 
             Element newElement = elementDAO.findById((int) elementId);
 

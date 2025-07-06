@@ -14,7 +14,7 @@ import de.thm.mixit.data.entities.Combination;
  * @author Justin Wolek
  */
 @Dao
-public interface CombinationDAO {
+public interface CombinationDao {
 
     /**
      * Returns all combinations inside the database.

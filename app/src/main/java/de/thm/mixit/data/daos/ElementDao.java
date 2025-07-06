@@ -14,7 +14,7 @@ import de.thm.mixit.data.entities.Element;
  * @author Justin Wolek
  */
 @Dao
-public interface ElementDAO {
+public interface ElementDao {
 
     /**
      * Returns all elements inside the database.
