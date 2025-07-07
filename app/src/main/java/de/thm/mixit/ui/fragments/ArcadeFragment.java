@@ -23,12 +23,17 @@ import de.thm.mixit.R;
 
 public class ArcadeFragment extends Fragment {
 
-    private static int turns = 0;
-    private Handler handler = new Handler();
+    private static final String TAG = ArcadeFragment.class.getSimpleName();
+    private final Handler handler = new Handler();
+    private TextView tv_target_element;
+    private static String target_element;
     private TextView tv_time_since_start;
-    private long startTime;
+    private static long startTime;
+    private static int turns = 0;
+    private TextView tv_turns;
 
-    private Runnable updateTimerRunnable = new Runnable() {
+
+    private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
             long elapsedMillis = System.currentTimeMillis() - startTime;
@@ -47,7 +52,8 @@ public class ArcadeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_arcade, container, false);
     }
@@ -60,11 +66,24 @@ public class ArcadeFragment extends Fragment {
         tv_time_since_start = view.findViewById(R.id.textview_time_since_start);
         startTime = System.currentTimeMillis();
         handler.post(updateTimerRunnable); // Timer starten
+
+        tv_turns = view.findViewById(R.id.textview_turns);
+        tv_turns.setText(String.format(Locale.getDefault(),
+                getString(R.string.arcade_fragment_turns), turns));
+
+        tv_target_element = view.findViewById(R.id.textview_target_element);
+        tv_target_element.setText(String.format(Locale.getDefault(),
+                getString(R.string.arcade_fragment_goal), target_element));
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacks(updateTimerRunnable); // Handler stoppen, um Memory-Leaks zu vermeiden
+    }
+
+    public static void increaseTurnCounter() {
+        turns++;
     }
 }

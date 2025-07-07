@@ -4,6 +4,9 @@
     <string name="main_menu_button_arcade">Arcade</string>
     <string name="main_menu_button_achievemnets">Achievements</string>
     <string name="main_menu_button_settings">Settings</string>
+    <string name="arcade_fragment_goal">Goal:\n%s</string>
+    <string name="arcade_fragment_time">Time: %02d:%02d:%02d</string>
+    <string name="arcade_fragment_turns">Turns: %d</string>
     <string name="game_element_list_search_hint">Search elements…</string>
     <string name="game_element_list_content_description">Searchable element list</string>
 </resources>
