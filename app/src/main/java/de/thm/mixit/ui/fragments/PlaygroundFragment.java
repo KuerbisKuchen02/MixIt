@@ -213,6 +213,7 @@ public class PlaygroundFragment extends Fragment{
         if(exampleElement != null){
             int innerRectLeftX =  (int) (playground.getWidth() * 0.1);
             int innerRectRightX = (int) (playground.getWidth() * 0.6);
+            int topMargin = (int) (playground.getHeight() * 0.08);
 
             Rect test = new Rect();
             exampleElement.getHitRect(test);
@@ -225,7 +226,8 @@ public class PlaygroundFragment extends Fragment{
 
             for(int attempt = 0; attempt < ATTEMPTS; attempt++){
                 coordinates[0] = innerRectLeftX + (rand.nextFloat() * innerRectRightX);
-                coordinates[1] = (rand.nextFloat() * (float) (playground.getHeight() * 0.8));
+                coordinates[1] = topMargin + (rand.nextFloat() *
+                        (float) (playground.getHeight() * 0.75));
 
                 test.offsetTo((int) coordinates[0], (int) coordinates[1]);
 
