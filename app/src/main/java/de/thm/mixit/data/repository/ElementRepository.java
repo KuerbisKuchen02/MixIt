@@ -93,7 +93,11 @@ public class ElementRepository {
      * @param element The ElementEntity to insert.
      */
     public void insertElement(Element element, Consumer<Element> callback) {
-        localDataSource.insertElement(element, callback);
+        findByName(element.name, e -> {
+            if (e == null) {
+                localDataSource.insertElement(element, callback);
+            }
+        });
     }
 
     /**
