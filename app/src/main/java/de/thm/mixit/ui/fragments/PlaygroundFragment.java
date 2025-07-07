@@ -219,6 +219,8 @@ public class PlaygroundFragment extends Fragment{
 
             Random rand = new Random();
 
+            // If playground has less than 50 elements, try to find a free space
+            // otherwise place randomly disregarding overlapping
             final int ATTEMPTS = playground.getChildCount() < 50 ? playground.getChildCount() : 1;
 
             for(int attempt = 0; attempt < ATTEMPTS; attempt++){
