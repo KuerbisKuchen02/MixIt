@@ -101,7 +101,15 @@ public class ElementRepository {
     }
 
     /**
-     * Deletes all ElementEntity records.
+     * Deletes all Elements and recreates the four starter
+     * elements: water, earth, fire, air.
+     */
+    public void reset() {
+        localDataSource.reset();
+    }
+
+    /**
+     * Deletes all Element records.
      */
     public void deleteAll() {
         localDataSource.deleteAll();

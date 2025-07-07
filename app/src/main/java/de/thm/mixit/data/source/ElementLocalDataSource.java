@@ -1,5 +1,6 @@
 package de.thm.mixit.data.source;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -90,7 +91,23 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously deletes all ElementEntity records from the database.
+     * Asynchronously deletes all Elements and recreates the four starter-elements.
+     */
+    public void reset() {
+        executor.execute(() -> {
+            elementDAO.deleteAll();
+            List<Element> elements = Arrays.asList(
+                    new Element("Wasser", "\uD83D\uDCA7"),
+                    new Element("Erde", "\uD83C\uDF0D"),
+                    new Element("Feuer", "\uD83D\uDD25"),
+                    new Element("Luft", "\uD83C\uDF2C\uFE0F")
+            );
+            elementDAO.insertAll(elements);
+        });
+    }
+
+    /**
+     * Asynchronously deletes all Element records from the database.
      */
     public void deleteAll() {
         executor.execute(elementDAO::deleteAll);
