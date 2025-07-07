@@ -55,7 +55,7 @@ public class ElementRemoteDataSource {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
                 .addUserMessage(element1 + " + " + element2)
-                .model(ChatModel.GPT_4O)
+                .model(ChatModel.CHATGPT_4O_LATEST)
                 .build();
 
        client.chat().completions().create(createParams).thenAccept(
