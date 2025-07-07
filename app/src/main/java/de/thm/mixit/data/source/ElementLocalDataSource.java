@@ -33,15 +33,15 @@ public class ElementLocalDataSource {
      * Asynchronously retrieves all Element records from the database.
      * <p>
      * The query runs on a background thread, and the results are delivered
-     * via the provided {@link ICallback} interface once loading is complete.
+     * via the provided {@link Consumer} interface once loading is complete.
      *
      * @param callback A callback to retrieve the list of {@link Element} objects when
      *                 loading the data is done.
      */
-    public void getAll(ICallback<List<Element>> callback) {
+    public void getAll(Consumer<List<Element>> callback) {
         executor.execute(() -> {
             List<Element> elements = elementDAO.getAll();
-            callback.onDataLoaded(elements);
+            callback.accept(elements);
         });
     }
 
@@ -49,15 +49,15 @@ public class ElementLocalDataSource {
      * Asynchronously finds an Element by its ID.
      * <p>
      * The query runs on a background thread, and the result is delivered
-     * via the provided {@link ICallback} once the data is loaded.
+     * via the provided {@link Consumer} once the data is loaded.
      *
      * @param id The ID of the element to find.
      * @param callback The callback to receive the found Element.
      */
-    public void findById(int id, ICallback<Element> callback) {
+    public void findById(int id, Consumer<Element> callback) {
         executor.execute(() -> {
             Element element = elementDAO.findById(id);
-            callback.onDataLoaded(element);
+            callback.accept(element);
         });
     }
 
@@ -65,7 +65,7 @@ public class ElementLocalDataSource {
      * Asynchronously finds an Element by its name.
      *
      * @param name The name of the element to find.
-     * @param callback The callback to receive the found ElementEntity.
+     * @param callback The callback to receive the found Element.
      */
     public void findByName(String name, Consumer<Element> callback) {
         executor.execute(() -> {

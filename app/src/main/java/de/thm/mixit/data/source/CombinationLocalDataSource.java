@@ -33,15 +33,15 @@ public class CombinationLocalDataSource {
      * Asynchronously retrieves all Combination records from the database.
      * <p>
      * The query runs on a background thread, and the results are delivered
-     * via the provided {@link ICallback} interface once loading is complete.
+     * via the provided {@link Consumer} interface once loading is complete.
      *
      * @param callback A callback to retrieve the list of {@link Combination} objects when
      *                 loading the data is done.
      */
-    public void getAll(ICallback<List<Combination>> callback) {
+    public void getAll(Consumer<List<Combination>> callback) {
         executor.execute(() -> {
             List<Combination> combinations = combinationDAO.getAll();
-            callback.onDataLoaded(combinations);
+            callback.accept(combinations);
         });
     }
 
@@ -49,17 +49,17 @@ public class CombinationLocalDataSource {
      * Asynchronously finds a Combination by its combination
      * <p>
      * The query runs on a background thread, and the result is delivered
-     * via the provided {@link ICallback} once the data is loaded.
+     * via the provided {@link Consumer} once the data is loaded.
      *
      * @param inputA The first input string.
      * @param inputB The second input string.
      * @param callback The callback to receive the found Combination.
      */
     public void findByCombination(String inputA, String inputB,
-                                  ICallback<Combination> callback) {
+                                  Consumer<Combination> callback) {
         executor.execute(() -> {
             Combination combination = combinationDAO.findByCombination(inputA, inputB);
-            callback.onDataLoaded(combination);
+            callback.accept(combination);
         });
     }
 

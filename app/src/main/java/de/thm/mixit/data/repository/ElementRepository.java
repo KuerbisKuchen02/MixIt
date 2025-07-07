@@ -10,7 +10,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
-import de.thm.mixit.data.source.ICallback;
+
 
 /**
  * Repository class that provides access to Element data.
@@ -73,7 +73,7 @@ public class ElementRepository {
      *
      * @param callback The callback to receive the list of all elements.
      */
-    public void getAll(ICallback<List<Element>> callback) {
+    public void getAll(Consumer<List<Element>> callback) {
         localDataSource.getAll(callback);
     }
 
@@ -83,7 +83,7 @@ public class ElementRepository {
      * @param id The id of the {@link Element}.
      * @param callback The callback to receive the found {@link Element}.
      */
-    public void findById(int id, ICallback<Element> callback) {
+    public void findById(int id, Consumer<Element> callback) {
        localDataSource.findById(id, callback);
     }
 

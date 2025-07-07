@@ -9,7 +9,6 @@ import de.thm.mixit.data.daos.CombinationDao;
 import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.CombinationLocalDataSource;
-import de.thm.mixit.data.source.ICallback;
 
 /**
  * Repository class that provides access to Combination data.
@@ -49,7 +48,7 @@ public class CombinationRepository {
      *
      * @param callback The callback to receive the list of all combinations.
      */
-    public void getAll(ICallback<List<Combination>> callback) {
+    public void getAll(Consumer<List<Combination>> callback) {
         localDataSource.getAll(callback);
     }
 
@@ -66,7 +65,7 @@ public class CombinationRepository {
      * {@link Combination}.
      */
     public void findByCombination(String inputA, String inputB,
-                                  ICallback<Combination> callback) {
+                                  Consumer<Combination> callback) {
         // Words of combination are always saved in alphabetical order.
         if (inputA.compareTo(inputB) > 0) {
             String temp = inputA;
