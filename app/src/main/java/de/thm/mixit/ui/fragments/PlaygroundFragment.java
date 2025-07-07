@@ -225,7 +225,7 @@ public class PlaygroundFragment extends Fragment{
 
             for(int attempt = 0; attempt < ATTEMPTS; attempt++){
                 coordinates[0] = innerRectLeftX + (rand.nextFloat() * innerRectRightX);
-                coordinates[1] = (rand.nextFloat() * (float) (playground.getHeight() * 0.8));
+                coordinates[1] = (rand.nextFloat() * (float) (playground.getHeight() * 0.75));
 
                 test.offsetTo((int) coordinates[0], (int) coordinates[1]);
 
