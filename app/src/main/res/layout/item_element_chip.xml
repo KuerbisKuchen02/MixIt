@@ -10,4 +10,4 @@
     android:paddingRight="10dp"
     android:paddingBottom="6dp"
     android:textColor="@color/black"
-    android:textSize="@dimen/text_size_large" />
+    android:textSize="@dimen/text_size_medium" />
