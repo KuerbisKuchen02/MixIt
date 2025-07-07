@@ -1,31 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:orientation="vertical">
-
-
-    <AutoCompleteTextView
-        android:id="@+id/auto_text_game_item_list_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:drawableStart="@drawable/ic_search"
-        android:hint="@string/game_element_list_search_hint" />
-
-    <ScrollView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="de.thm.mixit.ui.viewmodel.GameViewModel" />
+        <variable
+            name="recyclerViewAdapter"
+            type="de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter" />
+        <variable
+            name="layoutManager"
+            type="com.google.android.flexbox.FlexboxLayoutManager" />
+        <variable
+            name="arrayAdapter"
+            type="android.widget.ArrayAdapter" />
+    </data>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/game_element_list_content_description">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_game_item_list"
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_text_game_item_list_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-    </ScrollView>
+            android:layout_marginBottom="16dp"
+            android:drawableStart="@drawable/ic_search"
+            android:hint="@string/game_element_list_search_hint"
+            app:elements="@{viewModel.elements}"/>
 
-</LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/game_element_list_content_description">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_game_item_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:elements="@{viewModel.filteredElements}"
+                app:adapter="@{recyclerViewAdapter}"
+                app:layoutManager="@{layoutManager}" />
+        </ScrollView>
+
+    </LinearLayout>
+</layout>

@@ -2,8 +2,6 @@ package de.thm.mixit.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,27 +9,24 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.data.repository.ElementRepository;
+import de.thm.mixit.databinding.FragmentItemListBinding;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
+import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**
  *
@@ -49,10 +44,8 @@ public class ElementListFragment extends Fragment {
 
     private static final String TAG = ElementListFragment.class.getSimpleName();
 
-    private ElementRecyclerViewAdapter recyclerViewAdapter;
-    private ArrayAdapter<Element> arrayAdapter;
-
-    private ElementRepository elementRepository;
+    private GameViewModel viewModel;
+    private FragmentItemListBinding binding;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -61,36 +54,57 @@ public class ElementListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        List<Element> elements = new ArrayList<>();
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        binding = FragmentItemListBinding.inflate(inflater, container, false);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        // Setup element list
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_game_item_list);
+        viewModel = new ViewModelProvider(requireActivity(),
+                new GameViewModel.Factory(requireActivity())).get(GameViewModel.class);
+        binding.setViewModel(viewModel);
+
+        binding.setLayoutManager(getLayoutManager());
+        binding.setRecyclerViewAdapter(new ElementRecyclerViewAdapter(this::onClickElement));
+        
+        AutoCompleteTextView search = binding.autoTextGameItemListSearch;
+        // Filter list based on search
+        search.addTextChangedListener(getTextWatcher());
+        // Clear search on click cancel
+        search.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getX() >= search.getWidth() - search.getTotalPaddingEnd()) {
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Pressed cancel button inside search");
+                    search.setText("");
+                    viewModel.onSearchQueryChanged("");
+                }
+            }
+            return false;
+        });
+        
+        return binding.getRoot();
+    }
+
+    private FlexboxLayoutManager getLayoutManager() {
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
         layoutManager.setFlexWrap(FlexWrap.WRAP);
         layoutManager.setJustifyContent(JustifyContent.FLEX_START);
         layoutManager.setAlignItems(AlignItems.FLEX_START);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new ElementRecyclerViewAdapter(elements, this::onClickElement);
-        recyclerView.setAdapter(recyclerViewAdapter);
+        return layoutManager;
+    }
 
-        // Setup search bar
-        AutoCompleteTextView textView = view.findViewById(R.id.auto_text_game_item_list_search);
-        arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1,
-                android.R.id.text1, elements);
-        textView.setAdapter(arrayAdapter);
 
-        textView.addTextChangedListener(new TextWatcher() {
-
+    private TextWatcher getTextWatcher() {
+        return new TextWatcher() {
+            private final AutoCompleteTextView view = binding.autoTextGameItemListSearch;
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "Apply filter for String: " + s);
-                recyclerViewAdapter.filter(s.toString());
+                viewModel.onSearchQueryChanged(s.toString());
                 if (s.toString().isEmpty()) {
-                    textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_search,
+                    view.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_search,
                             0, 0, 0);
                 } else {
-                    textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_search,
+                    view.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_search,
                             0, R.drawable.ic_outline_cancel, 0);
                 }
             }
@@ -99,42 +113,7 @@ public class ElementListFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        });
-
-        textView.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getX() >= textView.getWidth() - textView.getTotalPaddingEnd()) {
-                    if (BuildConfig.DEBUG) Log.d(TAG, "Pressed cancel button inside search");
-                    textView.setText("");
-                }
-            }
-            return false;
-        });
-
-        // TODO: Move to ViewModel
-        elementRepository = ElementRepository.create(requireContext());
-
-        elementRepository.getAll(this::setElements);
-
-        getParentFragmentManager().setFragmentResultListener(ARGUMENT_ELEMENT_TO_LIST,
-                getViewLifecycleOwner(),
-                ((requestKey, result) ->
-                        elementRepository.getAll(this::setElements)
-                ));
-
-        return view;
-    }
-
-    // FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
-    public void setElements(List<Element> elements) {
-        recyclerViewAdapter.setElements(elements);
-        arrayAdapter.clear();
-        arrayAdapter.addAll(elements);
-        new Handler(Looper.getMainLooper()).post(() -> {
-            recyclerViewAdapter.notifyDataSetChanged();
-            arrayAdapter.notifyDataSetChanged();
-        });
-        if (BuildConfig.DEBUG) Log.d(TAG, "Loaded " + elements.size() + " Elements");
+        };
     }
 
     /**
@@ -146,10 +125,9 @@ public class ElementListFragment extends Fragment {
      * @param element The element that was clicked
      * @param position The positon of the element in the current view
      */
-    public void onClickElement(Element element, int position) {
+    private void onClickElement(Element element, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Clicked on element: " + position);
-        // FIXME: bundle should properly include the element object instead of only the string
-        //        requires ElementEntity to implement serializable or parcelable
+        // TODO: implement fragment communication with PlaygroundFragment
         Bundle result = new Bundle();
         result.putString(PlaygroundFragment.BUNDLE_ELEMENT, element.toString());
         getParentFragmentManager()
