@@ -5,9 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:background="@drawable/background_item"
-    android:paddingLeft="3dp"
-    android:paddingTop="2dp"
-    android:paddingRight="3dp"
-    android:paddingBottom="2dp"
+    android:paddingLeft="10dp"
+    android:paddingTop="6dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="6dp"
     android:textColor="@color/black"
-    android:textSize="@dimen/text_size_medium" />
+    android:textSize="@dimen/text_size_large" />

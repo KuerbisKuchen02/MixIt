@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import androidx.annotation.Nullable;
 import de.thm.mixit.R;
+import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.repository.ElementRepository;
 
 /**
  * Activity for the main menu.
@@ -30,6 +32,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "MainActivity was created");
+
+        ElementRepository repository = ElementRepository.create(this);
+
+        repository.insertElement(new Element("Wasser", "\uD83D\uDCA7"), e->{});
+        repository.insertElement(new Element("Feuer", "\uD83D\uDD25"), e->{});
+        repository.insertElement(new Element("Erde", "\uD83C\uDF0D"), e->{});
+        repository.insertElement(new Element("Luft", "\uD83D\uDCA8"), e->{});
     }
 
     public void onEndlessGameButtonClicked(View v) {
