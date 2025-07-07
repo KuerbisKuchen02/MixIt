@@ -38,7 +38,7 @@ public interface CombinationDao {
     /**
      * Inserts one {@link Combination} into the database.
      *
-     * @param combination CombinationEntity to insert into the database.
+     * @param combination Combination to insert into the database.
      */
     @Insert
     void insertCombination(Combination combination);

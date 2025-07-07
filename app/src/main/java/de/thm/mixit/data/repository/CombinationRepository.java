@@ -27,7 +27,7 @@ public class CombinationRepository {
      * Can be used for Unit-Testing. Use {@code CombinationRepository.create()} when trying to do
      * regular database operations.
      *
-     * @param localDataSource The local data source managing CombinationEntity persistence.
+     * @param localDataSource The local data source managing Combination persistence.
      */
     public CombinationRepository(CombinationLocalDataSource localDataSource) {
         this.localDataSource = localDataSource;
@@ -45,7 +45,7 @@ public class CombinationRepository {
     }
 
     /**
-     * Retrieves all CombinationEntity objects asynchronously.
+     * Retrieves all Combination objects asynchronously.
      *
      * @param callback The callback to receive the list of all combinations.
      */
@@ -77,12 +77,12 @@ public class CombinationRepository {
     }
 
     /**
-     * Inserts a new CombinationEntity asynchronously.
+     * Inserts a new Combination asynchronously.
      * <p>
      * Ensures that the inputs are alphabetically ordered before insertion
      * to prevent duplicate entries with switched input combinations.
      *
-     * @param combination The CombinationEntity to insert.
+     * @param combination The Combination to insert.
      */
     public void insertCombination(Combination combination,
                                   Consumer<Combination> callback) {
@@ -96,7 +96,7 @@ public class CombinationRepository {
     }
 
     /**
-     * Deletes all CombinationEntity records.
+     * Deletes all Combination records.
      */
     public void deleteAll() {
         localDataSource.deleteAll();

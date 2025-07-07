@@ -38,7 +38,7 @@ public class Combination {
     public Integer outputId;
 
     /**
-     * Constructor for a new CombinationEntity.
+     * Constructor for a new Combination.
      * The composite-key made up from {@code inputA} and {@code inputB} must be unique.
      *
      * @param inputA First part of the primary-key.

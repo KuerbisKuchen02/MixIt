@@ -30,7 +30,7 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously retrieves all ElementEntity records from the database.
+     * Asynchronously retrieves all Element records from the database.
      * <p>
      * The query runs on a background thread, and the results are delivered
      * via the provided {@link ICallback} interface once loading is complete.
@@ -46,13 +46,13 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously finds an ElementEntity by its ID.
+     * Asynchronously finds an Element by its ID.
      * <p>
      * The query runs on a background thread, and the result is delivered
      * via the provided {@link ICallback} once the data is loaded.
      *
      * @param id The ID of the element to find.
-     * @param callback The callback to receive the found ElementEntity.
+     * @param callback The callback to receive the found Element.
      */
     public void findById(int id, ICallback<Element> callback) {
         executor.execute(() -> {
@@ -62,7 +62,7 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously finds an ElementEntity by its name.
+     * Asynchronously finds an Element by its name.
      *
      * @param name The name of the element to find.
      * @param callback The callback to receive the found ElementEntity.
@@ -75,9 +75,9 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously inserts an ElementEntity into the database.
+     * Asynchronously inserts an Element into the database.
      *
-     * @param element The ElementEntity to insert.
+     * @param element The Element to insert.
      */
     public void insertElement(Element element, Consumer<Element> callback) {
         executor.execute(() -> {

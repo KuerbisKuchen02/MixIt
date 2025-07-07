@@ -46,7 +46,7 @@ public interface ElementDao {
     /**
      * Inserts one {@link Element} into the database.
      *
-     * @param element ElementEntity to insert into the database.
+     * @param element Element to insert into the database.
      */
     @Insert
     long insertElement(Element element);

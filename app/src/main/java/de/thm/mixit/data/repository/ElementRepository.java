@@ -28,7 +28,7 @@ public class ElementRepository {
      * Can be used for Unit-Testing. Use {@code ElementRepository.create()} when trying to do
      * regular database operations.
      *
-     * @param localDataSource The local data source managing ElementEntity persistence.
+     * @param localDataSource The local data source managing Element persistence.
      */
     public ElementRepository(ElementLocalDataSource localDataSource) {
         this.localDataSource = localDataSource;
@@ -46,11 +46,11 @@ public class ElementRepository {
     }
 
     /**
-     * Generates a new ElementEntity by combining two existing elements.
+     * Generates a new Element by combining two existing elements.
      *
-     * @param element1 The first ElementEntity to combine.
-     * @param element2 The second ElementEntity to combine.
-     * @param callback A callback to receive the newly generated ElementEntity.
+     * @param element1 The first Element to combine.
+     * @param element2 The second Element to combine.
+     * @param callback A callback to receive the newly generated Element.
      */
     public void generateNew(String element1, String element2,
                             Consumer<Element> callback) {
@@ -59,17 +59,17 @@ public class ElementRepository {
     }
 
     /**
-     * Finds an ElementEntity by its name asynchronously.
+     * Finds an Element by its name asynchronously.
      *
-     * @param name The name of the ElementEntity to find.
-     * @param callback The callback to receive the found ElementEntity.
+     * @param name The name of the Element to find.
+     * @param callback The callback to receive the found Element.
      */
     public void findByName(String name, Consumer<Element> callback) {
         localDataSource.findByName(name, callback);
     }
 
     /**
-     * Retrieves all ElementEntity objects asynchronously.
+     * Retrieves all Element objects asynchronously.
      *
      * @param callback The callback to receive the list of all elements.
      */
@@ -88,9 +88,9 @@ public class ElementRepository {
     }
 
     /**
-     * Inserts a new ElementEntity asynchronously.
+     * Inserts a new Element asynchronously.
      *
-     * @param element The ElementEntity to insert.
+     * @param element The Element to insert.
      */
     public void insertElement(Element element, Consumer<Element> callback) {
         findByName(element.name, e -> {

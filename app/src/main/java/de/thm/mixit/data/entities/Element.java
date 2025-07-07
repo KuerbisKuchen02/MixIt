@@ -28,7 +28,7 @@ public class Element {
     public String emoji;
 
     /**
-     * Constructor for a new ElementEntity. {@code id} is automatically generated.
+     * Constructor for a new Element. {@code id} is automatically generated.
      *
      * @param name A String representing the element's name.
      * @param emoji A String containing one or more emojis.
