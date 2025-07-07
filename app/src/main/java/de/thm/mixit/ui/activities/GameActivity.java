@@ -50,7 +50,7 @@ public class GameActivity extends AppCompatActivity {
             if (arcade_fragment == null) {
                 Log.e(TAG, "Error, arcade fragment reference is null!");
             } else {
-                fragmentManager.beginTransaction().hide(arcade_fragment).commit();
+                fragmentManager.beginTransaction().remove(arcade_fragment).commit();
             }
         }
 
