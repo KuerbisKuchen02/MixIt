@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Random;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
@@ -112,7 +113,7 @@ public class PlaygroundFragment extends Fragment{
         });
 
         if(BuildConfig.DEBUG){
-            Log.d(TAG, "new element " + text + " has been added to playground at " + x + ", " + y);
+            Log.i(TAG, "new element " + text + " has been added to playground");
         }
 
         View.OnTouchListener elementOnTouchListener = new View.OnTouchListener() {
@@ -203,9 +204,57 @@ public class PlaygroundFragment extends Fragment{
      * @return x and y coordinates to free space
      */
     private float[] getFreeSpace(){
-        return new float[]{0f,0f};
+        TextView exampleElement = getAnyElement();
+
+        float[] coordinates = new float[2];
+        coordinates[0] = playground.getWidth() / 2f;
+        coordinates[1] = playground.getHeight() / 2f;
+
+        if(exampleElement != null){
+            int innerRectLeftX =  (int) (playground.getWidth() * 0.1);
+            int innerRectRightX = (int) (playground.getWidth() * 0.6);
+
+            Rect test = new Rect();
+            exampleElement.getHitRect(test);
+
+            Random rand = new Random();
+
+            // If playground has less than 50 elements, try to find a free space
+            // otherwise place randomly disregarding overlapping
+            final int ATTEMPTS = playground.getChildCount() < 50 ? playground.getChildCount() : 1;
+
+            for(int attempt = 0; attempt < ATTEMPTS; attempt++){
+                coordinates[0] = innerRectLeftX + (rand.nextFloat() * innerRectRightX);
+                coordinates[1] = (rand.nextFloat() * (float) (playground.getHeight() * 0.8));
+
+                test.offsetTo((int) coordinates[0], (int) coordinates[1]);
+
+                if(!isOverlapping(test)) return coordinates;
+            }
+        }
+        return coordinates;
     }
 
+    private boolean isOverlapping(Rect test) {
+        for(int i = 0; i < playground.getChildCount(); i++){
+            View other = playground.getChildAt(i);
+            if (!(other instanceof TextView)) continue;
+            Rect otherRect = new Rect();
+            other.getHitRect(otherRect);
+
+            if(Rect.intersects(test, otherRect)) return true;
+        }
+        return false;
+    }
+
+    private TextView getAnyElement(){
+        for(int i = 0; i < playground.getChildCount(); i++){
+            if(playground.getChildAt(i) instanceof TextView){
+                return (TextView) playground.getChildAt(i);
+            }
+        }
+        return null;
+    }
 
     /**
      * style buttons differently when an item is picked up
@@ -302,7 +351,7 @@ public class PlaygroundFragment extends Fragment{
             if (Rect.intersects(draggedRect, otherRect) && other instanceof TextView) {
                 // Overlap detected
                 if(BuildConfig.DEBUG) {
-                    Log.d("Overlap", "Dragged element (" + draggedView.getText() +
+                    Log.d(TAG, "Dragged element (" + draggedView.getText() +
                             ") overlaps with: " + ((TextView) other).getText());
                 }
                 return other;
