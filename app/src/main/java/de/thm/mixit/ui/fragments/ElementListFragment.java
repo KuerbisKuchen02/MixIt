@@ -24,7 +24,7 @@ import com.google.android.flexbox.JustifyContent;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.databinding.FragmentItemListBinding;
+import de.thm.mixit.databinding.FragmentElementListBinding;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
@@ -45,7 +45,7 @@ public class ElementListFragment extends Fragment {
     private static final String TAG = ElementListFragment.class.getSimpleName();
 
     private GameViewModel viewModel;
-    private FragmentItemListBinding binding;
+    private FragmentElementListBinding binding;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -54,7 +54,7 @@ public class ElementListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = FragmentItemListBinding.inflate(inflater, container, false);
+        binding = FragmentElementListBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         viewModel = new ViewModelProvider(requireActivity(),
