@@ -179,6 +179,11 @@ public class PlaygroundFragment extends Fragment{
                                     newElement.toString());
                             getParentFragmentManager().setFragmentResult(
                                     ElementListFragment.ARGUMENT_ELEMENT_TO_LIST, result);
+
+                            // TODO move this logic to GameViewModel once it is available
+                            ArcadeFragment af = (ArcadeFragment) getParentFragmentManager().
+                                    findFragmentById(R.id.fragment_container_arcade);
+                            af.increaseTurnCounter();
                         } else {
                             v.setOnTouchListener(this);
                             other.setOnTouchListener(this);
