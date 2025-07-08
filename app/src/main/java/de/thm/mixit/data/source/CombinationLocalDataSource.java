@@ -30,43 +30,43 @@ public class CombinationLocalDataSource {
     }
 
     /**
-     * Asynchronously retrieves all CombinationEntity records from the database.
+     * Asynchronously retrieves all Combination records from the database.
      * <p>
      * The query runs on a background thread, and the results are delivered
-     * via the provided {@link ICallback} interface once loading is complete.
+     * via the provided {@link Consumer} interface once loading is complete.
      *
      * @param callback A callback to retrieve the list of {@link Combination} objects when
      *                 loading the data is done.
      */
-    public void getAll(ICallback<List<Combination>> callback) {
+    public void getAll(Consumer<List<Combination>> callback) {
         executor.execute(() -> {
             List<Combination> combinations = combinationDAO.getAll();
-            callback.onDataLoaded(combinations);
+            callback.accept(combinations);
         });
     }
 
     /**
-     * Asynchronously finds a CombinationEntity by its combination
+     * Asynchronously finds a Combination by its combination
      * <p>
      * The query runs on a background thread, and the result is delivered
-     * via the provided {@link ICallback} once the data is loaded.
+     * via the provided {@link Consumer} once the data is loaded.
      *
      * @param inputA The first input string.
      * @param inputB The second input string.
-     * @param callback The callback to receive the found CombinationEntity.
+     * @param callback The callback to receive the found Combination.
      */
     public void findByCombination(String inputA, String inputB,
-                                  ICallback<Combination> callback) {
+                                  Consumer<Combination> callback) {
         executor.execute(() -> {
             Combination combination = combinationDAO.findByCombination(inputA, inputB);
-            callback.onDataLoaded(combination);
+            callback.accept(combination);
         });
     }
 
     /**
-     * Asynchronously inserts a CombinationEntity into the database.
+     * Asynchronously inserts a Combination into the database.
      *
-     * @param combination The CombinationEntity to insert.
+     * @param combination The Combination to insert.
      */
     public void insertCombination(Combination combination,
                                   Consumer<Combination> callback) {
@@ -77,7 +77,7 @@ public class CombinationLocalDataSource {
     }
 
     /**
-     * Asynchronously deletes all CombinationEntity records from the database.
+     * Asynchronously deletes all Combination records from the database.
      */
     public void deleteAll() {
         executor.execute(combinationDAO::deleteAll);

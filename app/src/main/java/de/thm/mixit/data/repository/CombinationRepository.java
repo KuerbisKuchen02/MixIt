@@ -9,7 +9,6 @@ import de.thm.mixit.data.daos.CombinationDao;
 import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.CombinationLocalDataSource;
-import de.thm.mixit.data.source.ICallback;
 
 /**
  * Repository class that provides access to Combination data.
@@ -27,7 +26,7 @@ public class CombinationRepository {
      * Can be used for Unit-Testing. Use {@code CombinationRepository.create()} when trying to do
      * regular database operations.
      *
-     * @param localDataSource The local data source managing CombinationEntity persistence.
+     * @param localDataSource The local data source managing Combination persistence.
      */
     public CombinationRepository(CombinationLocalDataSource localDataSource) {
         this.localDataSource = localDataSource;
@@ -45,11 +44,11 @@ public class CombinationRepository {
     }
 
     /**
-     * Retrieves all CombinationEntity objects asynchronously.
+     * Retrieves all Combination objects asynchronously.
      *
      * @param callback The callback to receive the list of all combinations.
      */
-    public void getAll(ICallback<List<Combination>> callback) {
+    public void getAll(Consumer<List<Combination>> callback) {
         localDataSource.getAll(callback);
     }
 
@@ -66,7 +65,7 @@ public class CombinationRepository {
      * {@link Combination}.
      */
     public void findByCombination(String inputA, String inputB,
-                                  ICallback<Combination> callback) {
+                                  Consumer<Combination> callback) {
         // Words of combination are always saved in alphabetical order.
         if (inputA.compareTo(inputB) > 0) {
             String temp = inputA;
@@ -77,12 +76,12 @@ public class CombinationRepository {
     }
 
     /**
-     * Inserts a new CombinationEntity asynchronously.
+     * Inserts a new Combination asynchronously.
      * <p>
      * Ensures that the inputs are alphabetically ordered before insertion
      * to prevent duplicate entries with switched input combinations.
      *
-     * @param combination The CombinationEntity to insert.
+     * @param combination The Combination to insert.
      */
     public void insertCombination(Combination combination,
                                   Consumer<Combination> callback) {
@@ -96,7 +95,7 @@ public class CombinationRepository {
     }
 
     /**
-     * Deletes all CombinationEntity records.
+     * Deletes all Combination records.
      */
     public void deleteAll() {
         localDataSource.deleteAll();
