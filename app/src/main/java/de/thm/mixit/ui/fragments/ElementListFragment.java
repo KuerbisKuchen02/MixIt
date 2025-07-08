@@ -36,12 +36,6 @@ import de.thm.mixit.ui.viewmodel.GameViewModel;
  */
 public class ElementListFragment extends Fragment {
 
-    public final static String ARGUMENT_ELEMENT_TO_LIST =
-            "ARGUMENT_ELEMENT_TO_LIST";
-
-    public final static String BUNDLE_NEW_ELEMENT =
-            "BUNDLE_NEW_ELEMENT";
-
     private static final String TAG = ElementListFragment.class.getSimpleName();
 
     private GameViewModel viewModel;
@@ -127,11 +121,7 @@ public class ElementListFragment extends Fragment {
      */
     private void onClickElement(Element element, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Clicked on element: " + position);
-        // TODO: implement fragment communication with PlaygroundFragment
-        Bundle result = new Bundle();
-        result.putString(PlaygroundFragment.BUNDLE_ELEMENT, element.toString());
-        getParentFragmentManager()
-                .setFragmentResult(PlaygroundFragment.ARGUMENT_ADD_ELEMENT_TO_PLAYGROUND, result);
+        viewModel.addElementToPlayground(element);
     }
 
 }
