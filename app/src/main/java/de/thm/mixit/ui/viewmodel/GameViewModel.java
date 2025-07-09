@@ -28,15 +28,27 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
+    private final Handler timeHandler;
+
+    private final long startTime;
+    private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
+    private final MutableLiveData<Integer> turns = new MutableLiveData<>();
+    private final String targetElement;
 
     private GameViewModel(ElementRepository elementRepository, ElementUseCase elementUseCase) {
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
+        loadElements();
+        this.startTime = System.currentTimeMillis();
+        this.timeHandler = new Handler();
+        this.timeHandler.post(updateTimerRunnable);
         // TODO: GameStateManager: load saved playground state
         this.elementsOnPlayground.setValue(new ArrayList<>());
-        loadElements();
+        this.turns.setValue(0);
+        this.passedTime.setValue(0L);
+        this.targetElement = "Schokokuchen";
     }
 
     public LiveData<List<Element>> getElements() {
@@ -116,10 +128,41 @@ public class GameViewModel extends ViewModel {
         });
     }
 
+    public LiveData<Long> passedTime() {
+        return passedTime;
+    }
+
+    public LiveData<Integer> getTurns() {
+        return turns;
+    }
+
+    public String getTargetElement() {
+        return targetElement;
+    }
+
+    public void increaseTurnCounter() {
+        assert turns.getValue() != null;
+        turns.setValue(turns.getValue() + 1);
+    }
+
+    public void onDestroy() {
+        timeHandler.removeCallbacks(updateTimerRunnable);
+    }
+
     private void loadElements() {
         this.elementRepository.getAll((list) ->
                 new Handler(Looper.getMainLooper()).post(() -> this.elements.setValue(list)));
     }
+
+    private final Runnable updateTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            passedTime.setValue(System.currentTimeMillis() - startTime);
+
+            // Handler calls it again every second
+            timeHandler.postDelayed(this, 1000);
+        }
+    };
 
     public static class Factory implements ViewModelProvider.Factory {
 

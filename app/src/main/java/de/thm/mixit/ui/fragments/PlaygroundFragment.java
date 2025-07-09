@@ -129,10 +129,7 @@ public class PlaygroundFragment extends Fragment{
                                     viewModel.combineElements(
                                             getChipById((int) v.getTag()),
                                             getChipById((int) other.getTag()));
-                                    // TODO move this logic to GameViewModel once it is available
-                                    ArcadeFragment af = (ArcadeFragment) getParentFragmentManager().
-                                            findFragmentById(R.id.fragment_container_arcade);
-                                    af.increaseTurnCounter();
+                                    viewModel.increaseTurnCounter();
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error while combining elements: "
                                             + e.getMessage());

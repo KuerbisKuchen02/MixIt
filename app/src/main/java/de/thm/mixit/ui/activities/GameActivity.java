@@ -7,10 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
 import de.thm.mixit.R;
+import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**
  * Activity for the main view of the game.
@@ -26,11 +28,14 @@ public class GameActivity extends AppCompatActivity {
 
     public static final String EXTRA_IS_ARCADE = "isArcade";
     private static final String TAG = GameActivity.class.getSimpleName();
+    private GameViewModel viewModel;
     private boolean isArcade = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this, new GameViewModel.Factory(this))
+                .get(GameViewModel.class);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_game);
 
@@ -55,5 +60,11 @@ public class GameActivity extends AppCompatActivity {
         }
 
         Log.i(TAG, "GameActivity was created");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }
