@@ -112,8 +112,10 @@ public class PlaygroundFragment extends Fragment{
                         return true;
 
                     case MotionEvent.ACTION_MOVE:
-                        v.setX(event.getRawX() + dX);
-                        v.setY(event.getRawY() + dY);
+                        if(event.getRawX() + dX < playground.getWidth() - v.getWidth() &&
+                                event.getRawX() + dX > 0) v.setX(event.getRawX() + dX);
+                        if(event.getRawY() + dY < playground.getHeight() - v.getHeight() &&
+                                event.getRawY() + dY > 0) v.setY(event.getRawY() + dY);
                         return true;
 
                     case MotionEvent.ACTION_UP:
