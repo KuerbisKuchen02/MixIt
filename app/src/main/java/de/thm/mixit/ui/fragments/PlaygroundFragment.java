@@ -25,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Random;
 
 import de.thm.mixit.BuildConfig;
@@ -58,7 +60,8 @@ public class PlaygroundFragment extends Fragment{
             @Nullable Bundle savedInstanceState) {
 
         this.inflater = inflater;
-        FragmentPlaygroundBinding binding = FragmentPlaygroundBinding.inflate(inflater, container, false);
+        FragmentPlaygroundBinding binding =
+                FragmentPlaygroundBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         viewModel = new ViewModelProvider(requireActivity(),
@@ -129,8 +132,9 @@ public class PlaygroundFragment extends Fragment{
                                 other.setOnTouchListener((dummy, e) -> false);
                                 try {
                                     viewModel.combineElements(
-                                            getChipById((int) v.getTag()),
-                                            getChipById((int) other.getTag()));
+                                            Objects.requireNonNull(getChipById((int) v.getTag())),
+                                            Objects.requireNonNull(
+                                                    getChipById((int) other.getTag())));
                                     viewModel.increaseTurnCounter();
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error while combining elements: "
@@ -156,57 +160,21 @@ public class PlaygroundFragment extends Fragment{
     }
 
     private void updateElements(List<ElementChip> newElements) {
-        if (BuildConfig.DEBUG) Log.d(TAG, "New elements size: " + newElements.size()
-                + " Old elements size: " + currentElements.size());
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "New elements size: " + newElements.size()
+                    + " Old elements size: " + currentElements.size());
+            Log.v(TAG, "UpdateElements\n new=" + newElements + "\nold=" + currentElements);
+        }
+
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
                 new ElementDiffCallback(currentElements, newElements)
         );
 
-        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
-            @Override
-            public void onInserted(int position, int count) {
-                if (BuildConfig.DEBUG) Log.d(TAG, "Added element at " + position);
-                for (int i = 0; i < count; i++) {
-                    ElementChip e = newElements.get(position + i);
-                    playground.addView(createElement(e));
-                    if (BuildConfig.DEBUG) Log.d(TAG, "new Element: " + e);
-                }
-            }
-
-            @Override
-            public void onRemoved(int position, int count) {
-                if (BuildConfig.DEBUG) Log.d(TAG, "Removed element at " + position);
-                for (int i = 0; i < count; i++) {
-                    ElementChip e = currentElements.get(i + position);
-                    View viewToRemove = playground.findViewWithTag(e.getId());
-                    if (viewToRemove != null) playground.removeView(viewToRemove);
-                    if (BuildConfig.DEBUG) Log.d(TAG, "delete Element: " + e);
-                }
-            }
-
-            // Not important
-            @Override
-            public void onMoved(int fromPosition, int toPosition) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Moved element from " + fromPosition + " to " + toPosition);
-                }
-                throw new RuntimeException("This should not have happened :(");
-            }
-            @Override
-            public void onChanged(int position, int count, @Nullable Object payload) {
-                if (BuildConfig.DEBUG) Log.d(TAG, count + " elements changed");
-                for (int i = 0; i < count; i++ ) {
-                    ElementChip e = newElements.get(position + i);
-                    View v = playground.findViewById(position + i);
-                    if (v != null) {
-                        v.setX(e.getX());
-                        v.setY(e.getY());
-                    }
-                }
-            }
-        });
-        currentElements.clear();
-        currentElements.addAll(newElements);
+        // Not perfect, for more info see note on ElementListUpdateCallback class
+        ElementListUpdateCallback callback =
+                new ElementListUpdateCallback(currentElements, newElements);
+        diffResult.dispatchUpdatesTo(callback);
+        callback.finishInserts();
     }
     /**
      * Find free space on playground
@@ -334,5 +302,111 @@ public class PlaygroundFragment extends Fragment{
             }
         }
         return null;
+    }
+
+    /*
+    * FIXME: Better alternative for synchronizing playground with viewmodel data
+    * This is definitely not the cleanest solution more like a dirty workaround for the time being
+    *
+    * Problem:
+    * It is not possible within onInserted for the inserted oldList item to
+    * identify its related position in the newList.
+    * Normally inserting new items causes the onInsert method to throw an IndexOutOfBoundsException
+    * Also see: https://issuetracker.google.com/issues/115701827
+    *
+    * Solution:
+    * Insert a null-dummy list item in the oldList.
+    * After diffResult.dispatchUpdatesTo is done,
+    * replace the null-dummies with the newList items at same positions.
+    * Also see: https://stackoverflow.com/questions/56670162/how-to-fix-incorrect-position-i-get-when-dispatching-an-update-to-listupdatecall
+    *
+    * Since this Issue is marked as won't fix we cannot expect an official solution for this
+    * anytime soon. As long as we don't find a better alternative we stick with the working
+    * but bit ugly workaround
+    */
+    private class ElementListUpdateCallback implements ListUpdateCallback {
+
+        private final List<ElementChip> oldElements;
+        private final List<ElementChip> newElements;
+        private int inserts = 0;
+
+        public ElementListUpdateCallback(List<ElementChip> oldElements,
+                                         List<ElementChip> newElements) {
+            this.oldElements = oldElements;
+            this.newElements = newElements;
+        }
+
+        public void finishInserts() {
+            if (inserts <= 0) return;
+
+            if (BuildConfig.DEBUG) Log.d(TAG, "finishInserts inserts=" + inserts);
+
+            ListIterator<ElementChip> oldListIterator = oldElements.listIterator();
+            ListIterator<ElementChip> newListIterator = newElements.listIterator();
+
+            while (inserts > 0 && oldListIterator.hasNext() && newListIterator.hasNext()) {
+                ElementChip oldElement = oldListIterator.next();
+                ElementChip newElement = newListIterator.next();
+
+                if (oldElement == null) {
+                    //Replaces the last element returned by next()
+                    oldListIterator.set(newElement);
+                    playground.addView(createElement(newElement));
+                    if (BuildConfig.DEBUG) Log.d(TAG, "new Element: " + newElement);
+                    inserts--;
+                }
+            }
+
+            if (inserts > 0 || oldElements.contains(null)) {
+                //There must be something wrong
+                Log.e(TAG, "finishInserts inserts=" + inserts + " remaining");
+            }
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "onInserted position=" + position
+                    + " count=" + count);
+            for (int i = 0; i < count; i++) {
+                // We don't know the related position of the newList, so we add null
+                oldElements.add(position + i, null);
+                inserts++;
+            }
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "onRemoved position=" + position
+                    + " count=" + count);
+            for (int i = 0; i < count; i++) {
+                ElementChip e = oldElements.remove(position);
+                View viewToRemove = playground.findViewWithTag(e.getId());
+                if (viewToRemove != null) playground.removeView(viewToRemove);
+                if (BuildConfig.DEBUG) Log.d(TAG, "delete Element: " + e);
+            }
+        }
+
+        // Not important
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "onMoved fromPosition=" + fromPosition
+                    + " toPosition=" + toPosition);
+            oldElements.add(toPosition, oldElements.remove(fromPosition));
+        }
+
+        @Override
+        public void onChanged(int position, int count, @Nullable Object payload) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "onChanged position=" + position
+                    + " count=" + count);
+            for (int i = 0; i < count; i++ ) {
+                ElementChip e = newElements.get(position + i);
+                oldElements.set(position + i, e);
+                View v = playground.findViewById(position + i);
+                if (v != null) {
+                    v.setX(e.getX());
+                    v.setY(e.getY());
+                }
+            }
+        }
     }
 }
