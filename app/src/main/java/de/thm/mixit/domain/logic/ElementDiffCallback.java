@@ -28,8 +28,7 @@ public class ElementDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getElement().id
-                == newList.get(newItemPosition).getElement().id;
+        return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
     }
 
     @Override

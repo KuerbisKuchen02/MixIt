@@ -61,7 +61,8 @@ public class ElementChip {
     @Override
     public String toString() {
         return "ElementChip{" +
-                "element=" + element +
+                "id=" + id +
+                ", element=" + element +
                 ", x=" + x +
                 ", y=" + y +
                 '}';
@@ -70,6 +71,8 @@ public class ElementChip {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ElementChip)) return false;
-        return this.id == ((ElementChip) o).id;
+        return this.id == ((ElementChip) o).id
+                && this.x == ((ElementChip) o).x
+                && this.y == ((ElementChip) o).y;
     }
 }

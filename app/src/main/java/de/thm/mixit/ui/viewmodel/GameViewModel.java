@@ -116,16 +116,10 @@ public class GameViewModel extends ViewModel {
         elementsOnPlayground.setValue(new ArrayList<>());
     }
 
-    public void combineElements(ElementChip chip1,
-                                ElementChip chip2) {
-        elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (element) -> {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                removeElementFromPlayground(chip1);
-                removeElementFromPlayground(chip2);
-                addElementToPlayground(new ElementChip(element, chip1.getX(), chip2.getY()));
-                loadElements();
-            });
-        });
+    public void combineElements(ElementChip chip1, ElementChip chip2) {
+        elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (element) ->
+                new Handler(Looper.getMainLooper()).post(() ->
+                        handleCombineElements(chip1, chip2, element)));
     }
 
     public LiveData<Long> passedTime() {
@@ -152,6 +146,16 @@ public class GameViewModel extends ViewModel {
     private void loadElements() {
         this.elementRepository.getAll((list) ->
                 new Handler(Looper.getMainLooper()).post(() -> this.elements.setValue(list)));
+    }
+
+    private void handleCombineElements(ElementChip chip1, ElementChip chip2, Element newElement) {
+        List<ElementChip> list = elementsOnPlayground.getValue();
+        assert list != null;
+        list.remove(chip1);
+        list.remove(chip2);
+        list.add(new ElementChip(newElement, chip1.getX(), chip1.getY()));
+        elementsOnPlayground.setValue(list);
+        loadElements();
     }
 
     private final Runnable updateTimerRunnable = new Runnable() {
