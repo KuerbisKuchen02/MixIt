@@ -15,6 +15,11 @@ import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
+/**
+ * Data binding adapters for various elements inside the GameActivity or related fragments
+ *
+ * @author Josia Menger
+ */
 public class GameBindingAdapter {
 
     @BindingAdapter("elements")

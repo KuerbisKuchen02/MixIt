@@ -6,6 +6,11 @@ import java.util.List;
 
 import de.thm.mixit.data.model.ElementChip;
 
+/**
+ * Utility class used to calculate the difference of two element lists
+ *
+ * @author Josia Menger
+ */
 public class ElementDiffCallback extends DiffUtil.Callback {
     private final List<ElementChip> oldList;
     private final List<ElementChip> newList;

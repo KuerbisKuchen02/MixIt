@@ -304,26 +304,35 @@ public class PlaygroundFragment extends Fragment{
         return null;
     }
 
-    /*
-    * FIXME: Better alternative for synchronizing playground with viewmodel data
-    * This is definitely not the cleanest solution more like a dirty workaround for the time being
-    *
-    * Problem:
-    * It is not possible within onInserted for the inserted oldList item to
-    * identify its related position in the newList.
-    * Normally inserting new items causes the onInsert method to throw an IndexOutOfBoundsException
-    * Also see: https://issuetracker.google.com/issues/115701827
-    *
-    * Solution:
-    * Insert a null-dummy list item in the oldList.
-    * After diffResult.dispatchUpdatesTo is done,
-    * replace the null-dummies with the newList items at same positions.
-    * Also see: https://stackoverflow.com/questions/56670162/how-to-fix-incorrect-position-i-get-when-dispatching-an-update-to-listupdatecall
-    *
-    * Since this Issue is marked as won't fix we cannot expect an official solution for this
-    * anytime soon. As long as we don't find a better alternative we stick with the working
-    * but bit ugly workaround
-    */
+    /**
+     * Convert the first list to the second list by applying the differences calculated by
+     * {@link ElementDiffCallback}.
+     * <p>
+     * <b>Important</b>:<br>
+     * After invoking with `dispatchUpdatesTo()` use the method {@link #finishInserts()}
+     * to complete the transformation. See below for more details.
+     * <p>
+     * FIXME: Better alternative for synchronizing playground with viewmodel data
+     * <p>
+     * This is definitely not the cleanest solution more like a dirty workaround for the time being
+     * <p>
+     * Problem:<br>
+     * It is not possible within onInserted for the inserted oldList item to
+     * identify its related position in the newList.
+     * Normally inserting new items causes the onInsert method to throw an IndexOutOfBoundsException
+     * Also see: <a href="https://issuetracker.google.com/issues/115701827">Google Issue Tracker</a>
+     * <p>
+     * Solution:<br>
+     * Insert a null-dummy list item in the oldList.
+     * After diffResult.dispatchUpdatesTo is done,
+     * replace the null-dummies with the newList items at same positions.
+     * Also see: <a href="https://stackoverflow.com/questions/56670162/how-to-fix-incorrect-position-i-get-when-dispatching-an-update-to-listupdatecall">StackOverflow</a>
+     * <p>
+     * Since this Issue is marked as won't fix we cannot expect an official solution for this
+     * anytime soon. As long as we don't find a better alternative we stick with the working
+     * but bit ugly workaround
+     * @author Josia Menger
+     */
     private class ElementListUpdateCallback implements ListUpdateCallback {
 
         private final List<ElementChip> oldElements;

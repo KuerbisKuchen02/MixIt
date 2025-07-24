@@ -20,6 +20,13 @@ import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
+/**
+ * UI state for the {@link de.thm.mixit.ui.activities.GameActivity}
+ *
+ * Use the {@link Factory} to get a new GameViewModel instance
+ *
+ * @author Josia Menger
+ */
 public class GameViewModel extends ViewModel {
 
     private final ElementRepository elementRepository;
@@ -35,6 +42,11 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final String targetElement;
 
+    /**
+     * Use the {@link Factory} to get a new GameViewModel instance
+     * @param elementRepository ElementRepository used for dependency injection
+     * @param elementUseCase ElementUseCase used for dependency injection
+     */
     private GameViewModel(ElementRepository elementRepository, ElementUseCase elementUseCase) {
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
@@ -51,39 +63,50 @@ public class GameViewModel extends ViewModel {
         this.targetElement = "Schokokuchen";
     }
 
+    /**
+     * Get all discovered elements
+     * @return all elements
+     */
     public LiveData<List<Element>> getElements() {
         return elements;
     }
 
+    /**
+     * Get all elements filtered by last query set using {@link #onSearchQueryChanged}
+     * @return filtered elements
+     */
     public LiveData<List<Element>> getFilteredElements() {
         return filteredElements;
     }
 
+    /**
+     * Get all element chips currently on the playground
+     * @return element chips
+     */
     public LiveData<List<ElementChip>> getElementsOnPlayground() {
         return elementsOnPlayground;
     }
 
+    /**
+     * Set a new filter for the element list returned by {@link #filteredElements}
+     * @param query filter
+     */
     public void onSearchQueryChanged(String query) {
         searchQuery.setValue(query);
     }
 
-    private void filter() {
-        List<Element> all = elements.getValue();
-        String query = searchQuery.getValue();
-        if (all == null || query == null || query.isEmpty()) {
-            filteredElements.setValue(all);
-        } else {
-            List<Element> filtered = all.stream()
-                    .filter(e -> e.toString().toLowerCase().contains(query.toLowerCase()))
-                    .collect(Collectors.toList());
-            filteredElements.setValue(filtered);
-        }
-    }
-
+    /**
+     * Add a new element to a random position to the playground
+     * @param element element to add
+     */
     public void addElementToPlayground(Element element) {
         addElementToPlayground(new ElementChip(element));
     }
 
+    /**
+     * Add an existing element chip back to the playground
+     * @param element chip to add
+     */
     public void addElementToPlayground(ElementChip element) {
         List<ElementChip> list = elementsOnPlayground.getValue();
         assert list != null;
@@ -116,6 +139,13 @@ public class GameViewModel extends ViewModel {
         elementsOnPlayground.setValue(new ArrayList<>());
     }
 
+    /**
+     * Combine to Elements and add product
+     * <p>
+     * Will remove reactant and add product to the playground if succeeds
+     * @param chip1 reactant 1
+     * @param chip2 reactant 2
+     */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
         elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (element) ->
                 new Handler(Looper.getMainLooper()).post(() ->
@@ -139,15 +169,45 @@ public class GameViewModel extends ViewModel {
         turns.setValue(turns.getValue() + 1);
     }
 
+    /**
+     * Removes all callbacks
+     * <p>
+     * Should be called in onDestroy method of LifecycleOwner
+     */
     public void onDestroy() {
         timeHandler.removeCallbacks(updateTimerRunnable);
     }
 
+    /**
+     * Transform {@link #elements} using {@link #searchQuery} to {@link #filteredElements}
+     */
+    private void filter() {
+        List<Element> all = elements.getValue();
+        String query = searchQuery.getValue();
+        if (all == null || query == null || query.isEmpty()) {
+            filteredElements.setValue(all);
+        } else {
+            List<Element> filtered = all.stream()
+                    .filter(e -> e.toString().toLowerCase().contains(query.toLowerCase()))
+                    .collect(Collectors.toList());
+            filteredElements.setValue(filtered);
+        }
+    }
+
+    /**
+     * Get all elements from the element repository
+     */
     private void loadElements() {
         this.elementRepository.getAll((list) ->
                 new Handler(Looper.getMainLooper()).post(() -> this.elements.setValue(list)));
     }
 
+    /**
+     * Handle playground changes after successful combination
+     * @param chip1 reactant 1
+     * @param chip2 reactant 2
+     * @param newElement product
+     */
     private void handleCombineElements(ElementChip chip1, ElementChip chip2, Element newElement) {
         List<ElementChip> list = elementsOnPlayground.getValue();
         assert list != null;
@@ -158,6 +218,9 @@ public class GameViewModel extends ViewModel {
         loadElements();
     }
 
+    /**
+     * Worker thread to measure current playtime
+     */
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -168,6 +231,10 @@ public class GameViewModel extends ViewModel {
         }
     };
 
+    /**
+     * Creates a new {@link GameViewModel} instance or returns an existing one
+     * @author Josia Menger
+     */
     public static class Factory implements ViewModelProvider.Factory {
 
         private final ElementRepository elementRepository;
