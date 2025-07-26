@@ -38,6 +38,6 @@
         app:layout_constraintHeight_percent="0.33"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment_container_playground"
-        tools:layout="@layout/fragment_item_list" />
+        tools:layout="@layout/fragment_element_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

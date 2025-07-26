@@ -32,13 +32,10 @@ public class ElementRecyclerViewAdapter extends
     /**
      * Create a new ElementRecyclerViewAdapter
      *
-     * @param elements Element list to show
      * @param listener Callback method to call when an element card is clicked
      */
-    public ElementRecyclerViewAdapter(List<Element> elements,
-                                      OnElementClickListener listener) {
-        this.elements = new ArrayList<>(elements);
-        this.filteredElements = new ArrayList<>(elements);
+    public ElementRecyclerViewAdapter(OnElementClickListener listener) {
+        this.filteredElements = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -76,6 +73,7 @@ public class ElementRecyclerViewAdapter extends
         this.elements = elements;
         this.filteredElements.clear();
         this.filteredElements.addAll(elements);
+        notifyDataSetChanged();
     }
 
     /**
