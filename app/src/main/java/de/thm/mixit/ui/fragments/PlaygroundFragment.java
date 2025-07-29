@@ -139,6 +139,8 @@ public class PlaygroundFragment extends Fragment{
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error while combining elements: "
                                             + e.getMessage());
+                                    v.setOnTouchListener(this);
+                                    other.setOnTouchListener(this);
                                 }
                             }
                         }
