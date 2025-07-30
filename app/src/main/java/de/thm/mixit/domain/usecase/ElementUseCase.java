@@ -9,6 +9,7 @@ import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
+import de.thm.mixit.data.source.Result;
 
 /**
  * Use case for handling element combinations in the Infinite Craft game.
@@ -50,7 +51,7 @@ public class ElementUseCase {
      * @throws RuntimeException If an error occurs during the operation.
      */
     public void getElement(Element element1, Element element2,
-                           Consumer<Element> callback) throws RuntimeException {
+                           Consumer<Result<Element>> callback) throws RuntimeException {
         // Check if there is already a combination for the two elements
         combinationRepository.findByCombination(element1.toString(), element2.toString(),
                 combination -> {
@@ -60,7 +61,9 @@ public class ElementUseCase {
                                 + combination.inputA + " + " + combination.inputB
                                 + " with outputId: " + combination.outputId);
 
-                        elementRepository.findById(combination.outputId, callback::accept);
+                        elementRepository.findById(combination.outputId, element -> {
+                            if (element != null) callback.accept(Result.success(element));
+                        });
 
                         // If no combination exists, generate a new element
                     } else {
@@ -68,8 +71,21 @@ public class ElementUseCase {
                                 + element1 + " + " + element2);
 
                         elementRepository.generateNew(element1.toString(), element2.toString(),
-                                newElement -> handleGenerateNew(element1, element2,
-                                        newElement, callback));
+                                result -> {
+                            if (result.isError()) callback.accept(result);
+                            else {
+                                handleGenerateNew(element1, element2,
+                                        result.getData(), element -> {
+                                    if (element != null) {
+                                        callback.accept(Result.success(element));
+                                    } else {
+                                        callback.accept(Result.failure(
+                                                new RuntimeException("Failed to generate element")
+                                        ));
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
     }
