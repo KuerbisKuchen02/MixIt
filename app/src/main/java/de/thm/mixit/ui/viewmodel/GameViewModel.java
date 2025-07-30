@@ -3,6 +3,7 @@ package de.thm.mixit.ui.viewmodel;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -28,6 +29,7 @@ import de.thm.mixit.domain.usecase.ElementUseCase;
  * @author Josia Menger
  */
 public class GameViewModel extends ViewModel {
+    private final static String TAG = GameViewModel.class.getSimpleName();
 
     private final ElementRepository elementRepository;
     private final ElementUseCase elementUseCase;
@@ -35,6 +37,7 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
+    private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
     private final Handler timeHandler;
 
     private final long startTime;
@@ -58,6 +61,7 @@ public class GameViewModel extends ViewModel {
         this.timeHandler.post(updateTimerRunnable);
         // TODO: GameStateManager: load saved playground state
         this.elementsOnPlayground.setValue(new ArrayList<>());
+        this.combineError.setValue(null);
         this.turns.setValue(0);
         this.passedTime.setValue(0L);
         this.targetElement = "Schokokuchen";
@@ -147,9 +151,22 @@ public class GameViewModel extends ViewModel {
      * @param chip2 reactant 2
      */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
-        elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (element) ->
+        elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
+            // combineError contains null or the last error while trying to combine two elements.
+            if (result.isError()) {
+                Log.e(TAG, "An error occurred while combining: " + result.getError());
+                combineError.postValue(result.getError());
+            } else {
+                Log.d(TAG, "Elements successfully combined.");
+                combineError.postValue(null);
                 new Handler(Looper.getMainLooper()).post(() ->
-                        handleCombineElements(chip1, chip2, element)));
+                        handleCombineElements(chip1, chip2, result.getData()));
+            }
+        });
+    }
+
+    public LiveData<Throwable> getCombineError() {
+        return combineError;
     }
 
     public LiveData<Long> passedTime() {
