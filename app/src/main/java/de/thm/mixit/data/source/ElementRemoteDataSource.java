@@ -51,32 +51,48 @@ public class ElementRemoteDataSource {
      * - an invalid element format
      */
     public static void combine(String element1, String element2,
-                               Consumer<Element> callback) {
+                               Consumer<Result<Element>> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
                 .addUserMessage(element1 + " + " + element2)
                 .model(ChatModel.CHATGPT_4O_LATEST)
                 .build();
 
-       client.chat().completions().create(createParams).thenAccept(
-               chatCompletion -> {
-            if (chatCompletion.choices().isEmpty()) {
-                throw new RuntimeException("No choices returned from OpenAI API");
-            }
+        client.chat().completions().create(createParams).handle(
+                (chatCompletion, throwable) -> {
+                    // When an error has occurred when calling the OpenAI API, the response in
+                    // chatCompletion is null and throwable contains an error.
+                    if (throwable != null) {
+                        callback.accept(Result.failure(throwable));
+                        return null;
+                    }
 
-            if (chatCompletion.choices().get(0).message().content().isEmpty())
-                throw new RuntimeException("Empty content returned from OpenAI API");
+                    if (chatCompletion.choices().isEmpty()) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("No choices returned from OpenAI API")
+                        ));
+                    }
 
-            String content = chatCompletion.choices().get(0).message().content().get();
+                    if (chatCompletion.choices().get(0).message().content().isEmpty()) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("Empty content returned from OpenAI API")
+                        ));
+                    }
 
-            if (!isValidElement(content)) {
-                throw new RuntimeException("Invalid element format: " + content);
-            }
+                    String content = chatCompletion.choices().get(0).message().content().get();
 
-            String emoji = content.substring(0, content.indexOf(' '));
-            String name = content.substring(content.indexOf(' ') + 1);
+                    if (!isValidElement(content)) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("Invalid element format: " + content)
+                        ));
+                    }
 
-            callback.accept(new Element(name, emoji));
-        });
+                    String emoji = content.substring(0, content.indexOf(' '));
+                    String name = content.substring(content.indexOf(' ') + 1);
+                    callback.accept(Result.success(new Element(name, emoji)));
+
+                    return null;
+                });
     }
 }
+
