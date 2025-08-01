@@ -194,7 +194,8 @@ public class GameViewModel extends ViewModel {
     /**
      * Get all elements from the element repository
      */
-    private void loadElements() {
+    @VisibleForTesting
+    void loadElements() {
         this.elementRepository.getAll(elements::postValue);
     }
 
