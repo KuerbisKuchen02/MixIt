@@ -1,6 +1,7 @@
 package de.thm.mixit.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,8 @@ public class GameActivity extends AppCompatActivity {
     public static final String EXTRA_IS_ARCADE = "isArcade";
     private static final String TAG = GameActivity.class.getSimpleName();
     private GameViewModel viewModel;
+    private long startTime;
+    private Handler timeHandler;
     private boolean isArcade = false;
 
     @Override
@@ -59,6 +62,11 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
+        this.startTime = System.currentTimeMillis();
+        // FIXME: new Handler() is deprecated
+        this.timeHandler = new Handler();
+        this.timeHandler.post(updateTimerRunnable);
+
         Log.i(TAG, "GameActivity was created");
     }
 
@@ -66,5 +74,19 @@ public class GameActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+        timeHandler.removeCallbacks(updateTimerRunnable);
     }
+
+    /**
+     * Worker thread to measure current playtime
+     */
+    private final Runnable updateTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            viewModel.setPassedTime(System.currentTimeMillis() - startTime);
+
+            // Handler calls it again every second
+            timeHandler.postDelayed(this, 1000);
+        }
+    };
 }

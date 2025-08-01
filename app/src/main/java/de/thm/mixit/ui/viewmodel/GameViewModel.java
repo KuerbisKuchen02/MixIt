@@ -1,11 +1,10 @@
 package de.thm.mixit.ui.viewmodel;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,8 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
 /**
@@ -38,9 +37,6 @@ public class GameViewModel extends ViewModel {
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
     private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
-    private final Handler timeHandler;
-
-    private final long startTime;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final String targetElement;
@@ -50,15 +46,13 @@ public class GameViewModel extends ViewModel {
      * @param elementRepository ElementRepository used for dependency injection
      * @param elementUseCase ElementUseCase used for dependency injection
      */
-    private GameViewModel(ElementRepository elementRepository, ElementUseCase elementUseCase) {
+    @VisibleForTesting
+    GameViewModel(ElementRepository elementRepository, ElementUseCase elementUseCase) {
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
         loadElements();
-        this.startTime = System.currentTimeMillis();
-        this.timeHandler = new Handler();
-        this.timeHandler.post(updateTimerRunnable);
         // TODO: GameStateManager: load saved playground state
         this.elementsOnPlayground.setValue(new ArrayList<>());
         this.combineError.setValue(null);
@@ -159,8 +153,7 @@ public class GameViewModel extends ViewModel {
             } else {
                 Log.d(TAG, "Elements successfully combined.");
                 combineError.postValue(null);
-                new Handler(Looper.getMainLooper()).post(() ->
-                        handleCombineElements(chip1, chip2, result.getData()));
+                handleCombineElements(chip1, chip2, result.getData());
             }
         });
     }
@@ -169,7 +162,11 @@ public class GameViewModel extends ViewModel {
         return combineError;
     }
 
-    public LiveData<Long> passedTime() {
+    public void setPassedTime(Long time) {
+        passedTime.setValue(time);
+    }
+
+    public LiveData<Long> getPassedTime() {
         return passedTime;
     }
 
@@ -192,7 +189,7 @@ public class GameViewModel extends ViewModel {
      * Should be called in onDestroy method of LifecycleOwner
      */
     public void onDestroy() {
-        timeHandler.removeCallbacks(updateTimerRunnable);
+        // TODO save current game state
     }
 
     /**
@@ -215,8 +212,7 @@ public class GameViewModel extends ViewModel {
      * Get all elements from the element repository
      */
     private void loadElements() {
-        this.elementRepository.getAll((list) ->
-                new Handler(Looper.getMainLooper()).post(() -> this.elements.setValue(list)));
+        this.elementRepository.getAll(elements::postValue);
     }
 
     /**
@@ -231,22 +227,9 @@ public class GameViewModel extends ViewModel {
         list.remove(chip1);
         list.remove(chip2);
         list.add(new ElementChip(newElement, chip1.getX(), chip1.getY()));
-        elementsOnPlayground.setValue(list);
+        elementsOnPlayground.postValue(list);
         loadElements();
     }
-
-    /**
-     * Worker thread to measure current playtime
-     */
-    private final Runnable updateTimerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            passedTime.setValue(System.currentTimeMillis() - startTime);
-
-            // Handler calls it again every second
-            timeHandler.postDelayed(this, 1000);
-        }
-    };
 
     /**
      * Creates a new {@link GameViewModel} instance or returns an existing one
@@ -272,6 +255,4 @@ public class GameViewModel extends ViewModel {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }
-
-
 }
