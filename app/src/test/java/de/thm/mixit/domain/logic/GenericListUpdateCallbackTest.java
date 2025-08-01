@@ -50,7 +50,7 @@ public class GenericListUpdateCallbackTest {
 
         verifyNoInteractions(mockHandler);
         assertEquals(3, workingList.size());
-        assertNull(workingList.getLast());
+        assertNull(workingList.get(2));
     }
 
     @Test
