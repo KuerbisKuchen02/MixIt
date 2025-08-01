@@ -11,4 +11,6 @@
     <string name="game_element_list_content_description">Searchable element list</string>
     <string name="game_playground_fab_clear">clear playground</string>
     <string name="game_playground_fab_add_element">open element list</string>
+    <string name="gamestate_shared_preferences_endless">de.thm.mixit.GAMESTATE_ENDLESS_FILE</string>
+    <string name="gamestate_shared_preferences_arcade">de.thm.mixit.GAMESTATE_ARCADE_FILE</string>
 </resources>
