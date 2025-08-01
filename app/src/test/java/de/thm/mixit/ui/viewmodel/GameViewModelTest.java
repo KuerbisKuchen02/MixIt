@@ -2,6 +2,7 @@ package de.thm.mixit.ui.viewmodel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -141,19 +142,37 @@ public class GameViewModelTest {
         viewModel.addElementToPlayground(chip2);
 
         Element resultElement = new Element("Pflanze", "\uD83C\uDF31");
-
-        doAnswer(invocation -> {
-            Consumer<Result<Element>> callback = invocation.getArgument(2);
-            callback.accept(Result.success(resultElement));
-            return null;
-        }).when(mockElementUseCase).getElement(any(), any(), any());
+        mockElementUseCaseGetElement(Result.success(resultElement));
 
         viewModel.combineElements(chip1, chip2);
         List<ElementChip> result =
                 LiveDataTestUtil.getOrAwaitValue(viewModel.getElementsOnPlayground());
+        Throwable error = LiveDataTestUtil.getOrAwaitValue(viewModel.getCombineError());
 
+        assertNull(error);
         assertEquals(1, result.size());
         assertEquals("Pflanze", result.get(0).getElement().name);
+    }
+
+    @Test
+    public void combineElements_WithFailedCombination_SetErrorAndAbortCombination()
+        throws InterruptedException {
+        ElementChip chip1 = new ElementChip(new Element("Wasser", "\uD83D\uDCA7"));
+        ElementChip chip2 = new ElementChip(new Element("Erde", "\uD83C\uDF0D"));
+        viewModel.addElementToPlayground(chip1);
+        viewModel.addElementToPlayground(chip2);
+
+        mockElementUseCaseGetElement(Result.failure(new Throwable("An error occurred")));
+
+        viewModel.combineElements(chip1, chip2);
+        List<ElementChip> result =
+                LiveDataTestUtil.getOrAwaitValue(viewModel.getElementsOnPlayground());
+        Throwable error = LiveDataTestUtil.getOrAwaitValue(viewModel.getCombineError());
+
+        assertEquals("An error occurred", error.getMessage());
+        assertEquals(2, result.size());
+        assertEquals("Wasser", result.get(0).getElement().name);
+        assertEquals("Erde", result.get(1).getElement().name);
     }
 
     @Test
@@ -189,5 +208,13 @@ public class GameViewModelTest {
             callback.accept(list);
             return null;
         }).when(mockElementRepository).getAll(any());
+    }
+
+    private void mockElementUseCaseGetElement(Result<Element> result) {
+        doAnswer(invocation -> {
+            Consumer<Result<Element>> callback = invocation.getArgument(2);
+            callback.accept(result);
+            return null;
+        }).when(mockElementUseCase).getElement(any(), any(), any());
     }
 }

@@ -1,6 +1,5 @@
 package de.thm.mixit.util;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
