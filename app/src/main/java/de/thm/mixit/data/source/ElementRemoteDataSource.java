@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.model.Result;
 
 /**
  * Remote data source for accessing and combining elements using the OpenAI API.

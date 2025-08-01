@@ -1,4 +1,4 @@
-package de.thm.mixit.data.source;
+package de.thm.mixit.data.model;
 
 /**
  * A generic object that encapsulates the outcome of an operation,
@@ -46,10 +46,6 @@ public class Result<T> {
      */
     public static <T> Result<T> failure(Throwable error) {
         return new Result<>(null, error);
-    }
-
-    public boolean isSuccess() {
-        return error == null;
     }
 
     public boolean isError() {

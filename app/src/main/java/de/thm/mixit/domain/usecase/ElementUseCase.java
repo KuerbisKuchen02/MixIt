@@ -9,7 +9,7 @@ import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
-import de.thm.mixit.data.source.Result;
+import de.thm.mixit.data.model.Result;
 
 /**
  * Use case for handling element combinations in the Infinite Craft game.
@@ -72,19 +72,16 @@ public class ElementUseCase {
 
                         elementRepository.generateNew(element1.toString(), element2.toString(),
                                 result -> {
-                            if (result.isError()) callback.accept(result);
-                            else {
-                                handleGenerateNew(element1, element2,
-                                        result.getData(), element -> {
-                                    if (element != null) {
-                                        callback.accept(Result.success(element));
-                                    } else {
-                                        callback.accept(Result.failure(
-                                                new RuntimeException("Failed to generate element")
-                                        ));
-                                    }
-                                });
+                            if (result.isError()) {
+                                Log.d(TAG, "Failed to generate element: " + result.getError());
+                                callback.accept(result);
+                                return;
                             }
+
+                            handleGenerateNew(element1, element2,
+                                    result.getData(), element -> {
+                                callback.accept(Result.success(element));
+                            });
                         });
                     }
                 });

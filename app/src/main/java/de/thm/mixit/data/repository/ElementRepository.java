@@ -10,7 +10,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
-import de.thm.mixit.data.source.Result;
+import de.thm.mixit.data.model.Result;
 
 
 /**
