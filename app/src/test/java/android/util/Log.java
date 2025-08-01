@@ -1,5 +1,11 @@
 package android.util;
 
+/**
+ * Implementation of static Log methods without android dependencies.
+ * <p>
+ * This is used so that not all Log methods have to be mocked every time.
+ * @author Josia Menger
+ */
 @SuppressWarnings("unused")
 public class Log {
     public static int d(String tag, String msg) {

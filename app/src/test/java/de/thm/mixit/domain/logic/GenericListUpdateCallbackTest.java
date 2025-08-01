@@ -22,6 +22,10 @@ import java.util.List;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.model.ElementChip;
 
+/**
+ * Tests for {@link GenericListUpdateCallback}
+ * @author Josia Menger
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class GenericListUpdateCallbackTest {
 

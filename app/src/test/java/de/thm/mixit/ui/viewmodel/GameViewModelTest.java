@@ -31,6 +31,10 @@ import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 import de.thm.mixit.util.LiveDataTestUtil;
 
+/**
+ * Tests for {@link GameViewModel}
+ * @author Josia Menger
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class GameViewModelTest {
 
@@ -113,7 +117,8 @@ public class GameViewModelTest {
     }
 
     @Test
-    public void updateElementPositionOnPlayground_WithValidChip_UpdatesPositionCorrectly() throws InterruptedException {
+    public void updateElementPositionOnPlayground_WithValidChip_UpdatesPositionCorrectly()
+            throws InterruptedException {
         ElementChip elementChip1 =
                 new ElementChip(new Element("Feuer", "\uD83D\uDD25"), 0, 0);
         ElementChip elementChip2 =

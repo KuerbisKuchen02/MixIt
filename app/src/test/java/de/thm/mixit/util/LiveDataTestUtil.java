@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
  * For background information on why this is needed, read
  * <a href="https://medium.com/androiddevelopers/unit-testing-livedata-and-other-common-observability-problems-bb477262eb04">
  *     Unit-testing LiveData and other common observability problems</a>
+ * @author Josia Menger
  */
 @SuppressWarnings("unchecked")
 public class LiveDataTestUtil {
