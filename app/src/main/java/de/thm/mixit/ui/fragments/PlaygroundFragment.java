@@ -83,8 +83,11 @@ public class PlaygroundFragment extends Fragment{
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
         viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
             Log.d(TAG, "Registered new state after combining: " + error);
+            String text = "Something went wrong! Please check your internet connection.";
             if (error != null) {
-                Snackbar.make((View)playground, error.getMessage(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(playground, text, 6000)
+                        .setBackgroundTint(Color.RED)
+                        .show();
             }
         });
 
