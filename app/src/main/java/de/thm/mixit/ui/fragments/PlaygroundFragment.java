@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListUpdateCallback;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,16 @@ public class PlaygroundFragment extends Fragment{
                 });
 
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
+        viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
+            Log.d(TAG, "Registered new state after combining: " + error);
+            String text = "Something went wrong! Please check your internet connection.";
+            if (error != null) {
+                Snackbar.make(playground, text, 6000)
+                        .setBackgroundTint(Color.RED)
+                        .show();
+            }
+        });
+
 
         return binding.getRoot();
     }
