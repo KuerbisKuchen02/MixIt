@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
-import de.thm.mixit.domain.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.CombinationUseCase;
 
 /**
  * UI state for the {@link de.thm.mixit.ui.activity.GameActivity}
@@ -32,7 +32,7 @@ public class GameViewModel extends ViewModel {
     private final static String TAG = GameViewModel.class.getSimpleName();
 
     private final ElementRepository elementRepository;
-    private final ElementUseCase elementUseCase;
+    private final CombinationUseCase combinationUseCase;
     private final MutableLiveData<List<Element>> elements = new MutableLiveData<>();
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
@@ -48,11 +48,11 @@ public class GameViewModel extends ViewModel {
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
      * @param elementRepository ElementRepository used for dependency injection
-     * @param elementUseCase ElementUseCase used for dependency injection
+     * @param combinationUseCase ElementUseCase used for dependency injection
      */
-    private GameViewModel(ElementRepository elementRepository, ElementUseCase elementUseCase) {
+    private GameViewModel(ElementRepository elementRepository, CombinationUseCase combinationUseCase) {
         this.elementRepository = elementRepository;
-        this.elementUseCase = elementUseCase;
+        this.combinationUseCase = combinationUseCase;
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
         loadElements();
@@ -151,7 +151,7 @@ public class GameViewModel extends ViewModel {
      * @param chip2 reactant 2
      */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
-        elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
+        combinationUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
                 Log.e(TAG, "An error occurred while combining: " + result.getError());
@@ -255,11 +255,11 @@ public class GameViewModel extends ViewModel {
     public static class Factory implements ViewModelProvider.Factory {
 
         private final ElementRepository elementRepository;
-        private final ElementUseCase elementUseCase;
+        private final CombinationUseCase combinationUseCase;
 
         public Factory(Context context) {
             this.elementRepository = ElementRepository.create(context);
-            this.elementUseCase = new ElementUseCase(context);
+            this.combinationUseCase = new CombinationUseCase(context);
         }
 
         @NonNull
@@ -267,7 +267,7 @@ public class GameViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == GameViewModel.class) {
-                return (T) new GameViewModel(elementRepository, elementUseCase);
+                return (T) new GameViewModel(elementRepository, combinationUseCase);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

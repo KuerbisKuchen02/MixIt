@@ -21,9 +21,9 @@ import de.thm.mixit.data.model.Result;
  *
  * @author Jonathan Hildebrandt
  */
-public class ElementUseCase {
+public class CombinationUseCase {
 
-    private static final String TAG = ElementUseCase.class.getSimpleName();
+    private static final String TAG = CombinationUseCase.class.getSimpleName();
 
     private final CombinationRepository combinationRepository;
     private final ElementRepository elementRepository;
@@ -34,7 +34,7 @@ public class ElementUseCase {
      *
      * @param context The Android context used to create the repositories.
      */
-    public ElementUseCase(Context context) {
+    public CombinationUseCase(Context context) {
         this.combinationRepository = CombinationRepository.create(context);
         this.elementRepository = ElementRepository.create(context);
     }
