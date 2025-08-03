@@ -35,8 +35,49 @@ public class ElementRemoteDataSource {
             "Gib keine Erklärungen, keine Zusätze – " +
             "nur das eine neue Element mit genau einem passenden Emoji.\n";
 
+    private final static String GOAL_WORD_PROMPT =
+            "Arcade-Modus – Zielwort & Synonyme (Deutsch)\n" +
+            "\n" +
+            "Wir spielen Infinite Craft. Start-Elemente: Feuer, Wasser, Luft, Erde.\n" +
+            "\n" +
+            "Wähle ein **Zielwort**, das mit diesen Start-Elementen in 5–15 " +
+                    "Minuten Spielzeit erreichbar ist (mittlere Schwierigkeit;" +
+                    " weder trivial noch kryptisch; keine Eigennamen/Marken).\n" +
+            "\n" +
+            "Gib **ausschließlich** eine kommaseparierte Liste zurück:\n" +
+            "<Zielwort>, <Variante1>, <Variante2>, ...\n" +
+            "\n" +
+            "Regeln:\n" +
+            "- Sprache: Deutsch.\n" +
+            "- Erster Eintrag = exakt das Zielwort, das angezeigt wird.\n" +
+            "- Danach 3–7 **gleichwertige Bezeichnungen desselben Gegenstands**: " +
+                    "echte Synonyme, Flexionsformen (Singular/Plural) oder " +
+                    "gängige Zusammensetzungen/Schreibvarianten mit dem Zielwort als " +
+                    "Kopf (z. B. Kerze, Kerzen, Wachskerze).\n" +
+            "- **Strenger Bedeutungsrahmen (IS-A-Test):** Jedes Wort muss denselben " +
+                    "Gegenstand bezeichnen wie das Zielwort („Ein <WORT> " +
+                    "ist eine/ein <ZIELWORT>?“ → **Ja**).\n" +
+            "- **NICHT erlaubt:** Oberbegriffe/Funktionen (z. B. Lichtquelle, Beleuchtung), " +
+                    "Nachbarobjekte (z. B. Laterne, Lampe, Fackel), " +
+                    "Teile/Material/Eigenschaften (z. B. Flamme, Docht, Wachs), Halter/Behälter " +
+                    "(z. B. Kerzenhalter, Laterne).\n" +
+            "- Keine Erklärungen, kein Zusatztext, **keine Emojis**, keine Anführungszeichen, " +
+                    "**kein Punkt am Ende**.\n" +
+            "- Keine Duplikate; jeweils **ein Leerzeichen nach jedem Komma**; " +
+                    "Groß-/Kleinschreibung gemäß deutscher Rechtschreibung.\n" +
+            "- **Wenn unsicher:** Nutze ausschließlich Flexions- und Kompositavarianten " +
+                    "mit dem Zielwort als Bestandteil.\n" +
+            "\n" +
+            "Beispielausgabe:\n" +
+            "Kerze, Kerzen, Wachskerze\n";
+
     // TODO insert a regex to validate the element format <Emoji> <Description>
     private static boolean isValidElement(String element) {
+        return true;
+        // return element.matches("");
+    }
+
+    private static boolean isValidGoalResponse(String response) {
         return true;
         // return element.matches("");
     }
@@ -91,6 +132,57 @@ public class ElementRemoteDataSource {
                     String emoji = content.substring(0, content.indexOf(' '));
                     String name = content.substring(content.indexOf(' ') + 1);
                     callback.accept(Result.success(new Element(name, emoji)));
+
+                    return null;
+                });
+    }
+
+    /**
+     * Generates a new goal word and its synonyms using the OpenAI API.
+     * The result is returned via a callback.
+     *
+     * @param callback - a callback that will be called with the result of the goal word generation
+     * @throws RuntimeException if the OpenAI API returns:
+     * - no choices
+     * - an empty content
+     */
+    public static void generateNewGoalWord(Consumer<Result<String[]>> callback) {
+        ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
+                .addDeveloperMessage(GOAL_WORD_PROMPT)
+                .model(ChatModel.CHATGPT_4O_LATEST)
+                .build();
+
+        client.chat().completions().create(createParams).handle(
+                (chatCompletion, throwable) -> {
+                    if (throwable != null) {
+                        callback.accept(Result.failure(throwable));
+                        return null;
+                    }
+
+                    if (chatCompletion.choices().isEmpty()) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("No choices returned from OpenAI API")
+                        ));
+                        return null;
+                    }
+
+                    var content = chatCompletion.choices().get(0).message().content();
+
+                    if (content.isPresent()) {
+                        if (isValidGoalResponse(content.get())) {
+                            String[] words = content.get().split(", ");
+                            callback.accept(Result.success(words));
+                        } else {
+                            callback.accept(Result.failure(
+                                    new RuntimeException("Invalid goal word response format: " + content.get())
+                            ));
+                        }
+
+                    } else {
+                        callback.accept(Result.failure(
+                                new RuntimeException("Empty content returned from OpenAI API")
+                        ));
+                    }
 
                     return null;
                 });
