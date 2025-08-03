@@ -2,7 +2,7 @@ package de.thm.mixit.data.model;
 
 import androidx.annotation.NonNull;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 
 
 /**

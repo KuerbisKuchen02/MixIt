@@ -6,8 +6,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.ElementDao;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.dao.ElementDao;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * Local data source for accessing and modifying {@link Element} data.

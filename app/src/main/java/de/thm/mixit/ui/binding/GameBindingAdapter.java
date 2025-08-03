@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
 /**

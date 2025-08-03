@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.fragments;
+package de.thm.mixit.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import com.google.android.flexbox.JustifyContent;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.databinding.FragmentElementListBinding;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 import de.thm.mixit.ui.viewmodel.GameViewModel;

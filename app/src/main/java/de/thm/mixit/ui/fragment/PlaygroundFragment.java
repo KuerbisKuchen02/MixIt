@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.fragments;
+package de.thm.mixit.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -32,7 +32,7 @@ import java.util.Random;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.logic.ElementDiffCallback;

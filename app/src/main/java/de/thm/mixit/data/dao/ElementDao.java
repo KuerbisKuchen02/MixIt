@@ -1,4 +1,4 @@
-package de.thm.mixit.data.daos;
+package de.thm.mixit.data.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -6,7 +6,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * This DAO (data access object) defines methods to be used on {@link Element}'s.

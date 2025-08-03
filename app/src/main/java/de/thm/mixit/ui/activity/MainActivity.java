@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.activities;
+package de.thm.mixit.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;

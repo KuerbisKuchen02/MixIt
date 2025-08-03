@@ -1,4 +1,4 @@
-package de.thm.mixit.data.entities;
+package de.thm.mixit.data.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

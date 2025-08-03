@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
 /**
- * UI state for the {@link de.thm.mixit.ui.activities.GameActivity}
+ * UI state for the {@link de.thm.mixit.ui.activity.GameActivity}
  *
  * Use the {@link Factory} to get a new GameViewModel instance
  *

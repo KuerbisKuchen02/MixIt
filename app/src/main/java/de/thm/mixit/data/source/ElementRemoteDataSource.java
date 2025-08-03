@@ -8,7 +8,7 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.Result;
 
 /**

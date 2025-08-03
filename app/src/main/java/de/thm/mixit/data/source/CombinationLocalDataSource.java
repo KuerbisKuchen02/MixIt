@@ -5,8 +5,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.CombinationDao;
-import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.data.dao.CombinationDao;
+import de.thm.mixit.data.entity.Combination;
 
 /**
  * Local data source for accessing and modifying {@link Combination} data.

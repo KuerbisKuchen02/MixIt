@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_arcade"
-        android:name="de.thm.mixit.ui.fragments.ArcadeFragment"
+        android:name="de.thm.mixit.ui.fragment.ArcadeFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +19,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_playground"
-        android:name="de.thm.mixit.ui.fragments.PlaygroundFragment"
+        android:name="de.thm.mixit.ui.fragment.PlaygroundFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/fragment_container_element_list"
@@ -30,7 +30,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_element_list"
-        android:name="de.thm.mixit.ui.fragments.ElementListFragment"
+        android:name="de.thm.mixit.ui.fragment.ElementListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * Filterable recycler view adapter for element entities
