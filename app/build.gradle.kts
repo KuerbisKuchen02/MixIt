@@ -74,7 +74,6 @@ dependencies {
     implementation(libs.fragment)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
-    @Suppress("UnstableApiUsage")
     mockitoAgent(libs.mockito.core) { isTransitive = false }
     testImplementation(libs.core.testing)
     testImplementation(libs.lifecycle.viewmodel.android)
