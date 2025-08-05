@@ -3,39 +3,51 @@ package de.thm.mixit.data.repository;
 import android.content.Context;
 
 import de.thm.mixit.data.entities.GameState;
-import de.thm.mixit.data.source.GameStateDatasource;
+import de.thm.mixit.data.source.GameStateDataSource;
 
 /**
- * TODO Write description
- * @return
+ * Repository class that provides access to GameState data.
+ * <p>
+ * Acts as a single source of truth for GameState data by delegating
+ * data operations to a {@link GameStateDataSource}.
+ *
+ * @author Jannik Heimann
  */
 public class GameStateRepository {
 
-    private final GameStateDatasource datasource;
+    private final GameStateDataSource datasource;
 
-    private GameStateRepository(GameStateDatasource datasource) {
+    private GameStateRepository(GameStateDataSource datasource) {
         this.datasource = datasource;
     }
 
     /**
-     * TODO Write description
-     * @return
+     * Method to create an instance of the class.
+     * @param context Context of the Android application.
+     * @param isArcade Whether the to be saved GameState data belongs to the arcade or endless
+     *                 game mode.
+     * @return {@link GameStateRepository}
+     *
+     * @author Jannik Heimann
      */
     public GameStateRepository create(Context context, boolean isArcade) {
-        return new GameStateRepository(new GameStateDatasource(context, isArcade));
+        return new GameStateRepository(new GameStateDataSource(context, isArcade));
     }
 
     /**
-     * TODO Write description
-     * @return
+     * Loads the last saved GameState by calling the load Method in the corresponding datasource.
+     * @return {@link GameState}
+     *
+     * @author Jannik Heimann
      */
     public GameState loadGameState() {
         return datasource.loadGameState();
     }
 
     /**
-     * TODO Write description
-     * @return
+     * Saves the given gameState by calling the save Method in the corresponding datasource.
+     *
+     * @author Jannik Heimann
      */
    public void saveGameState(GameState gameState) {
         datasource.saveGameState(gameState);

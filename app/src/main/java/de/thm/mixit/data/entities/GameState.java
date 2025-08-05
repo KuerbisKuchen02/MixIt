@@ -7,15 +7,13 @@ import de.thm.mixit.data.model.ElementChip;
 /**
  * Represents the data of the GameState of the Arcade and Endless Game mode
  * <p>
- * {@code arcadeTime} Passed playtime in current arcade mode.
+ * {@code time} Passed playtime.
  * <br>
- * {@code arcadeTurns} Taken turns in current arcade mode.
+ * {@code turns} Taken turns.
  * <br>
- * {@code arcadeGoalElement} The goal {@link Element} in current arcade mode.
+ * {@code goalElement} The goal {@link Element} in arcade mode.
  * <br>
- * {@code arcadeElements} The positioning of all placed {@link ElementChip} in current arcade mode.
- * <br>
- * {@code endlessElements} The positioning of all placed {@link ElementChip} in endless mode.
+ * {@code elementchips} The positioning of all placed {@link ElementChip}.
  *
  * @author Jannik Heimann
  */

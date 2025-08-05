@@ -23,7 +23,7 @@ import de.thm.mixit.data.model.ElementChip;
  *
  * @author Jannik Heimann
  */
-public class GameStateDatasource {
+public class GameStateDataSource {
 
     private final SharedPreferences sp;
     private static final String PREF_TIME = "TIME";
@@ -31,7 +31,16 @@ public class GameStateDatasource {
     private static final String PREF_GOAL_ELEMENT = "GOAL_ELEMENT";
     private static final String PREF_ELEMENTCHIPS = "ELEMENTCHIPS";
 
-    public GameStateDatasource(Context context, boolean isArcade) {
+    /**
+     * Creates a Shared Preference to store a GameState object.
+     * The Shared Preference Object uses one of two pre defined filenames depending on the isArcade
+     * param.
+     * @param context Context of the Android application, needed to access shared preferences.
+     * @param isArcade Whether the GameState data belongs to the arcade or endless game mode.
+     *
+     * @author Jannik Heimann
+     */
+    public GameStateDataSource(Context context, boolean isArcade) {
         String filepath = context.getString(
                 isArcade ? R.string.gamestate_shared_preferences_arcade :
                 R.string.gamestate_shared_preferences_endless);
@@ -41,8 +50,10 @@ public class GameStateDatasource {
     }
 
     /**
-     * TODO Write description
-     * @return
+     * Loads the last saved GameState from the Shared Preference object of the class.
+     * @return {@link GameState}
+     *
+     * @author Jannik Heimann
      */
     public GameState loadGameState() {
         Gson gson = new Gson();
@@ -66,7 +77,10 @@ public class GameStateDatasource {
     }
 
     /**
-     * TODO Write description
+     * Saves the given GameState to the corresponding class Shared Preferences object.
+     * @param gameState GameState data to save.
+     *
+     * @author Jannik Heimann
      */
     public void saveGameState(GameState gameState) {
         Gson gson = new Gson();
