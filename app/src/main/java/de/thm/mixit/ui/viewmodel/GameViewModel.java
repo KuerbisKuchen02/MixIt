@@ -57,7 +57,7 @@ public class GameViewModel extends ViewModel {
         this.filteredElements.addSource(searchQuery, query -> filter());
         loadElements();
         this.startTime = System.currentTimeMillis();
-        this.timeHandler = new Handler();
+        this.timeHandler = new Handler(Looper.getMainLooper());
         this.timeHandler.post(updateTimerRunnable);
         // TODO: GameStateManager: load saved playground state
         this.elementsOnPlayground.setValue(new ArrayList<>());
