@@ -78,8 +78,7 @@ public class ElementRemoteDataSource {
     }
 
     private static boolean isValidGoalResponse(String response) {
-        return true;
-        // return element.matches("");
+        return response.matches("^([a-zA-Z 0-9]+, )+([a-zA-Z 0-9]+)$");
     }
 
     /**
