@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Contains unit tests for the ArcadeGoalChecker class.
  *
- * @Author Justin Wolek
+ * @author Justin Wolek
  */
 public class ArcadeGoalCheckerUnitTest {
 

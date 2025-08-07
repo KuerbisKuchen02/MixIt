@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * The ArcadeGoalChecker is responsible for checking if a found word/element satisfies a
  * searched word inside the Arcade Mode.
  *
- * @Author Justin Wolek
+ * @author Justin Wolek
  */
 public class ArcadeGoalChecker {
 
