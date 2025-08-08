@@ -32,7 +32,6 @@ public class GameActivity extends AppCompatActivity {
     private GameViewModel viewModel;
     private long startTime;
     private Handler timeHandler;
-    private boolean isArcade = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,13 +43,14 @@ public class GameActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_IS_ARCADE)) {
-            isArcade = Objects.requireNonNull(intent.getExtras()).getBoolean(EXTRA_IS_ARCADE);
+            viewModel.setArcade(Objects.requireNonNull(intent.getExtras())
+                    .getBoolean(EXTRA_IS_ARCADE));
         } else {
             Log.w(TAG, "GameActivity received Intent without the " + EXTRA_IS_ARCADE
-                    + " Extra attribute, default value is " + isArcade);
+                    + " Extra attribute, default value is " + viewModel.isArcade());
         }
 
-        if (!isArcade) {
+        if (!viewModel.isArcade()) {
             Log.i(TAG, "GameActivity is hiding arcade fragment.");
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment arcade_fragment = fragmentManager
@@ -71,9 +71,14 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        viewModel.onDestroy();
+    protected void onStart() {
+        super.onStart();
+        timeHandler.post(updateTimerRunnable);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         timeHandler.removeCallbacks(updateTimerRunnable);
     }
 

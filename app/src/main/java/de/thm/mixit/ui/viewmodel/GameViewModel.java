@@ -37,6 +37,7 @@ public class GameViewModel extends ViewModel {
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
     private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
+    private boolean isArcade;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final String targetElement;
@@ -59,6 +60,14 @@ public class GameViewModel extends ViewModel {
         this.turns.setValue(0);
         this.passedTime.setValue(0L);
         this.targetElement = "Schokokuchen";
+    }
+
+    public boolean isArcade() {
+        return isArcade;
+    }
+
+    public void setArcade(boolean arcade) {
+        isArcade = arcade;
     }
 
     /**
