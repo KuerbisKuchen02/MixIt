@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.domain.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.GameStateUseCase;
 
 /**
  * UI state for the {@link de.thm.mixit.ui.activities.GameActivity}
@@ -32,15 +34,17 @@ public class GameViewModel extends ViewModel {
 
     private final ElementRepository elementRepository;
     private final ElementUseCase elementUseCase;
+    private final GameStateUseCase gameStateUseCase;
     private final MutableLiveData<List<Element>> elements = new MutableLiveData<>();
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
     private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
     private boolean isArcade;
-    private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
-    private final MutableLiveData<Integer> turns = new MutableLiveData<>();
-    private final String targetElement;
+    private long alreadySavedPassedTime;
+    private final MutableLiveData<Long> passedTime = new MutableLiveData<>(0L);
+    private final MutableLiveData<Integer> turns = new MutableLiveData<>(0);
+    private String[] targetElement;
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
@@ -48,18 +52,17 @@ public class GameViewModel extends ViewModel {
      * @param elementUseCase ElementUseCase used for dependency injection
      */
     @VisibleForTesting
-    GameViewModel(ElementRepository elementRepository, ElementUseCase elementUseCase) {
+    GameViewModel(ElementRepository elementRepository,
+                          ElementUseCase elementUseCase,
+                          GameStateUseCase gameStateUseCase) {
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
+        this.gameStateUseCase = gameStateUseCase;
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
         loadElements();
         // TODO: GameStateManager: load saved playground state
-        this.elementsOnPlayground.setValue(new ArrayList<>());
         this.combineError.setValue(null);
-        this.turns.setValue(0);
-        this.passedTime.setValue(0L);
-        this.targetElement = "Schokokuchen";
     }
 
     public boolean isArcade() {
@@ -68,6 +71,7 @@ public class GameViewModel extends ViewModel {
 
     public void setArcade(boolean arcade) {
         isArcade = arcade;
+        gameStateUseCase.init(isArcade);
     }
 
     /**
@@ -179,12 +183,16 @@ public class GameViewModel extends ViewModel {
         return passedTime;
     }
 
+    public long getAlreadySavedPassedTime() {
+        return alreadySavedPassedTime;
+    }
+
     public LiveData<Integer> getTurns() {
         return turns;
     }
 
     public String getTargetElement() {
-        return targetElement;
+        return targetElement != null ? targetElement[0] : "";
     }
 
     public void increaseTurnCounter() {
@@ -192,13 +200,30 @@ public class GameViewModel extends ViewModel {
         turns.setValue(turns.getValue() + 1);
     }
 
+    public void load() {
+        GameState gameState = gameStateUseCase.load();
+        this.elementsOnPlayground.setValue(gameState.getElementChips());
+        this.alreadySavedPassedTime = gameState.getTime();
+        this.passedTime.setValue(gameState.getTime());
+        this.turns.setValue(gameState.getTurns());
+        this.targetElement = gameState.getGoalElement();
+    }
+
     /**
      * Removes all callbacks
      * <p>
      * Should be called in onDestroy method of LifecycleOwner
      */
-    public void onDestroy() {
-        // TODO save current game state
+    public void persist() {
+        Long time = this.passedTime.getValue();
+        if (time == null) time = 0L;
+        Integer turns = this.turns.getValue();
+        if (turns == null) turns = 0;
+        gameStateUseCase.save(new GameState(
+                time,
+                turns,
+                this.targetElement,
+                this.elementsOnPlayground.getValue()));
     }
 
     /**
@@ -248,10 +273,12 @@ public class GameViewModel extends ViewModel {
 
         private final ElementRepository elementRepository;
         private final ElementUseCase elementUseCase;
+        private final GameStateUseCase gameStateUseCase;
 
         public Factory(Context context) {
             this.elementRepository = ElementRepository.create(context);
             this.elementUseCase = new ElementUseCase(context);
+            this.gameStateUseCase = new GameStateUseCase(context);
         }
 
         @NonNull
@@ -259,7 +286,7 @@ public class GameViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == GameViewModel.class) {
-                return (T) new GameViewModel(elementRepository, elementUseCase);
+                return (T) new GameViewModel(elementRepository, elementUseCase, gameStateUseCase);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

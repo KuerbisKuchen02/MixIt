@@ -74,12 +74,14 @@ public class GameActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         timeHandler.post(updateTimerRunnable);
+        viewModel.load();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         timeHandler.removeCallbacks(updateTimerRunnable);
+        viewModel.persist();
     }
 
     /**
@@ -88,7 +90,8 @@ public class GameActivity extends AppCompatActivity {
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
-            viewModel.setPassedTime(System.currentTimeMillis() - startTime);
+            viewModel.setPassedTime(System.currentTimeMillis() - startTime
+                    + viewModel.getAlreadySavedPassedTime());
 
             // Handler calls it again every second
             timeHandler.postDelayed(this, 1000);
