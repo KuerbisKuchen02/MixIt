@@ -30,7 +30,7 @@ public class GameStateRepository {
      *
      * @author Jannik Heimann
      */
-    public GameStateRepository create(Context context, boolean isArcade) {
+    public static GameStateRepository create(Context context, boolean isArcade) {
         return new GameStateRepository(new GameStateDataSource(context, isArcade));
     }
 
