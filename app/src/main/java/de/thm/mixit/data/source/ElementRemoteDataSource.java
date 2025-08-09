@@ -74,7 +74,6 @@ public class ElementRemoteDataSource {
     // TODO insert a regex to validate the element format <Emoji> <Description>
     private static boolean isValidElement(String element) {
         return true;
-        // return element.matches("");
     }
 
     private static boolean isValidGoalResponse(String response) {
@@ -106,15 +105,11 @@ public class ElementRemoteDataSource {
                     if (throwable != null) {
                         callback.accept(Result.failure(throwable));
                         return null;
-                    }
-
-                    if (chatCompletion.choices().isEmpty()) {
+                    } else if (chatCompletion.choices().isEmpty()) {
                         callback.accept(Result.failure(
                                 new RuntimeException("No choices returned from OpenAI API")
                         ));
-                    }
-
-                    if (chatCompletion.choices().get(0).message().content().isEmpty()) {
+                    } else if (chatCompletion.choices().get(0).message().content().isEmpty()) {
                         callback.accept(Result.failure(
                                 new RuntimeException("Empty content returned from OpenAI API")
                         ));
@@ -126,6 +121,8 @@ public class ElementRemoteDataSource {
                         callback.accept(Result.failure(
                                 new RuntimeException("Invalid element format: " + content)
                         ));
+
+                        return null;
                     }
 
                     String emoji = content.substring(0, content.indexOf(' '));
