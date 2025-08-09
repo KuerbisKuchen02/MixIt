@@ -59,6 +59,17 @@ public class ElementRepository {
     }
 
     /**
+     * Generates a new goal word asynchronously.
+     *
+     * @param callback The callback to receive the generated goal words.
+     *
+     * @throws RuntimeException if the remote data source fails to generate new goal words.
+     */
+    public void generateNewGoalWord(Consumer<Result<String[]>> callback) throws RuntimeException {
+        ElementRemoteDataSource.generateNewGoalWord(callback);
+    }
+
+    /**
      * Finds an Element by its name asynchronously.
      *
      * @param name The name of the Element to find.
