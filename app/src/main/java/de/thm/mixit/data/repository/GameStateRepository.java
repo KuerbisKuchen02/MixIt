@@ -53,4 +53,16 @@ public class GameStateRepository {
         datasource.saveGameState(gameState);
    }
 
+    /**
+     * Whether there is an existing saved GameState.
+     * @return boolean
+     *
+     * @author Jannik Heimann
+     */
+   public boolean hasSavedGameState() { return datasource.hasSavedGameState(); }
+
+    /**
+     * Deletes the last saved GameState.
+     */
+    public void deleteSavedGameState() { datasource.deleteSavedGameState(); }
 }

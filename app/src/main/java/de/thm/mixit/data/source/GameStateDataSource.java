@@ -91,4 +91,25 @@ public class GameStateDataSource {
         spEditor.putString(PREF_ELEMENTCHIPS, gson.toJson(gameState.getElementChips()));
         spEditor.apply();
     }
+
+    /**
+     * Checks whether the corresponding Sharded Preferences Object has any data saved.
+     * @return boolean
+     *
+     * @author Jannik Heimann
+     */
+    public boolean hasSavedGameState() {
+        return !sp.getAll().isEmpty();
+    }
+
+    /**
+     * Deletes all saved data within the corresponding Shared Preferences Object.
+     *
+     * @author Jannik Heimann
+     */
+    public void deleteSavedGameState() {
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.clear();
+        spEditor.apply();
+    }
 }
