@@ -81,16 +81,19 @@ public class PlaygroundFragment extends Fragment{
                     assert getActivity() != null;
                     ((GameActivity) getActivity()).setElementListVisible(true);
                     showElementListButton.hide();
+
+                    // Apply OnClickListener to playground as long as the Elementlist is visible
+                    playground.setOnClickListener(
+                            playgroundView -> {
+                                if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
+                                assert getActivity() != null;
+                                ((GameActivity) getActivity()).setElementListVisible(false);
+                                showElementListButton.show();
+                                playground.setOnClickListener(null);
+                            }
+                    );
                 });
 
-        playground.setOnClickListener(
-                view -> {
-                    if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
-                    assert getActivity() != null;
-                    ((GameActivity) getActivity()).setElementListVisible(false);
-                    showElementListButton.show();
-                }
-        );
 
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
         viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
