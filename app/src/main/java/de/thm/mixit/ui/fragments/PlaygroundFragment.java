@@ -36,6 +36,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
+import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**
@@ -76,9 +77,23 @@ public class PlaygroundFragment extends Fragment{
 
         showElementListButton.setOnClickListener(
                 view -> {
-                    // TODO implement fragment communication to ElementListFragment or GameActivity
                     if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
+                    assert getActivity() != null;
+                    ((GameActivity) getActivity()).setElementListVisible(true);
+                    showElementListButton.hide();
+
+                    // Apply OnClickListener to playground as long as the Elementlist is visible
+                    playground.setOnClickListener(
+                            playgroundView -> {
+                                if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
+                                assert getActivity() != null;
+                                ((GameActivity) getActivity()).setElementListVisible(false);
+                                showElementListButton.show();
+                                playground.setOnClickListener(null);
+                            }
+                    );
                 });
+
 
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
         viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
