@@ -32,10 +32,11 @@ public class ElementUseCase {
      * Initializes the repositories needed for element operations.
      *
      * @param context The Android context used to create the repositories.
+     * @param isArcade Whether the use case is called in endless or arcade mode.
      */
-    public ElementUseCase(Context context) {
-        this.combinationRepository = CombinationRepository.create(context);
-        this.elementRepository = ElementRepository.create(context);
+    public ElementUseCase(Context context, boolean isArcade) {
+        this.combinationRepository = CombinationRepository.create(context, isArcade);
+        this.elementRepository = ElementRepository.create(context, isArcade);
     }
 
     /**

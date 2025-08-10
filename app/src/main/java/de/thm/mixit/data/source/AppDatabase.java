@@ -24,35 +24,36 @@ import de.thm.mixit.data.entities.Element;
 @Database(entities = {Element.class, Combination.class},
         version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    private static AppDatabase db;
 
     /**
      * Room Databases are fairly expensive. Therefore, use the Singleton pattern to
-     * only create one instance of AppDatabase.
+     * only create one instance of AppDatabase for each game mode.
      * @param context The application context.
+     * @param isArcade Whether the db is containing data of endless or arcade mode.
      * @return An AppDatabase object allowing access to the SQLite database
      */
-    public static AppDatabase getInstance(Context context) {
-        if (db == null) {
-            synchronized (AppDatabase.class) {
-                db = Room.databaseBuilder(
-                        context.getApplicationContext(),
-                        AppDatabase.class,
-                        "local-db"
-                )
-                        .fallbackToDestructiveMigration(true)
-                        .addCallback(new RoomDatabase.Callback() {
-                            // OnCreate is called whenever the app is freshly installed.
-                            // In that case populate the database with the initial four elements.
-                            @Override
-                            public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                                super.onCreate(db);
-                                resetDatabase(db);
-                            }
-                        })
-                        .build();
-            }
+    public static AppDatabase getInstance(Context context, boolean isArcade) {
+        AppDatabase db;
+        String db_name = isArcade ? "local-arcade-db" : "local-endless-db";
+        synchronized (AppDatabase.class) {
+            db = Room.databaseBuilder(
+                            context.getApplicationContext(),
+                            AppDatabase.class,
+                            db_name
+                    )
+                    .fallbackToDestructiveMigration(true)
+                    .addCallback(new RoomDatabase.Callback() {
+                        // OnCreate is called whenever the app is freshly installed.
+                        // In that case populate the database with the initial four elements.
+                        @Override
+                        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                            super.onCreate(db);
+                            resetDatabase(db);
+                        }
+                    })
+                    .build();
         }
+
         return db;
     }
 

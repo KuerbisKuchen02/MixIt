@@ -34,10 +34,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this, new GameViewModel.Factory(this))
-                .get(GameViewModel.class);
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(R.layout.activity_game);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_IS_ARCADE)) {
@@ -46,6 +42,11 @@ public class GameActivity extends AppCompatActivity {
             Log.w(TAG, "GameActivity received Intent without the " + EXTRA_IS_ARCADE
                     + " Extra attribute, default value is " + isArcade);
         }
+
+        viewModel = new ViewModelProvider(this, new GameViewModel.Factory(this, isArcade))
+                .get(GameViewModel.class);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        setContentView(R.layout.activity_game);
 
         if (!isArcade) {
             Log.i(TAG, "GameActivity is hiding arcade fragment.");
@@ -66,5 +67,9 @@ public class GameActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+    }
+
+    public boolean isArcade() {
+        return isArcade;
     }
 }

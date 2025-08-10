@@ -36,7 +36,6 @@ public class GameViewModel extends ViewModel {
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
     private final Handler timeHandler;
-
     private final long startTime;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
@@ -240,9 +239,9 @@ public class GameViewModel extends ViewModel {
         private final ElementRepository elementRepository;
         private final ElementUseCase elementUseCase;
 
-        public Factory(Context context) {
-            this.elementRepository = ElementRepository.create(context);
-            this.elementUseCase = new ElementUseCase(context);
+        public Factory(Context context, boolean isArcade) {
+            this.elementRepository = ElementRepository.create(context, isArcade);
+            this.elementUseCase = new ElementUseCase(context, isArcade);
         }
 
         @NonNull

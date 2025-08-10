@@ -35,6 +35,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
+import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**
@@ -64,8 +65,10 @@ public class PlaygroundFragment extends Fragment{
                 FragmentPlaygroundBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        viewModel = new ViewModelProvider(requireActivity(),
-                new GameViewModel.Factory(requireActivity())).get(GameViewModel.class);
+        GameActivity gameActivity = ((GameActivity) requireActivity());
+        viewModel = new ViewModelProvider(gameActivity,
+                new GameViewModel.Factory(gameActivity,
+                        gameActivity.isArcade())).get(GameViewModel.class);
 
         playground = binding.layoutPlayground;
         clearElementsButton = binding.buttonClearElements;

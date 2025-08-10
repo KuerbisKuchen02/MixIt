@@ -37,10 +37,11 @@ public class ElementRepository {
     /**
      * Method to create an ElementRepository instance.
      * @param context The Android context used to get the database instance.
+     * @param isArcade Whether the repo is handling data from endless or arcade mode.
      * @return A new instance of {@code ElementRepository}.
      */
-    public static ElementRepository create(Context context) {
-        AppDatabase db = AppDatabase.getInstance(context);
+    public static ElementRepository create(Context context, boolean isArcade) {
+        AppDatabase db = AppDatabase.getInstance(context, isArcade);
         ElementDao dao = db.elementDAO();
         return new ElementRepository(new ElementLocalDataSource(dao));
     }
