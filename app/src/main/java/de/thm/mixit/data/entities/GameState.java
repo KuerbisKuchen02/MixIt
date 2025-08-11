@@ -1,7 +1,6 @@
 package de.thm.mixit.data.entities;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import de.thm.mixit.data.model.ElementChip;
 
