@@ -46,6 +46,10 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void onArcadeDeleteSaveStateButtonClicked(View view) {
+        Log.i(TAG, "Arcade delete Savestate Button was clicked.");
+    }
+
     public void onAchievementsButtonClicked(View view) {
         Log.i(TAG, "Achievements Button was clicked.");
         // TODO implement when Achievement Activity is added
