@@ -1,6 +1,7 @@
 package de.thm.mixit.data.entities;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import de.thm.mixit.data.model.ElementChip;
 
@@ -63,5 +64,12 @@ public class GameState {
 
     public void setElementChips(List<ElementChip> elementChips) {
         this.elementChips = elementChips;
+    }
+
+    public int getHighestElementChipID() {
+        return this.elementChips.stream()
+                .mapToInt(ElementChip::getId)
+                .max()
+                .orElse(0);
     }
 }
