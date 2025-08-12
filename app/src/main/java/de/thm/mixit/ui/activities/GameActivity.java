@@ -29,10 +29,12 @@ import de.thm.mixit.ui.viewmodel.GameViewModel;
 public class GameActivity extends AppCompatActivity {
 
     public static final String EXTRA_IS_ARCADE = "isArcade";
+    public static final String EXTRA_NEW_GAME = "isNewGame";
     private static final String TAG = GameActivity.class.getSimpleName();
     private GameViewModel viewModel;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
     private boolean isArcade = false;
+    private boolean isNewGame = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,13 @@ public class GameActivity extends AppCompatActivity {
         } else {
             Log.w(TAG, "GameActivity received Intent without the " + EXTRA_IS_ARCADE
                     + " Extra attribute, default value is " + isArcade);
+        }
+
+        if (intent.hasExtra(EXTRA_NEW_GAME)) {
+            isNewGame = Objects.requireNonNull(intent.getExtras()).getBoolean(EXTRA_NEW_GAME);
+        } else {
+            Log.w(TAG, "GameActivity received Intent without the " + EXTRA_NEW_GAME
+                    + " Extra attribute, default value is " + isNewGame);
         }
 
         viewModel = new ViewModelProvider(this, new GameViewModel.Factory(this, isArcade))
@@ -68,8 +77,14 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
+        viewModel.saveGameState();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         viewModel.onDestroy();
     }
 
