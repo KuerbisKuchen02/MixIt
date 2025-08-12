@@ -35,10 +35,11 @@ public class CombinationRepository {
     /**
      * Method to create a CombinationRepository instance.
      * @param context The Android context used to get the database instance.
+     * @param isArcade Whether the repo is handling data from endless or arcade mode.
      * @return A new instance of {@code CombinationRepository}.
      */
-    public static CombinationRepository create(Context context) {
-        AppDatabase db = AppDatabase.getInstance(context);
+    public static CombinationRepository create(Context context, boolean isArcade) {
+        AppDatabase db = AppDatabase.getInstance(context, isArcade);
         CombinationDao dao = db.combinationDAO();
         return new CombinationRepository(new CombinationLocalDataSource(dao));
     }
