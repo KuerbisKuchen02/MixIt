@@ -52,12 +52,12 @@
             app:layout_constraintWidth_percent="0.8" />
 
         <Button
-            android:id="@+id/button_delete_arcade_savestate"
+            android:id="@+id/button_main_menu_delete_arcade_savestate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onArcadeDeleteSaveStateButtonClicked"
-            app:icon="@drawable/outline_delete_24" />
+            android:drawableStart="@drawable/outline_delete_24" />
     </LinearLayout>
 
     <LinearLayout
