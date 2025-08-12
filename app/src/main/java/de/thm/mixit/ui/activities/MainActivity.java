@@ -38,10 +38,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         gameStateRepository = GameStateRepository.create(this,true);
 
+        Log.i(TAG, "MainActivity was created");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         // Show or hide delete Button for Arcade GameState depending on an existing saved GameState
         setVisibilityOfDeleteArcadeSaveStateButton(gameStateRepository.hasSavedGameState());
-
-        Log.i(TAG, "MainActivity was created");
     }
 
     public void onEndlessGameButtonClicked(View v) {
@@ -55,6 +60,7 @@ public class MainActivity extends Activity {
         Log.i(TAG, "Arcade Button was clicked.");
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
+        intent.putExtra(GameActivity.EXTRA_NEW_GAME, !gameStateRepository.hasSavedGameState());
         startActivity(intent);
     }
 
