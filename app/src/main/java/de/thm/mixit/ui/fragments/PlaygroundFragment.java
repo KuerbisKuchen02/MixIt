@@ -66,8 +66,10 @@ public class PlaygroundFragment extends Fragment{
                 FragmentPlaygroundBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        viewModel = new ViewModelProvider(requireActivity(),
-                new GameViewModel.Factory(requireActivity())).get(GameViewModel.class);
+        GameActivity gameActivity = ((GameActivity) requireActivity());
+        viewModel = new ViewModelProvider(gameActivity,
+                new GameViewModel.Factory(gameActivity,
+                        gameActivity.isArcade())).get(GameViewModel.class);
 
         playground = binding.layoutPlayground;
         clearElementsButton = binding.buttonClearElements;
