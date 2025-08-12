@@ -10,6 +10,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
+import de.thm.mixit.data.model.Result;
 
 
 /**
@@ -54,9 +55,19 @@ public class ElementRepository {
      * @param callback A callback to receive the newly generated Element.
      */
     public void generateNew(String element1, String element2,
-                            Consumer<Element> callback) {
-        // TODO - implement error handling for remote data source
+                            Consumer<Result<Element>> callback) {
         ElementRemoteDataSource.combine(element1, element2, callback);
+    }
+
+    /**
+     * Generates a new goal word asynchronously.
+     *
+     * @param callback The callback to receive the generated goal words.
+     *
+     * @throws RuntimeException if the remote data source fails to generate new goal words.
+     */
+    public void generateNewGoalWord(Consumer<Result<String[]>> callback) throws RuntimeException {
+        ElementRemoteDataSource.generateNewGoalWord(callback);
     }
 
     /**

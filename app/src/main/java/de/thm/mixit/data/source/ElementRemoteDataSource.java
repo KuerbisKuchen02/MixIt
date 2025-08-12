@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.model.Result;
 
 /**
  * Remote data source for accessing and combining elements using the OpenAI API.
@@ -34,10 +35,49 @@ public class ElementRemoteDataSource {
             "Gib keine Erklärungen, keine Zusätze – " +
             "nur das eine neue Element mit genau einem passenden Emoji.\n";
 
+    private final static String GOAL_WORD_PROMPT =
+            "Arcade-Modus – Zielwort & Synonyme (Deutsch)\n" +
+            "\n" +
+            "Wir spielen Infinite Craft. Start-Elemente: Feuer, Wasser, Luft, Erde.\n" +
+            "\n" +
+            "Wähle ein **Zielwort**, das mit diesen Start-Elementen in 5–15 " +
+                    "Minuten Spielzeit erreichbar ist (mittlere Schwierigkeit;" +
+                    " weder trivial noch kryptisch; keine Eigennamen/Marken).\n" +
+            "\n" +
+            "Gib **ausschließlich** eine kommaseparierte Liste zurück:\n" +
+            "<Zielwort>, <Variante1>, <Variante2>, ...\n" +
+            "\n" +
+            "Regeln:\n" +
+            "- Sprache: Deutsch.\n" +
+            "- Erster Eintrag = exakt das Zielwort, das angezeigt wird.\n" +
+            "- Danach 3–7 **gleichwertige Bezeichnungen desselben Gegenstands**: " +
+                    "echte Synonyme, Flexionsformen (Singular/Plural) oder " +
+                    "gängige Zusammensetzungen/Schreibvarianten mit dem Zielwort als " +
+                    "Kopf (z. B. Kerze, Kerzen, Wachskerze).\n" +
+            "- **Strenger Bedeutungsrahmen (IS-A-Test):** Jedes Wort muss denselben " +
+                    "Gegenstand bezeichnen wie das Zielwort („Ein <WORT> " +
+                    "ist eine/ein <ZIELWORT>?“ → **Ja**).\n" +
+            "- **NICHT erlaubt:** Oberbegriffe/Funktionen (z. B. Lichtquelle, Beleuchtung), " +
+                    "Nachbarobjekte (z. B. Laterne, Lampe, Fackel), " +
+                    "Teile/Material/Eigenschaften (z. B. Flamme, Docht, Wachs), Halter/Behälter " +
+                    "(z. B. Kerzenhalter, Laterne).\n" +
+            "- Keine Erklärungen, kein Zusatztext, **keine Emojis**, keine Anführungszeichen, " +
+                    "**kein Punkt am Ende**.\n" +
+            "- Keine Duplikate; jeweils **ein Leerzeichen nach jedem Komma**; " +
+                    "Groß-/Kleinschreibung gemäß deutscher Rechtschreibung.\n" +
+            "- **Wenn unsicher:** Nutze ausschließlich Flexions- und Kompositavarianten " +
+                    "mit dem Zielwort als Bestandteil.\n" +
+            "\n" +
+            "Beispielausgabe:\n" +
+            "Kerze, Kerzen, Wachskerze\n";
+
     // TODO insert a regex to validate the element format <Emoji> <Description>
     private static boolean isValidElement(String element) {
         return true;
-        // return element.matches("");
+    }
+
+    private static boolean isValidGoalResponse(String response) {
+        return response.matches("^([a-zA-Z 0-9]+, )+([a-zA-Z 0-9]+)$");
     }
 
     /**
@@ -51,32 +91,97 @@ public class ElementRemoteDataSource {
      * - an invalid element format
      */
     public static void combine(String element1, String element2,
-                               Consumer<Element> callback) {
+                               Consumer<Result<Element>> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
                 .addDeveloperMessage(SYSTEM_PROMPT)
                 .addUserMessage(element1 + " + " + element2)
                 .model(ChatModel.CHATGPT_4O_LATEST)
                 .build();
 
-       client.chat().completions().create(createParams).thenAccept(
-               chatCompletion -> {
-            if (chatCompletion.choices().isEmpty()) {
-                throw new RuntimeException("No choices returned from OpenAI API");
-            }
+        client.chat().completions().create(createParams).handle(
+                (chatCompletion, throwable) -> {
+                    // When an error has occurred when calling the OpenAI API, the response in
+                    // chatCompletion is null and throwable contains an error.
+                    if (throwable != null) {
+                        callback.accept(Result.failure(throwable));
+                        return null;
+                    } else if (chatCompletion.choices().isEmpty()) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("No choices returned from OpenAI API")
+                        ));
+                    } else if (chatCompletion.choices().get(0).message().content().isEmpty()) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("Empty content returned from OpenAI API")
+                        ));
+                    }
 
-            if (chatCompletion.choices().get(0).message().content().isEmpty())
-                throw new RuntimeException("Empty content returned from OpenAI API");
+                    String content = chatCompletion.choices().get(0).message().content().get();
 
-            String content = chatCompletion.choices().get(0).message().content().get();
+                    if (!isValidElement(content)) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("Invalid element format: " + content)
+                        ));
 
-            if (!isValidElement(content)) {
-                throw new RuntimeException("Invalid element format: " + content);
-            }
+                        return null;
+                    }
 
-            String emoji = content.substring(0, content.indexOf(' '));
-            String name = content.substring(content.indexOf(' ') + 1);
+                    String emoji = content.substring(0, content.indexOf(' '));
+                    String name = content.substring(content.indexOf(' ') + 1);
+                    callback.accept(Result.success(new Element(name, emoji)));
 
-            callback.accept(new Element(name, emoji));
-        });
+                    return null;
+                });
+    }
+
+    /**
+     * Generates a new goal word and its synonyms using the OpenAI API.
+     * The result is returned via a callback.
+     *
+     * @param callback - a callback that will be called with the result of the goal word generation
+     * @throws RuntimeException if the OpenAI API returns:
+     * - no choices
+     * - an empty content
+     */
+    public static void generateNewGoalWord(Consumer<Result<String[]>> callback) {
+        ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
+                .addDeveloperMessage(GOAL_WORD_PROMPT)
+                .model(ChatModel.CHATGPT_4O_LATEST)
+                .build();
+
+        client.chat().completions().create(createParams).handle(
+                (chatCompletion, throwable) -> {
+                    if (throwable != null) {
+                        callback.accept(Result.failure(throwable));
+                        return null;
+                    }
+
+                    if (chatCompletion.choices().isEmpty()) {
+                        callback.accept(Result.failure(
+                                new RuntimeException("No choices returned from OpenAI API")
+                        ));
+                        return null;
+                    }
+
+                    var content = chatCompletion.choices().get(0).message().content();
+
+                    if (content.isPresent()) {
+                        if (isValidGoalResponse(content.get())) {
+                            String[] words = content.get().split(", ");
+                            callback.accept(Result.success(words));
+                        } else {
+                            callback.accept(Result.failure(
+                                    new RuntimeException("Invalid goal word response format: " + content.get())
+                            ));
+                        }
+
+                    } else {
+                        callback.accept(Result.failure(
+                                new RuntimeException("Empty content returned from OpenAI API")
+                        ));
+                    }
+
+                    return null;
+                });
     }
 }
+

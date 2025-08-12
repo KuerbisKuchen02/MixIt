@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListUpdateCallback;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,11 +79,35 @@ public class PlaygroundFragment extends Fragment{
 
         showElementListButton.setOnClickListener(
                 view -> {
-                    // TODO implement fragment communication to ElementListFragment or GameActivity
                     if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
+                    assert getActivity() != null;
+                    ((GameActivity) getActivity()).setElementListVisible(true);
+                    showElementListButton.hide();
+
+                    // Apply OnClickListener to playground as long as the Elementlist is visible
+                    playground.setOnClickListener(
+                            playgroundView -> {
+                                if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
+                                assert getActivity() != null;
+                                ((GameActivity) getActivity()).setElementListVisible(false);
+                                showElementListButton.show();
+                                playground.setOnClickListener(null);
+                            }
+                    );
                 });
 
+
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
+        viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
+            Log.d(TAG, "Registered new state after combining: " + error);
+            String text = "Something went wrong! Please check your internet connection.";
+            if (error != null) {
+                Snackbar.make(playground, text, 6000)
+                        .setBackgroundTint(Color.RED)
+                        .show();
+            }
+        });
+
 
         return binding.getRoot();
     }

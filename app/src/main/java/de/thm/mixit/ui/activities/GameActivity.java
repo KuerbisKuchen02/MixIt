@@ -2,6 +2,8 @@ package de.thm.mixit.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +31,7 @@ public class GameActivity extends AppCompatActivity {
     public static final String EXTRA_IS_ARCADE = "isArcade";
     private static final String TAG = GameActivity.class.getSimpleName();
     private GameViewModel viewModel;
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
     private boolean isArcade = false;
 
     @Override
@@ -50,7 +53,6 @@ public class GameActivity extends AppCompatActivity {
 
         if (!isArcade) {
             Log.i(TAG, "GameActivity is hiding arcade fragment.");
-            FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment arcade_fragment = fragmentManager
                     .findFragmentById(R.id.fragment_container_arcade);
             if (arcade_fragment == null) {
@@ -60,6 +62,8 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
+        setElementListVisible(false);
+
         Log.i(TAG, "GameActivity was created");
     }
 
@@ -67,6 +71,30 @@ public class GameActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+    }
+
+    /**
+     * Shows or hides the ElementList Fragment within the Activity.
+     * @param visible whether to show or hide the ElementList Fragment.
+     */
+    public void setElementListVisible(boolean visible) {
+        Fragment elementlist_fragment = fragmentManager
+                .findFragmentById(R.id.fragment_container_element_list);
+        FrameLayout container = findViewById(R.id.fragment_container_element_list);
+        if (elementlist_fragment == null) {
+            Log.e(TAG, "Error, elementlist fragment reference is null!");
+            return;
+        }
+
+        if (visible) {
+            Log.i(TAG, "GameActivity is showing elementlist fragment.");
+            container.setVisibility(View.VISIBLE);
+            fragmentManager.beginTransaction().show(elementlist_fragment).commit();
+        } else {
+            Log.i(TAG, "GameActivity is hiding elementlist fragment.");
+            container.setVisibility(View.GONE);
+            fragmentManager.beginTransaction().hide(elementlist_fragment).commit();
+        }
     }
 
     public boolean isArcade() {
