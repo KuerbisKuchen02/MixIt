@@ -108,6 +108,13 @@ public class PlaygroundFragment extends Fragment{
             }
         });
 
+        viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
+            if (gameActivity.isArcade() && isWon) {
+                Log.d(TAG, "The player found the goal word!");
+                // TODO: Switch to the Arcade Victory Activity here
+            }
+        });
+
 
         return binding.getRoot();
     }
