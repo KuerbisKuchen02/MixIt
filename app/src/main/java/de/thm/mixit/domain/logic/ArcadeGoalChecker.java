@@ -20,7 +20,7 @@ public class ArcadeGoalChecker {
      * @return          A {@code boolean} representing if the given word is the word
      *                  which should be found.
      */
-    public static boolean matchesTargetElement(ArrayList<String> goalWords, String word) {
+    public static boolean matchesTargetElement(String[] goalWords, String word) {
         for (String w : goalWords) {
             if (w.equalsIgnoreCase(word)) return true;
         }
