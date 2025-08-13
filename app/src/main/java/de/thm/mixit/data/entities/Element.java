@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Represents one Element inside the database
  * <p>
@@ -17,7 +19,7 @@ import androidx.room.PrimaryKey;
  * @author Justin Wolek
  */
 @Entity(tableName = "elements")
-public class Element {
+public class Element implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 

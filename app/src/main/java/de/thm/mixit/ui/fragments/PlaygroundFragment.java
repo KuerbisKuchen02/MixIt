@@ -1,9 +1,11 @@
 package de.thm.mixit.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +38,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
+import de.thm.mixit.ui.activities.ArcadeVictoryActivity;
 import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
@@ -112,6 +115,15 @@ public class PlaygroundFragment extends Fragment{
             if (gameActivity.isArcade() && isWon) {
                 Log.d(TAG, "The player found the goal word!");
                 // TODO: Switch to the Arcade Victory Activity here
+
+                List<Element> list = viewModel.getElements().getValue();
+                Element goalElement = list.get(list.size()-1);
+
+                Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, goalElement);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS, viewModel.getTurns().getValue());
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.passedTime().getValue());
+                startActivity(intent);
             }
         });
 

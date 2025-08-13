@@ -24,6 +24,8 @@
 
         <activity android:name=".ui.activities.GameActivity"/>
 
+        <activity android:name=".ui.activities.ArcadeVictoryActivity" android:theme="@style/AppTheme"/>
+
     </application>
 
 </manifest>
