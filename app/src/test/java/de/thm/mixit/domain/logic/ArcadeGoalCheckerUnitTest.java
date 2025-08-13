@@ -18,9 +18,9 @@ public class ArcadeGoalCheckerUnitTest {
     @Test
     public void matchesTargetElement_correctElement_returnsTrue() {
         // Given
-        ArrayList<String> goalWords = new ArrayList<>(
-                List.of("Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte")
-        );
+        String[] goalWords = {
+                "Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte"
+        };
         String word = "Schokokuchen";
 
         // When
@@ -33,9 +33,9 @@ public class ArcadeGoalCheckerUnitTest {
     @Test
     public void matchesTargetElement_wrongElement_returnsFalse() {
         // Given
-        ArrayList<String> goalWords = new ArrayList<>(
-                List.of("Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte")
-        );
+        String[] goalWords = {
+                "Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte"
+        };
         String word = "Erdbeerkuchen";
 
         // When
