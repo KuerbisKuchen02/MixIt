@@ -10,6 +10,7 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 
 import de.thm.mixit.R;
+import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 
 /**
@@ -67,6 +68,8 @@ public class MainActivity extends Activity {
     public void onArcadeDeleteSaveStateButtonClicked(View view) {
         Log.i(TAG, "Arcade delete Savestate Button was clicked.");
         gameStateRepository.deleteSavedGameState();
+        ElementRepository elementRepository = ElementRepository.create(this, true);
+        elementRepository.reset();
         setVisibilityOfDeleteArcadeSaveStateButton(false);
     }
 
