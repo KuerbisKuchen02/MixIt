@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,7 +113,6 @@ public class PlaygroundFragment extends Fragment{
         viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
             if (gameActivity.isArcade() && isWon) {
                 Log.d(TAG, "The player found the goal word!");
-                // TODO: Switch to the Arcade Victory Activity here
 
                 List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
                 Element goalElement = list.get(list.size()-1).getElement();

@@ -1,6 +1,5 @@
 package de.thm.mixit.domain.logic;
 
-import java.util.ArrayList;
 
 /**
  * The ArcadeGoalChecker is responsible for checking if a found word/element satisfies a
