@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -125,24 +126,44 @@ public class PlaygroundFragment extends Fragment{
             chip.setY(freeSpace[1]);
         }
 
+        GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                // Duplicate the view here
+                if(BuildConfig.DEBUG) Log.d(TAG, "Double Tap on " +
+                        chip.getElement() + " recognized");
+                final int OFFSET = 20;
+                viewModel.addElementToPlayground(new ElementChip(chip.getElement(),
+                        chip.getX()+OFFSET, chip.getY()+OFFSET));
+                return true;
+            }
+        });
+
         view.setX(chip.getX());
         view.setY(chip.getY());
         view.setOnTouchListener(new View.OnTouchListener() {
             float dX, dY;
+            boolean isDragging;
 
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
+                if(gestureDetector.onTouchEvent(event)) return true;
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        // when an item is picked up
+                        isDragging = false;
                         dX = v.getX() - event.getRawX();
                         dY = v.getY() - event.getRawY();
                         v.bringToFront();
-                        v.invalidate();
                         whenItemIsPickedUp();
                         return true;
 
                     case MotionEvent.ACTION_MOVE:
+                        isDragging = true;
+                        // limit possible position of element to playground bounds
                         if(event.getRawX() + dX < playground.getWidth() - v.getWidth() &&
                                 event.getRawX() + dX > 0) v.setX(event.getRawX() + dX);
                         if(event.getRawY() + dY < playground.getHeight() - v.getHeight() &&
@@ -150,8 +171,11 @@ public class PlaygroundFragment extends Fragment{
                         return true;
 
                     case MotionEvent.ACTION_UP:
-                        viewModel.updateElementPositonOnPlayground(chip, v.getX(), v.getY());
                         whenItemIsDropped();
+                        if(!isDragging){
+                            return false;
+                        }
+                        viewModel.updateElementPositonOnPlayground(chip, v.getX(), v.getY());
                         if (!overlapsWithDeleteButton(v)){
                             View other = checkOverlap((TextView) v);
                             if(other != null){
