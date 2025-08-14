@@ -70,4 +70,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.gson)
+    implementation("nl.dionsegijn:konfetti-xml:2.0.5")
 }

@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <nl.dionsegijn.konfetti.xml.KonfettiView
+        android:id="@+id/konfetti_arc_vic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <Button
         android:id="@+id/button_arc_vic_return"
         android:layout_width="0dp"

@@ -1,6 +1,7 @@
 package de.thm.mixit.ui.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,15 +10,29 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
+import nl.dionsegijn.konfetti.core.Angle;
+import nl.dionsegijn.konfetti.core.Party;
+import nl.dionsegijn.konfetti.core.PartyFactory;
+import nl.dionsegijn.konfetti.core.Position;
+import nl.dionsegijn.konfetti.core.Spread;
+import nl.dionsegijn.konfetti.core.emitter.Emitter;
+import nl.dionsegijn.konfetti.core.emitter.EmitterConfig;
+import nl.dionsegijn.konfetti.core.models.Shape;
+import nl.dionsegijn.konfetti.core.models.Size;
+import nl.dionsegijn.konfetti.xml.KonfettiView;
+import nl.dionsegijn.konfetti.xml.image.ImageUtil;
 
 /**
  * Activity for the victory screen of an arcade game.
@@ -34,6 +49,9 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
     private Element goalWord;
     private int numTurns = -1;
     private long passedTime = -1;
+
+    private KonfettiView konfettiView;
+    private Shape.DrawableShape drawableShape;
 
 
     @Override
@@ -88,9 +106,65 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
         TextView passedTimeView = findViewById(R.id.text_arc_vic_time);
         passedTimeView.setText(time);
 
+        // Konfetti
+        final Drawable drawable =
+                ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_plus);
+        this.drawableShape = ImageUtil.loadDrawable(drawable, true, true);
+
+        this.konfettiView = findViewById(R.id.konfetti_arc_vic);
+
+        parade();
+
         Log.i(TAG, "ArcadeVictoryActivity was created");
     }
 
+
+    // Konfetti using https://github.com/DanielMartinus/Konfetti
+    private void parade() {
+        EmitterConfig emitterConfig = new Emitter(5, TimeUnit.SECONDS).perSecond(30);
+        konfettiView.start(
+                new PartyFactory(emitterConfig)
+                        .angle(Angle.RIGHT - 45)
+                        .spread(Spread.SMALL)
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
+                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
+                        .setSpeedBetween(10f, 30f)
+                        .position(new Position.Relative(0.0, 0.5))
+                        .build(),
+                new PartyFactory(emitterConfig)
+                        .angle(Angle.LEFT + 45)
+                        .spread(Spread.SMALL)
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
+                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
+                        .setSpeedBetween(10f, 30f)
+                        .position(new Position.Relative(1.0, 0.5))
+                        .build());
+    }
+
+    private void rain() {
+        EmitterConfig emitterConfig = new Emitter(5, TimeUnit.SECONDS).perSecond(100);
+        konfettiView.start(
+                new PartyFactory(emitterConfig)
+                        .angle(Angle.BOTTOM)
+                        .spread(Spread.ROUND)
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
+                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
+                        .setSpeedBetween(0f, 15f)
+                        .position(new Position.Relative(0.0, 0.0).between(new Position.Relative(1.0, 0.0)))
+                        .build());
+    }
+
+    private void explode() {
+        EmitterConfig emitterConfig = new Emitter(100L, TimeUnit.MILLISECONDS).max(100);
+        konfettiView.start(
+                new PartyFactory(emitterConfig)
+                        .spread(360)
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
+                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
+                        .setSpeedBetween(0f, 30f)
+                        .position(new Position.Relative(0.5, 0.3))
+                        .build());
+    }
 
     public void onNewGameButtonClicked(View view){
         if(BuildConfig.DEBUG) Log.d(TAG, "New game button clicked");

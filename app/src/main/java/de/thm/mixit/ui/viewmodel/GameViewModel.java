@@ -92,7 +92,7 @@ public class GameViewModel extends ViewModel {
                     this.targetElement.postValue(new String[]{"Error could'nt fetch new Word"});
                 } else {
                     Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
-                    this.targetElement.postValue(new String[]{"Vulkan"});
+                    this.targetElement.postValue(res.getData());
                 }
             });
         }
