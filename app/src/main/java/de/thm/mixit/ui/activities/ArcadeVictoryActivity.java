@@ -16,6 +16,8 @@ import java.util.Objects;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.repository.ElementRepository;
+import de.thm.mixit.data.repository.GameStateRepository;
 
 /**
  * Activity for the victory screen of an arcade game.
@@ -37,6 +39,12 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GameStateRepository gameStateRepository = GameStateRepository.create(this,true);
+        gameStateRepository.deleteSavedGameState();
+
+        ElementRepository elementRepository = ElementRepository.create(this, true);
+        elementRepository.reset();
 
         Intent intent = getIntent();
 

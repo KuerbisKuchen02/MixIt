@@ -116,8 +116,8 @@ public class PlaygroundFragment extends Fragment{
                 Log.d(TAG, "The player found the goal word!");
                 // TODO: Switch to the Arcade Victory Activity here
 
-                List<Element> list = viewModel.getElements().getValue();
-                Element goalElement = list.get(list.size()-1);
+                List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
+                Element goalElement = list.get(list.size()-1).getElement();
 
                 Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
                 intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, goalElement);
