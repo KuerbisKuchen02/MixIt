@@ -14,4 +14,7 @@
     <string name="gamestate_shared_preferences_endless">de.thm.mixit.GAMESTATE_ENDLESS_FILE</string>
     <string name="gamestate_shared_preferences_arcade">de.thm.mixit.GAMESTATE_ARCADE_FILE</string>
     <string name="statistic_shared_preferences">de.thm.mixit.STATISTIC_FILE</string>
+    <string name="achievements_heading">Achievements</string>
+    <string name="achievements_sub_heading_progress">%d/%d Achievements unlocked</string>
+    <string name="achievement_card_progress_text">%d/%d</string>
 </resources>
