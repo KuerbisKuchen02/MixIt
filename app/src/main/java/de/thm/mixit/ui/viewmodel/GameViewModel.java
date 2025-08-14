@@ -23,6 +23,7 @@ import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.GameStateRepository;
+import de.thm.mixit.domain.logic.ArcadeGoalChecker;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
 /**
@@ -47,6 +48,7 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isWon = new MutableLiveData<>();
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
@@ -65,6 +67,7 @@ public class GameViewModel extends ViewModel {
         this.timeHandler = new Handler();
         this.timeHandler.post(updateTimerRunnable);
         this.combineError.setValue(null);
+        this.isWon.setValue(false);
 
         // TODO check with implementation of GameState Use Case
         if (gameStateRepository.hasSavedGameState()) {
@@ -210,6 +213,10 @@ public class GameViewModel extends ViewModel {
         return targetElement;
     }
 
+    public MutableLiveData<Boolean> getIsWon() {
+        return isWon;
+    }
+
     public void increaseTurnCounter() {
         assert turns.getValue() != null;
         turns.setValue(turns.getValue() + 1);
@@ -258,6 +265,19 @@ public class GameViewModel extends ViewModel {
     }
 
     /**
+     * Takes a sequence of target words and returns true if the Game has been won.
+     * @param targetWords       The sequence of words to check for the newWord
+     * @param newWord           The word which must be inside targetElements in order to win.
+     */
+    private void checkIsWon(String[] targetWords, String newWord) {
+        if (targetWords == null) return;
+        if (ArcadeGoalChecker.matchesTargetElement(targetWords, newWord)) {
+            Log.d(TAG, newWord + " matches " + Arrays.toString(targetElement.getValue()));
+            isWon.postValue(true);
+        }
+    }
+
+    /**
      * Handle playground changes after successful combination
      * @param chip1 reactant 1
      * @param chip2 reactant 2
@@ -271,6 +291,7 @@ public class GameViewModel extends ViewModel {
         list.add(new ElementChip(newElement, chip1.getX(), chip1.getY()));
         elementsOnPlayground.setValue(list);
         loadElements();
+        checkIsWon(targetElement.getValue(), newElement.name);
     }
 
     /**

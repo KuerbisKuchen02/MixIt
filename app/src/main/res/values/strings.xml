@@ -13,4 +13,8 @@
     <string name="game_playground_fab_add_element">open element list</string>
     <string name="gamestate_shared_preferences_endless">de.thm.mixit.GAMESTATE_ENDLESS_FILE</string>
     <string name="gamestate_shared_preferences_arcade">de.thm.mixit.GAMESTATE_ARCADE_FILE</string>
+    <string name="arcade_victory_win1">Super, Du hast</string>
+    <string name="arcade_victory_win2">gefunden!</string>
+    <string name="arcade_victory_new_game_text">Neues Spiel</string>
+    <string name="arcade_victory_return_text">Zurück zum&#10;Hauptmenü</string>
 </resources>
