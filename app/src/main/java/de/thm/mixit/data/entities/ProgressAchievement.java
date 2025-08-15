@@ -6,7 +6,7 @@ package de.thm.mixit.data.entities;
  *
  * @author Justin Wolek
  */
-public class ProgressAchievement extends Achievement{
+public class ProgressAchievement extends Achievement {
     private int currentProgress;
     private final int targetProgress;
 
