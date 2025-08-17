@@ -21,6 +21,8 @@ public class ElementChip {
      * and we don't want to store views inside the viewmodel
      */
     private static int ID = 0;
+
+    private boolean isAnimated = false;
     private final int id;
     private final Element element;
     private float x;
@@ -73,6 +75,14 @@ public class ElementChip {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public boolean isAnimated() {
+        return isAnimated;
+    }
+
+    public void setAnimated(boolean animated) {
+        isAnimated = animated;
     }
 
     public ElementChip withPosition(float x, float y) {
