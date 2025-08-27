@@ -37,11 +37,11 @@ import java.util.Random;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
-import de.thm.mixit.domain.logic.GenericListUpdateCallback;
 import de.thm.mixit.domain.logic.GenericListChangeHandler;
+import de.thm.mixit.domain.logic.GenericListUpdateCallback;
 import de.thm.mixit.ui.activities.ArcadeVictoryActivity;
 import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
@@ -149,7 +149,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
                 intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, goalElement);
                 intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS, viewModel.getTurns().getValue());
-                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.passedTime().getValue());
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.getPassedTime().getValue());
                 startActivity(intent);
             }
         });

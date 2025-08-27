@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.entities.GameState;
-import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.domain.logic.ArcadeGoalChecker;
 import de.thm.mixit.domain.usecase.ElementUseCase;
@@ -43,6 +43,7 @@ public class GameViewModel extends ViewModel {
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
     private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
+    private long alreadySavedPassedTime;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
@@ -72,16 +73,14 @@ public class GameViewModel extends ViewModel {
             GameState gameState = gameStateRepository.loadGameState();
             this.elementsOnPlayground.setValue(gameState.getElementChips());
             this.turns.setValue(gameState.getTurns());
-            this.passedTime.setValue(gameState.getTime());
-            this.startTime = System.currentTimeMillis() -
-                    Objects.requireNonNull(this.passedTime.getValue());
+            this.alreadySavedPassedTime = gameState.getTime();
+            this.passedTime.setValue(0L);
             this.targetElement.setValue(gameState.getGoalElement());
         } else {
             Log.i(TAG, "GameState is not there using default values");
             this.elementsOnPlayground.setValue(new ArrayList<>());
             this.turns.setValue(0);
             this.passedTime.setValue(0L);
-            this.startTime = System.currentTimeMillis();
             elementRepository.generateNewGoalWord(res -> {
                 if (res.isError()) {
                     // TODO add proper Error Handling
@@ -204,6 +203,11 @@ public class GameViewModel extends ViewModel {
     public LiveData<Long> getPassedTime() {
         return passedTime;
     }
+
+    public long getAlreadySavedPassedTime() {
+        return alreadySavedPassedTime;
+    }
+
 
     public LiveData<Integer> getTurns() {
         return turns;

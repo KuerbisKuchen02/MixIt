@@ -124,14 +124,14 @@ public class GameActivity extends AppCompatActivity {
     public boolean isArcade() {
         return isArcade;
     }
-
     /**
      * Worker thread to measure current playtime
      */
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
-            viewModel.setPassedTime(System.currentTimeMillis() - startTime);
+            viewModel.setPassedTime(System.currentTimeMillis() - startTime
+                    + viewModel.getAlreadySavedPassedTime());
 
             // Handler calls it again every second
             timeHandler.postDelayed(this, 1000);

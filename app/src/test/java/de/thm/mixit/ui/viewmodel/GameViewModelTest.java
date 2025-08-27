@@ -28,6 +28,7 @@ import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.repository.ElementRepository;
+import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 import de.thm.mixit.util.LiveDataTestUtil;
 
@@ -51,6 +52,9 @@ public class GameViewModelTest {
     @Mock
     private ElementUseCase mockElementUseCase;
 
+    @Mock
+    GameStateRepository gameStateRepository;
+
     private GameViewModel viewModel;
 
     @Before
@@ -60,7 +64,7 @@ public class GameViewModelTest {
                 new Element("Erde", "\uD83C\uDF0D"),
                 new Element("Feuer", "\uD83D\uDD25"),
                 new Element("Luft", "\uD83C\uDF2C️")));
-        viewModel = new GameViewModel(mockElementRepository, mockElementUseCase);
+        viewModel = new GameViewModel(mockElementRepository, mockElementUseCase, gameStateRepository);
     }
 
     @Test
