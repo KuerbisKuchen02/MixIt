@@ -25,6 +25,7 @@ import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.databinding.FragmentElementListBinding;
+import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
@@ -51,8 +52,10 @@ public class ElementListFragment extends Fragment {
         binding = FragmentElementListBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        viewModel = new ViewModelProvider(requireActivity(),
-                new GameViewModel.Factory(requireActivity())).get(GameViewModel.class);
+        GameActivity gameActivity = ((GameActivity) requireActivity());
+        viewModel = new ViewModelProvider(gameActivity,
+                new GameViewModel.Factory(gameActivity,
+                        gameActivity.isArcade())).get(GameViewModel.class);
         binding.setViewModel(viewModel);
 
         binding.setLayoutManager(getLayoutManager());

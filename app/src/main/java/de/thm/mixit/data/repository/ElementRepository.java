@@ -38,10 +38,11 @@ public class ElementRepository {
     /**
      * Method to create an ElementRepository instance.
      * @param context The Android context used to get the database instance.
+     * @param isArcade Whether the repo is handling data from endless or arcade mode.
      * @return A new instance of {@code ElementRepository}.
      */
-    public static ElementRepository create(Context context) {
-        AppDatabase db = AppDatabase.getInstance(context);
+    public static ElementRepository create(Context context, boolean isArcade) {
+        AppDatabase db = AppDatabase.getInstance(context, isArcade);
         ElementDao dao = db.elementDAO();
         return new ElementRepository(new ElementLocalDataSource(dao));
     }
@@ -56,6 +57,17 @@ public class ElementRepository {
     public void generateNew(String element1, String element2,
                             Consumer<Result<Element>> callback) {
         ElementRemoteDataSource.combine(element1, element2, callback);
+    }
+
+    /**
+     * Generates a new goal word asynchronously.
+     *
+     * @param callback The callback to receive the generated goal words.
+     *
+     * @throws RuntimeException if the remote data source fails to generate new goal words.
+     */
+    public void generateNewGoalWord(Consumer<Result<String[]>> callback) throws RuntimeException {
+        ElementRemoteDataSource.generateNewGoalWord(callback);
     }
 
     /**

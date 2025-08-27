@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import de.thm.mixit.databinding.FragmentArcadeBinding;
+import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**
@@ -29,8 +30,10 @@ public class ArcadeFragment extends Fragment {
         FragmentArcadeBinding binding = FragmentArcadeBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        GameViewModel viewModel = new ViewModelProvider(requireActivity(),
-                new GameViewModel.Factory(requireActivity())).get(GameViewModel.class);
+        GameActivity gameActivity = ((GameActivity) requireActivity());
+        GameViewModel viewModel = new ViewModelProvider(gameActivity,
+                new GameViewModel.Factory(gameActivity,
+                        gameActivity.isArcade())).get(GameViewModel.class);
         binding.setViewModel(viewModel);
         return binding.getRoot();
     }

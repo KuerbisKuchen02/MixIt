@@ -1,11 +1,15 @@
 package de.thm.mixit.ui.fragments;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +28,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
@@ -36,6 +42,8 @@ import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
 import de.thm.mixit.domain.logic.GenericListUpdateCallback;
 import de.thm.mixit.domain.logic.GenericListChangeHandler;
+import de.thm.mixit.ui.activities.ArcadeVictoryActivity;
+import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**
@@ -54,6 +62,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
     private final List<ElementChip> currentElements = new ArrayList<>();
 
+    private final Map<Integer, ObjectAnimator> animations = new HashMap<>();
 
     @Nullable
     @Override
@@ -65,8 +74,10 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 FragmentPlaygroundBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        viewModel = new ViewModelProvider(requireActivity(),
-                new GameViewModel.Factory(requireActivity())).get(GameViewModel.class);
+        GameActivity gameActivity = ((GameActivity) requireActivity());
+        viewModel = new ViewModelProvider(gameActivity,
+                new GameViewModel.Factory(gameActivity,
+                        gameActivity.isArcade())).get(GameViewModel.class);
 
         playground = binding.layoutPlayground;
         clearElementsButton = binding.buttonClearElements;
@@ -76,18 +87,70 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         showElementListButton.setOnClickListener(
                 view -> {
-                    // TODO implement fragment communication to ElementListFragment or GameActivity
                     if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
+                    assert getActivity() != null;
+                    ((GameActivity) getActivity()).setElementListVisible(true);
+                    showElementListButton.hide();
+
+                    // Apply OnClickListener to playground as long as the Elementlist is visible
+                    playground.setOnClickListener(
+                            playgroundView -> {
+                                if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
+                                assert getActivity() != null;
+                                ((GameActivity) getActivity()).setElementListVisible(false);
+                                showElementListButton.show();
+                                playground.setOnClickListener(null);
+                            }
+                    );
                 });
 
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
         viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
             Log.d(TAG, "Registered new state after combining: " + error);
             String text = "Something went wrong! Please check your internet connection.";
+
             if (error != null) {
                 Snackbar.make(playground, text, 6000)
                         .setBackgroundTint(Color.RED)
                         .show();
+
+                ArrayList<Integer> deletedIds = new ArrayList<>();
+
+                for (Map.Entry<Integer, ObjectAnimator> entry : animations.entrySet()) {
+                    ElementChip chip = getChipById(entry.getKey());
+
+                    if (chip == null || !chip.isAnimated()) {
+                        entry.getValue().cancel();
+
+                        if (chip != null) {
+                            chip.setAnimated(false);
+                            View v = playground.findViewWithTag(chip.getId());
+                            v.setOnTouchListener(new TouchListener(chip));
+                            v.setAlpha(1f);
+                        }
+
+                        deletedIds.add(entry.getKey());
+                    }
+                }
+
+                for (Integer id : deletedIds) {
+                    animations.remove(id);
+                }
+            }
+        });
+
+        viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
+            if (gameActivity.isArcade() && isWon) {
+                Log.d(TAG, "The player found the goal word!");
+
+                List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
+                Element goalElement = list.get(list.size()-1).getElement();
+
+                Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, goalElement);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS, viewModel.getTurns().getValue());
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.passedTime().getValue());
+                startActivity(intent);
             }
         });
 
@@ -132,56 +195,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         view.setX(chip.getX());
         view.setY(chip.getY());
-        view.setOnTouchListener(new View.OnTouchListener() {
-            float dX, dY;
-
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        dX = v.getX() - event.getRawX();
-                        dY = v.getY() - event.getRawY();
-                        v.bringToFront();
-                        v.invalidate();
-                        whenItemIsPickedUp();
-                        return true;
-
-                    case MotionEvent.ACTION_MOVE:
-                        if(event.getRawX() + dX < playground.getWidth() - v.getWidth() &&
-                                event.getRawX() + dX > 0) v.setX(event.getRawX() + dX);
-                        if(event.getRawY() + dY < playground.getHeight() - v.getHeight() &&
-                                event.getRawY() + dY > 0) v.setY(event.getRawY() + dY);
-                        return true;
-
-                    case MotionEvent.ACTION_UP:
-                        viewModel.updateElementPositonOnPlayground(chip, v.getX(), v.getY());
-                        whenItemIsDropped();
-                        if (!overlapsWithDeleteButton(v)){
-                            View other = checkOverlap((TextView) v);
-                            if(other != null){
-                                // while combining disable onTouchListener
-                                v.setOnTouchListener((dummy, e) -> false);
-                                other.setOnTouchListener((dummy, e) -> false);
-                                try {
-                                    viewModel.combineElements(
-                                            Objects.requireNonNull(getChipById((int) v.getTag())),
-                                            Objects.requireNonNull(
-                                                    getChipById((int) other.getTag())));
-                                    viewModel.increaseTurnCounter();
-                                } catch (Exception e) {
-                                    Log.e(TAG, "Error while combining elements: "
-                                            + e.getMessage());
-                                }
-                            }
-                        }
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
+        view.setOnTouchListener(new TouchListener(chip));
         return view;
     }
 
@@ -334,5 +348,113 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             }
         }
         return null;
+    }
+
+    private class TouchListener implements View.OnTouchListener {
+        float dX, dY;
+        boolean isDragging;
+
+        GestureDetector gestureDetector;
+
+        ElementChip chip;
+
+        public TouchListener(ElementChip chip) {
+            this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    // Duplicate the view here
+                    if(BuildConfig.DEBUG) Log.d(TAG, "Double Tap on " +
+                            chip.getElement() + " recognized");
+                    final int OFFSET = 20;
+                    viewModel.addElementToPlayground(new ElementChip(chip.getElement(),
+                            chip.getX()+OFFSET, chip.getY()+OFFSET));
+                    return true;
+                }
+            });
+            this.chip = chip;
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if(gestureDetector.onTouchEvent(event)) return true;
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    // when an item is picked up
+                    isDragging = false;
+                    dX = v.getX() - event.getRawX();
+                    dY = v.getY() - event.getRawY();
+                    v.bringToFront();
+                    whenItemIsPickedUp();
+                    return true;
+
+                case MotionEvent.ACTION_MOVE:
+                    isDragging = true;
+                    // limit possible position of element to playground bounds
+                    if(event.getRawX() + dX < playground.getWidth() - v.getWidth() &&
+                            event.getRawX() + dX > 0) v.setX(event.getRawX() + dX);
+                    if(event.getRawY() + dY < playground.getHeight() - v.getHeight() &&
+                            event.getRawY() + dY > 0) v.setY(event.getRawY() + dY);
+                    return true;
+
+                case MotionEvent.ACTION_UP:
+                    whenItemIsDropped();
+                    if(!isDragging){
+                        return false;
+                    }
+                    viewModel.updateElementPositonOnPlayground(chip, v.getX(), v.getY());
+                    if (!overlapsWithDeleteButton(v)){
+                        View other = checkOverlap((TextView) v);
+                        if(other != null){
+                            // while combining disable onTouchListener
+                            try {
+                                ElementChip firstChip = Objects.requireNonNull(
+                                        getChipById((int) v.getTag()));
+                                ElementChip secondChip = Objects.requireNonNull(
+                                        getChipById((int) other.getTag()));
+
+                                firstChip.setAnimated(true);
+                                secondChip.setAnimated(true);
+
+                                v.setOnTouchListener((dummy, e) -> false);
+                                other.setOnTouchListener((dummy, e) -> false);
+
+                                ObjectAnimator fade1 = ObjectAnimator.ofFloat(v, "alpha", 1f, 0.2f);
+                                ObjectAnimator fade2 = ObjectAnimator.ofFloat(other, "alpha", 1f, 0.2f);
+
+                                fade1.setDuration(1000);
+                                fade2.setDuration(1000);
+
+                                fade1.setRepeatCount(ObjectAnimator.INFINITE);
+                                fade2.setRepeatCount(ObjectAnimator.INFINITE);
+
+                                fade1.setRepeatMode(ObjectAnimator.REVERSE);
+                                fade2.setRepeatMode(ObjectAnimator.REVERSE);
+
+                                AnimatorSet set = new AnimatorSet();
+                                set.playTogether(fade1, fade2);
+                                set.start();
+
+                                animations.put(firstChip.getId(), fade1);
+                                animations.put(secondChip.getId(), fade2);
+
+                                viewModel.combineElements(
+                                        Objects.requireNonNull(firstChip),
+                                        Objects.requireNonNull(secondChip));
+                                viewModel.increaseTurnCounter();
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error while combining elements: "
+                                        + e.getMessage());
+                            }
+                        }
+                    }
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
     }
 }
