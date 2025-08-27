@@ -93,7 +93,7 @@ UnitTests:
     - ./gradlew -Pci --console=plain :app:createDebugCoverageReport
     # Everything else doesnt work so just grap the relevant part from the html page and print it to the log
     - cat ./**/build/reports/coverage/test/debug/index.html | grep -o 'Total[^%]*%'
-  coverage: '/Total.+([0-9]{1,3}%)/'
+  coverage: '/Total.+?([0-9]{1,3}%)/'
   artifacts:
     when: always
     expire_in: 1 day
