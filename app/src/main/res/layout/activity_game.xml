@@ -5,17 +5,30 @@
     android:fitsSystemWindows="true"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_arcade"
-        android:name="de.thm.mixit.ui.fragments.ArcadeFragment"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_container_arcade"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_arcade" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fragment_container_playground"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="24dp"
+        app:cardBackgroundColor="?attr/colorSurface"
+        android:layout_margin="16dp">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container_arcade"
+            android:name="de.thm.mixit.ui.fragments.ArcadeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_arcade" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_playground"
@@ -25,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@id/fragment_container_element_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_container_arcade"
+        app:layout_constraintTop_toBottomOf="@id/card_container_arcade"
         tools:layout="@layout/fragment_playground" />
 
     <androidx.fragment.app.FragmentContainerView

@@ -297,7 +297,8 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         clearElementsButton.setImageResource(R.drawable.ic_broom_24px);
         clearElementsButton.requestLayout();
         clearElementsButton.setAlpha(1f);
-        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+        int color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
+        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
         showElementListButton.setClickable(true);
     }
 

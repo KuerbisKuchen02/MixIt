@@ -9,5 +9,6 @@
     android:paddingTop="6dp"
     android:paddingRight="10dp"
     android:paddingBottom="6dp"
-    android:textColor="@color/black"
+    android:backgroundTint="?attr/colorSecondaryContainer"
+    android:textColor="?attr/colorOnSecondaryContainer"
     android:textSize="@dimen/text_size_medium" />
