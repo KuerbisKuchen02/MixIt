@@ -18,6 +18,14 @@ package de.thm.mixit.data.entities;
  * {@code mostDiscardedElements} Max number of discarded elements in one time.
  * <br>
  * {@code mostCombinationsForOneElement} Max unlocked combinations to create the same element.
+ * <br>
+ * {@code arcadeGamesPlayed} Number of arcade games played by the player.
+ * <br>
+ *  {@code arcadeGamesWon} Number of arcade games won by the player.
+ *  <br>
+ *  {@code shortestArcadeTimeToBeat} Fastest time the player beat the arcade game.
+ *  <br>
+ *  {@code fewestArcadeTurnsToBeat} Fewest turns needed by the player to beat the arcade mode.
  *
  * @author Jannik Heimann
  */
