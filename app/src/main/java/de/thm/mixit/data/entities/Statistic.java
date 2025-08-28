@@ -29,6 +29,11 @@ public class Statistic {
     private long numberOfDiscardedElements;
     private int mostDiscardedElements;
     private int mostCombinationsForOneElement;
+    private int arcadeGamesPlayed;
+    private int arcadeGamesWon;
+    private long shortestArcadeTimeToBeat;
+    private int fewestArcadeTurnsToBeat;
+
 
     public Statistic(long playtime,
                      long numberOfCombinations,
@@ -36,7 +41,11 @@ public class Statistic {
                      int numberOfUnlockedElements,
                      long numberOfDiscardedElements,
                      int mostDiscardedElements,
-                     int mostCombinationsForOneElement) {
+                     int mostCombinationsForOneElement,
+                     int arcadeGamesPlayed,
+                     int arcadeGamesWon,
+                     long shortestArcadeTimeToBeat,
+                     int fewestArcadeTurnsToBeat) {
         this.playtime = playtime;
         this.numberOfCombinations = numberOfCombinations;
         this.longestElement = longestElement;
@@ -44,6 +53,10 @@ public class Statistic {
         this.numberOfDiscardedElements = numberOfDiscardedElements;
         this.mostDiscardedElements = mostDiscardedElements;
         this.mostCombinationsForOneElement = mostCombinationsForOneElement;
+        this.arcadeGamesPlayed = arcadeGamesPlayed;
+        this.arcadeGamesWon = arcadeGamesWon;
+        this.shortestArcadeTimeToBeat = shortestArcadeTimeToBeat;
+        this.fewestArcadeTurnsToBeat = fewestArcadeTurnsToBeat;
     }
 
     public long getPlaytime() {
@@ -59,6 +72,7 @@ public class Statistic {
     }
 
     public long getNumberOfDiscardedElements() { return this.numberOfDiscardedElements; }
+
     public int getNumberOfUnlockedElements() {
         return this.numberOfUnlockedElements;
     }
@@ -70,6 +84,14 @@ public class Statistic {
     public int getMostCombinationsForOneElement() {
         return this.mostCombinationsForOneElement;
     }
+
+    public int getArcadeGamesPlayed() { return this.arcadeGamesPlayed; }
+
+    public int getArcadeGamesWon() { return this.arcadeGamesWon; }
+
+    public long getShortestArcadeTimeToBeat() { return this.shortestArcadeTimeToBeat; }
+
+    public int getFewestArcadeTurnsToBeat() { return this.fewestArcadeTurnsToBeat; }
 
     public void setPlaytimeBy(long playTime) {
         this.playtime = playTime;
@@ -97,5 +119,21 @@ public class Statistic {
 
     public void setMostCombinationsForOneElement(int mostCombinationsForOneElement) {
         this.mostCombinationsForOneElement = mostCombinationsForOneElement;
+    }
+
+    public void setArcadeGamesPlayed(int numberPlayed) {
+        this.arcadeGamesPlayed = numberPlayed;
+    }
+
+    public void setArcadeGamesWon(int numberWon) {
+        this.arcadeGamesWon = numberWon;
+    }
+
+    public void setShortestArcadeTimeToBeat(long time) {
+        this.shortestArcadeTimeToBeat = time;
+    }
+
+    public void setFewestArcadeTurnsToBeat(int turns) {
+        this.fewestArcadeTurnsToBeat = turns;
     }
 }
