@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Light Primary -->
+    <color name="md_theme_light_primary">#9C50B8</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#F1DAF8</color>
+    <color name="md_theme_light_onPrimaryContainer">#360047</color>
+
+    <!-- Light Secondary -->
+    <color name="md_theme_light_secondary">#FE733C</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#FFDAD0</color>
+    <color name="md_theme_light_onSecondaryContainer">#400100</color>
+
+    <!-- Dark Primary -->
+    <color name="md_theme_dark_primary">#E3B4F4</color>
+    <color name="md_theme_dark_onPrimary">#500F69</color>
+    <color name="md_theme_dark_primaryContainer">#733490</color>
+    <color name="md_theme_dark_onPrimaryContainer">#F1DAF8</color>
+
+    <!-- Dark Secondary -->
+    <color name="md_theme_dark_secondary">#FFB59C</color>
+    <color name="md_theme_dark_onSecondary">#5F1500</color>
+    <color name="md_theme_dark_secondaryContainer">#882E12</color>
+    <color name="md_theme_dark_onSecondaryContainer">#FFDAD0</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
