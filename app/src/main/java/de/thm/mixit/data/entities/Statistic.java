@@ -29,18 +29,19 @@ package de.thm.mixit.data.entities;
  *
  * @author Jannik Heimann
  */
+// TODO clear comments as soon as the corresponding saving of data is done
 public class Statistic {
     private long playtime;
     private long numberOfCombinations;
     private String longestElement;
-    private int numberOfUnlockedElements;
+    private int numberOfUnlockedElements;       // In Element UseCase getElement, could return bool, alternative also db query at closing
     private long numberOfDiscardedElements;
     private int mostDiscardedElements;
-    private int mostCombinationsForOneElement;
-    private int arcadeGamesPlayed;
-    private int arcadeGamesWon;
-    private long shortestArcadeTimeToBeat;
-    private int fewestArcadeTurnsToBeat;
+    private int mostCombinationsForOneElement;  // Needs an additional db query, implement in GameViewModel saveStatistic
+    private int arcadeGamesPlayed;              // Missing Win Detection in this Branch
+    private int arcadeGamesWon;                 // Missing Win Detection in this Branch
+    private long shortestArcadeTimeToBeat;      // Missing Win Detection in this Branch
+    private int fewestArcadeTurnsToBeat;        // Missing Win Detection in this Branch
 
 
     public Statistic(long playtime,
@@ -101,7 +102,7 @@ public class Statistic {
 
     public int getFewestArcadeTurnsToBeat() { return this.fewestArcadeTurnsToBeat; }
 
-    public void setPlaytimeBy(long playTime) {
+    public void setPlaytime(long playTime) {
         this.playtime = playTime;
     }
 
@@ -110,7 +111,8 @@ public class Statistic {
     }
 
     public void setLongestElement(String longestElement) {
-        this.longestElement = longestElement;
+        if (longestElement.length() > this.longestElement.length())
+            this.longestElement = longestElement;
     }
 
     public void setNumberOfUnlockedElements(int numberOfUnlockedElements) {
@@ -122,7 +124,8 @@ public class Statistic {
     }
 
     public void setMostDiscardedElements(int mostDiscardedElements) {
-        this.mostDiscardedElements = mostDiscardedElements;
+        if (mostDiscardedElements > this.mostDiscardedElements)
+            this.mostDiscardedElements = mostDiscardedElements;
     }
 
     public void setMostCombinationsForOneElement(int mostCombinationsForOneElement) {
@@ -143,5 +146,23 @@ public class Statistic {
 
     public void setFewestArcadeTurnsToBeat(int turns) {
         this.fewestArcadeTurnsToBeat = turns;
+    }
+
+    @Override
+    /**
+     * Override for Debug Purposes
+     */
+    public String toString() {
+        return "Played Time: " + playtime + "\n" +
+                "Number of Combinations: " + numberOfCombinations + "\n" +
+                "Longest Element: " + longestElement + "\n" +
+                "Number of unlocked Elememts: " + numberOfUnlockedElements + "\n" +
+                "Total Discarded Elements: " +  numberOfDiscardedElements + "\n" +
+                "Most Discarded Elements: " + mostDiscardedElements + "\n" +
+                "Most Combinations for one Element: " + mostCombinationsForOneElement + "\n" +
+                "Arcade Games Played: " + arcadeGamesPlayed + "\n" +
+                "Arcade Games Won: " + arcadeGamesWon + "\n" +
+                "Shortest Arcade Playtime: " + shortestArcadeTimeToBeat + "\n" +
+                "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat;
     }
 }

@@ -80,6 +80,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         viewModel.saveGameState();
+        viewModel.saveStatistics();
     }
 
     @Override
