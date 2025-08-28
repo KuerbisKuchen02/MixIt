@@ -52,7 +52,7 @@ public class StatisticDataSource {
      */
     public Statistic loadStatistic() {
         long playtime = sp.getLong(PREF_TOTAL_PLAYTIME, 0L);
-        long combinations = sp.getInt(PREF_TOTAL_COMBINATIONS, 0);
+        long combinations = sp.getLong(PREF_TOTAL_COMBINATIONS, 0);
         String longestElement = sp.getString(PREF_LONGEST_ELEMENT, "");
         int numUnlockedElements = sp.getInt(PREF_NUM_UNLOCKED_ELEMENTS, 0);
         long numDiscardedElements = sp.getLong(PREF_NUM_DISCARDED_ELEMENTS, 0L);
