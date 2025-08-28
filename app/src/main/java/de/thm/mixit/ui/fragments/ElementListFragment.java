@@ -87,6 +87,12 @@ public class ElementListFragment extends Fragment {
         return layoutManager;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // set search to empty text so element list will update on it's own
+        binding.autoTextGameItemListSearch.setText("");
+    }
 
     private TextWatcher getTextWatcher() {
         return new TextWatcher() {
