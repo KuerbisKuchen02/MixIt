@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:elevation="0dp"
+    android:fitsSystemWindows="true">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_arcade"
@@ -33,11 +34,27 @@
         android:name="de.thm.mixit.ui.fragments.ElementListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.33"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment_container_playground"
         tools:layout="@layout/fragment_element_list" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:onClick="onBackButtonClicked"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
