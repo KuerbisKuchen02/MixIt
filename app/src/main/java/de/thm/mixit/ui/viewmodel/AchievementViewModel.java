@@ -105,7 +105,7 @@ public class AchievementViewModel extends ViewModel {
 
     // TODO Replace achievement names with string resources
     /**
-     *
+     * Update the progress of each achievement based on the saved statistics.
      */
     private void updateProgress() {
         Statistic statistic = statisticRepository.loadStatistic();
