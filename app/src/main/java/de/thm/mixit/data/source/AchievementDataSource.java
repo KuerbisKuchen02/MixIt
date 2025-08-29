@@ -42,8 +42,10 @@ public class AchievementDataSource {
         this.sp = context.getSharedPreferences(
                 filepath,
                 Context.MODE_PRIVATE);
-        this.binaryAchievementNames = new HashSet<>();
-        this.progressAchievementNames = new HashSet<>();
+        this.binaryAchievementNames = sp.getStringSet("binaryAchievementNames",
+                new HashSet<>());
+        this.progressAchievementNames = sp.getStringSet("progressAchievementNames",
+                new HashSet<>());
     }
 
     /**
@@ -95,6 +97,10 @@ public class AchievementDataSource {
             }
 
         }
+
+        spEditor.putStringSet("binaryAchievementNames", binaryAchievementNames);
+        spEditor.putStringSet("progressAchievementNames", progressAchievementNames);
+
         spEditor.apply();
     }
 
