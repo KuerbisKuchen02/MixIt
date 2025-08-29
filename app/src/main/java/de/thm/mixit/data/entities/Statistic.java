@@ -19,8 +19,6 @@ package de.thm.mixit.data.entities;
  * <br>
  * {@code mostCombinationsForOneElement} Max unlocked combinations to create the same element.
  * <br>
- * {@code arcadeGamesPlayed} Number of arcade games played by the player.
- * <br>
  *  {@code arcadeGamesWon} Number of arcade games won by the player.
  *  <br>
  *  {@code shortestArcadeTimeToBeat} Fastest time the player beat the arcade game.
@@ -38,7 +36,6 @@ public class Statistic {
     private long numberOfDiscardedElements;
     private int mostDiscardedElements;
     private int mostCombinationsForOneElement;
-    private int arcadeGamesPlayed;              // Missing Win Detection in this Branch
     private int arcadeGamesWon;                 // Missing Win Detection in this Branch
     private long shortestArcadeTimeToBeat;      // Missing Win Detection in this Branch
     private int fewestArcadeTurnsToBeat;        // Missing Win Detection in this Branch
@@ -51,7 +48,6 @@ public class Statistic {
                      long numberOfDiscardedElements,
                      int mostDiscardedElements,
                      int mostCombinationsForOneElement,
-                     int arcadeGamesPlayed,
                      int arcadeGamesWon,
                      long shortestArcadeTimeToBeat,
                      int fewestArcadeTurnsToBeat) {
@@ -62,7 +58,6 @@ public class Statistic {
         this.numberOfDiscardedElements = numberOfDiscardedElements;
         this.mostDiscardedElements = mostDiscardedElements;
         this.mostCombinationsForOneElement = mostCombinationsForOneElement;
-        this.arcadeGamesPlayed = arcadeGamesPlayed;
         this.arcadeGamesWon = arcadeGamesWon;
         this.shortestArcadeTimeToBeat = shortestArcadeTimeToBeat;
         this.fewestArcadeTurnsToBeat = fewestArcadeTurnsToBeat;
@@ -93,8 +88,6 @@ public class Statistic {
     public int getMostCombinationsForOneElement() {
         return this.mostCombinationsForOneElement;
     }
-
-    public int getArcadeGamesPlayed() { return this.arcadeGamesPlayed; }
 
     public int getArcadeGamesWon() { return this.arcadeGamesWon; }
 
@@ -135,10 +128,6 @@ public class Statistic {
             this.mostCombinationsForOneElement = mostCombinationsForOneElement;
     }
 
-    public void setArcadeGamesPlayed(int numberPlayed) {
-        this.arcadeGamesPlayed = numberPlayed;
-    }
-
     public void setArcadeGamesWon(int numberWon) {
         this.arcadeGamesWon = numberWon;
     }
@@ -163,7 +152,6 @@ public class Statistic {
                 "Total Discarded Elements: " +  numberOfDiscardedElements + "\n" +
                 "Most Discarded Elements: " + mostDiscardedElements + "\n" +
                 "Most Combinations for one Element: " + mostCombinationsForOneElement + "\n" +
-                "Arcade Games Played: " + arcadeGamesPlayed + "\n" +
                 "Arcade Games Won: " + arcadeGamesWon + "\n" +
                 "Shortest Arcade Playtime: " + shortestArcadeTimeToBeat + "\n" +
                 "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat;

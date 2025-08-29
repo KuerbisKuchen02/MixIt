@@ -24,7 +24,6 @@ public class StatisticDataSource {
     private static final String PREF_NUM_DISCARDED_ELEMENTS = "NUMBER_OF_DISCARDED_ELEMENTS";
     private static final String PREF_MOST_DISCARDED_ELEMENTS = "MOST_DISCARDED_ELEMENTS";
     private static final String PREF_MOST_COMBINATIONS_FOR_ELEMENT = "MOST_COMBINATIONS_FOR_ELEMENT";
-    private static final String PREF_ARCADE_GAMES_PLAYED = "ARCADE_GAMES_PLAYED";
     private static final String PREF_ARCADE_GAMES_WON = "ARCADE_GAMES_WON";
     private static final String PREF_SHORTEST_TIME_TO_BEAT = "SHORTEST_TIME_TO_BEAT";
     private static final String PREF_FEWEST_TURNS_TO_BEAT = "FEWEST_TURNS_TO_BEAT";
@@ -58,7 +57,6 @@ public class StatisticDataSource {
         long numDiscardedElements = sp.getLong(PREF_NUM_DISCARDED_ELEMENTS, 0L);
         int mostDiscardedElements = sp.getInt(PREF_MOST_DISCARDED_ELEMENTS, 0);
         int mostElementCombinations = sp.getInt(PREF_MOST_COMBINATIONS_FOR_ELEMENT, 0);
-        int arcadeGamesPlayed = sp.getInt(PREF_ARCADE_GAMES_PLAYED, 0);
         int arcadeGamesWon = sp.getInt(PREF_ARCADE_GAMES_WON, 0);
         long shortestTimeToBeat = sp.getLong(PREF_SHORTEST_TIME_TO_BEAT, Long.MAX_VALUE);
         int fewestTurnsToBeat = sp.getInt(PREF_FEWEST_TURNS_TO_BEAT, Integer.MAX_VALUE);
@@ -66,7 +64,7 @@ public class StatisticDataSource {
 
         return new Statistic(playtime, combinations, longestElement, numUnlockedElements,
                 numDiscardedElements, mostDiscardedElements, mostElementCombinations,
-                arcadeGamesPlayed, arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat);
+                arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat);
     }
 
     /**
@@ -85,7 +83,6 @@ public class StatisticDataSource {
         spEditor.putInt(PREF_MOST_DISCARDED_ELEMENTS, statistic.getMostDiscardedElements());
         spEditor.putInt(PREF_MOST_COMBINATIONS_FOR_ELEMENT,
                 statistic.getMostCombinationsForOneElement());
-        spEditor.putInt(PREF_ARCADE_GAMES_PLAYED, statistic.getArcadeGamesPlayed());
         spEditor.putInt(PREF_ARCADE_GAMES_WON, statistic.getArcadeGamesWon());
         spEditor.putLong(PREF_SHORTEST_TIME_TO_BEAT, statistic.getShortestArcadeTimeToBeat());
         spEditor.putInt(PREF_FEWEST_TURNS_TO_BEAT, statistic.getFewestArcadeTurnsToBeat());
