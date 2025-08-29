@@ -107,6 +107,12 @@ public class GameActivity extends AppCompatActivity {
      * @param visible whether to show or hide the ElementList Card and Fragment.
      */
     public void setElementListCardVisible(boolean visible) {
+        // Needed to successfully execute animation even when user clicked on search view
+        View root = findViewById(R.id.game_activity_root_layout);
+        if (root != null) {
+            root.requestFocus();
+        }
+
         // Get ElementlistCard
         MaterialCardView elementlistCard = findViewById(R.id.card_container_elementlist);
 
