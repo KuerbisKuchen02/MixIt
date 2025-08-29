@@ -36,4 +36,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.33" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:onClick="onBackButtonClicked"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_24" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
