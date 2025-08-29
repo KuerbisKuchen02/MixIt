@@ -15,7 +15,9 @@ import java.util.Objects;
 import de.thm.mixit.data.entities.Achievement;
 import de.thm.mixit.data.entities.BinaryAchievement;
 import de.thm.mixit.data.entities.ProgressAchievement;
+import de.thm.mixit.data.entities.Statistic;
 import de.thm.mixit.data.repository.AchievementRepository;
+import de.thm.mixit.data.repository.StatisticRepository;
 
 /**
  * UI state for the {@link de.thm.mixit.ui.activities.AchievementActivity}
@@ -27,6 +29,7 @@ import de.thm.mixit.data.repository.AchievementRepository;
 public class AchievementViewModel extends ViewModel {
     private final static String TAG = AchievementViewModel.class.getSimpleName();
     private final AchievementRepository achievementRepository;
+    private final StatisticRepository statisticRepository;
     private final MutableLiveData<List<Achievement>> achievements;
     private final MutableLiveData<Integer> sizeOfUnlockedAchievement = new MutableLiveData<>();
     private final MutableLiveData<Integer> sizeOfAllAchievements = new MutableLiveData<>();
@@ -35,11 +38,14 @@ public class AchievementViewModel extends ViewModel {
      * Use the {@link AchievementViewModel.Factory} to get a new GameViewModel instance
      * @param achievementRepository AchievementRepository used for dependency injection
      */
-    private AchievementViewModel(AchievementRepository achievementRepository) {
+    private AchievementViewModel(AchievementRepository achievementRepository,
+                                 StatisticRepository statisticRepository) {
         this.achievementRepository = achievementRepository;
         this.achievements = new MutableLiveData<>();
+        this.statisticRepository = statisticRepository;
 
         loadAchievements();
+        updateProgress();
 
         int counter = 0;
         for (Achievement a : Objects.requireNonNull(achievements.getValue())) {
@@ -97,6 +103,58 @@ public class AchievementViewModel extends ViewModel {
         }
     }
 
+    // TODO Replace achievement names with string resources
+    /**
+     *
+     */
+    private void updateProgress() {
+        Statistic statistic = statisticRepository.loadStatistic();
+
+        for (Achievement achievement: Objects.requireNonNull(achievements.getValue())) {
+            switch (achievement.getName()) {
+                case "Hooked":
+                case "Addicted":
+                case "Get a life":
+                    ((ProgressAchievement) achievement).setCurrentProgress((int) (statistic.getPlaytime() / 3600));
+                    break;
+                case "Know the drill":
+                    ((ProgressAchievement) achievement).setCurrentProgress((int) statistic.getNumberOfCombinations());
+                    break;
+                case "The journey begins":
+                case "Word collector":
+                    ((ProgressAchievement) achievement).setCurrentProgress(statistic.getNumberOfUnlockedElements() - 4);
+                    break;
+                case "I like it clean":
+                    ((ProgressAchievement) achievement).setCurrentProgress((int) statistic.getNumberOfDiscardedElements());
+                    break;
+                case "Challenge accepted":
+                    ((ProgressAchievement) achievement).setCurrentProgress(statistic.getArcadeGamesWon());
+                    break;
+                case "Multiple recipes":
+                    ((ProgressAchievement) achievement).setCurrentProgress(statistic.getMostCombinationsForOneElement());
+                    break;
+                case "Winner":
+                    ((BinaryAchievement) achievement).setUnlocked(statistic.getArcadeGamesWon() > 0);
+                    break;
+                case "Fast as fuck boy":
+                    ((BinaryAchievement) achievement).setUnlocked(statistic.getShortestArcadeTimeToBeat() < 60);
+                    break;
+                case "Mastermind":
+                    ((BinaryAchievement) achievement).setUnlocked(statistic.getFewestArcadeTurnsToBeat() < 10);
+                    break;
+                case "Kärcher":
+                    ((BinaryAchievement) achievement).setUnlocked(statistic.getMostDiscardedElements() > 10);
+                    break;
+                case "How did we get here?":
+                    ((BinaryAchievement) achievement).setUnlocked(statistic.getLongestElement().length() >= 25);
+                    break;
+                case "The cake is a lie":
+                    // TODO find way to verify... maybe extra statistic to save?
+                    break;
+            }
+        }
+    }
+
     /**
      * Initialise a list of predefined achievements.
      * Should only be called once when no achievements are present on the device.
@@ -114,7 +172,7 @@ public class AchievementViewModel extends ViewModel {
                 new ProgressAchievement("I like it clean", "Delete 50 elements from the playground", 0, 50),
                 new ProgressAchievement("Challenge accepted!", "Win 10 arcade games", 0, 10),
                 new ProgressAchievement("Multiple recipes", "Get 5 combinations for a single element", 0, 15),
-                new BinaryAchievement("Winner ", "Win your first arcade game", false),
+                new BinaryAchievement("Winner", "Win your first arcade game", false),
                 new BinaryAchievement("Fast as fuck boy!", "Win a arcade game in under 1 minute", false),
                 new BinaryAchievement("Mastermind", "Win an arcade game in less then 10 turns.", false),
                 new BinaryAchievement("Kärcher", "Delete 10 elements at once", false),
@@ -130,9 +188,11 @@ public class AchievementViewModel extends ViewModel {
     public static class Factory implements ViewModelProvider.Factory {
 
         private final AchievementRepository achievementRepository;
+        private final StatisticRepository statisticRepository;
 
         public Factory(Context context) {
             this.achievementRepository = AchievementRepository.create(context);
+            this.statisticRepository = StatisticRepository.create(context);
         }
 
         @NonNull
@@ -140,7 +200,7 @@ public class AchievementViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == AchievementViewModel.class) {
-                return (T) new AchievementViewModel(achievementRepository);
+                return (T) new AchievementViewModel(achievementRepository, statisticRepository);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

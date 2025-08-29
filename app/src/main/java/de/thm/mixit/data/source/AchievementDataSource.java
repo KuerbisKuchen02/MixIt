@@ -121,14 +121,10 @@ public class AchievementDataSource {
      *
      * @author Jannik Heimann
      */
-    public void deleteSavedAchievement(String name) {
+    public void deleteSavedAchievements() {
         // Delete from shared preferences
         SharedPreferences.Editor spEditor = sp.edit();
-        spEditor.remove(name);
+        spEditor.clear();
         spEditor.apply();
-
-        // Delete also from names list
-        binaryAchievementNames.remove(name);
-        progressAchievementNames.remove(name);
     }
 }

@@ -62,8 +62,7 @@ public class AchievementRepository {
     public boolean hasSavedAchievement(String name) { return datasource.hasSavedAchievement(name); }
 
     /**
-     * Deletes the saved Achievement with the given name.
-     * @param name The name of the Achievement which should be deleted.
+     * Deletes the saved Achievements.
      */
-    public void deleteSavedAchievement(String name) { datasource.deleteSavedAchievement(name); }
+    public void deleteSavedAchievements() { datasource.deleteSavedAchievements(); }
 }
