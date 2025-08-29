@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.GameStateRepository;
@@ -36,6 +37,7 @@ import de.thm.mixit.domain.usecase.ElementUseCase;
  */
 public class GameViewModel extends ViewModel {
     private final static String TAG = GameViewModel.class.getSimpleName();
+    private final CombinationRepository combinationRepository;
     private final ElementRepository elementRepository;
     private final ElementUseCase elementUseCase;
     private final GameStateRepository gameStateRepository;
@@ -57,10 +59,12 @@ public class GameViewModel extends ViewModel {
      * @param elementRepository ElementRepository used for dependency injection
      * @param elementUseCase ElementUseCase used for dependency injection
      */
-    private GameViewModel(ElementRepository elementRepository,
+    private GameViewModel(CombinationRepository combinationRepository,
+                          ElementRepository elementRepository,
                           ElementUseCase elementUseCase,
                           GameStateRepository gameStateRepository,
                           StatisticRepository statisticRepository) {
+        this.combinationRepository = combinationRepository;
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
         this.gameStateRepository = gameStateRepository;
@@ -245,8 +249,17 @@ public class GameViewModel extends ViewModel {
      */
     public void saveStatistics() {
         // Check via db query for a new Record for the most combinations for one element
-        // TODO implement
-        this.statisticRepository.saveStatistic(statistics);
+        this.combinationRepository.getAmountOfMostOccurringOutputId( res -> {
+            this.statistics.setMostCombinationsForOneElement(res);
+            this.statisticRepository.saveStatistic(statistics);
+        });
+
+        // Get via db query the amount of unlocked elements
+        this.elementRepository.getAll(res -> {
+            this.statistics.setNumberOfUnlockedElements(res.size());
+            this.statisticRepository.saveStatistic(statistics);
+        });
+
     }
 
     /**
@@ -317,6 +330,7 @@ public class GameViewModel extends ViewModel {
      */
     public static class Factory implements ViewModelProvider.Factory {
 
+        private final CombinationRepository combinationRepository;
         private final ElementRepository elementRepository;
         private final ElementUseCase elementUseCase;
         //TODO Change to GameStateUseCase instead of GameStateRepository
@@ -324,6 +338,7 @@ public class GameViewModel extends ViewModel {
         private final StatisticRepository statisticRepository;
 
         public Factory(Context context, boolean isArcade) {
+            this.combinationRepository = CombinationRepository.create(context, isArcade);
             this.elementRepository = ElementRepository.create(context, isArcade);
             this.elementUseCase = new ElementUseCase(context, isArcade);
             this.gameStateRepository = GameStateRepository.create(context, isArcade);
@@ -335,7 +350,8 @@ public class GameViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == GameViewModel.class) {
-                return (T) new GameViewModel(elementRepository,
+                return (T) new GameViewModel(combinationRepository,
+                        elementRepository,
                         elementUseCase,
                         gameStateRepository,
                         statisticRepository);

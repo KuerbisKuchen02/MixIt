@@ -62,7 +62,7 @@ public class CombinationRepository {
      *
      * @param inputA   The first input string of the combination.
      * @param inputB   The second input string of the combination.
-     * @param callback The callback to receive the found
+     * @param callback The callback to receive the found combination.
      * {@link Combination}.
      */
     public void findByCombination(String inputA, String inputB,
@@ -74,6 +74,15 @@ public class CombinationRepository {
             inputB = temp;
         }
         localDataSource.findByCombination(inputA, inputB, callback);
+    }
+
+    /**
+     * Finds the Amount of the OutputId which occurs most often in the dataset.
+     *
+     * @param callback The callback to receive the found OutputId
+     */
+    public void getAmountOfMostOccurringOutputId(Consumer<Integer> callback) {
+        localDataSource.getAmountOfMostOccurringOutputId(callback);
     }
 
     /**

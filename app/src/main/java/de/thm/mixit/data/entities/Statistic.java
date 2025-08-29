@@ -34,10 +34,10 @@ public class Statistic {
     private long playtime;
     private long numberOfCombinations;
     private String longestElement;
-    private int numberOfUnlockedElements;       // In Element UseCase getElement, could return bool, alternative also db query at closing
+    private int numberOfUnlockedElements;
     private long numberOfDiscardedElements;
     private int mostDiscardedElements;
-    private int mostCombinationsForOneElement;  // Needs an additional db query, implement in GameViewModel saveStatistic
+    private int mostCombinationsForOneElement;
     private int arcadeGamesPlayed;              // Missing Win Detection in this Branch
     private int arcadeGamesWon;                 // Missing Win Detection in this Branch
     private long shortestArcadeTimeToBeat;      // Missing Win Detection in this Branch
@@ -116,7 +116,9 @@ public class Statistic {
     }
 
     public void setNumberOfUnlockedElements(int numberOfUnlockedElements) {
-        this.numberOfUnlockedElements = numberOfUnlockedElements;
+        // If statement needed, because max number could be from arcade or endless mode
+        if (numberOfUnlockedElements > this.numberOfUnlockedElements)
+            this.numberOfUnlockedElements = numberOfUnlockedElements;
     }
 
     public void setNumberOfDiscardedElements(long numberOfDiscardedElements) {
@@ -129,7 +131,8 @@ public class Statistic {
     }
 
     public void setMostCombinationsForOneElement(int mostCombinationsForOneElement) {
-        this.mostCombinationsForOneElement = mostCombinationsForOneElement;
+        if (mostCombinationsForOneElement > this.mostCombinationsForOneElement)
+            this.mostCombinationsForOneElement = mostCombinationsForOneElement;
     }
 
     public void setArcadeGamesPlayed(int numberPlayed) {

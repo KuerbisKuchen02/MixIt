@@ -64,6 +64,20 @@ public class CombinationLocalDataSource {
     }
 
     /**
+     * Asynchronously finds the Amount of the most occurring output id.
+     * <p>
+     * The query runs on a background thread, and the result is delivered
+     * via the provided {@link Consumer} once the data is loaded.
+     *
+     * @param callback The callback to receive the found Combination.
+     */
+    public void getAmountOfMostOccurringOutputId(Consumer<Integer> callback) {
+        executor.execute(() -> {
+           callback.accept(combinationDAO.getAmountOfMostOccurringOutputId());
+        });
+    }
+
+    /**
      * Asynchronously inserts a Combination into the database.
      *
      * @param combination The Combination to insert.
