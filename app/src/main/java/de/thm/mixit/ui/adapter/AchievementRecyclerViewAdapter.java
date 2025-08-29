@@ -1,5 +1,6 @@
 package de.thm.mixit.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import de.thm.mixit.data.entities.ProgressAchievement;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,16 +26,16 @@ import java.util.List;
  */
 public class AchievementRecyclerViewAdapter extends
         RecyclerView.Adapter<AchievementRecyclerViewAdapter.AchievementCardViewHolder> {
-    private final List<Achievement> achievements;
 
-    /**
-     * Creates a new AchievementRecyclerViewAdapter
-     *
-     * @param achievements  {@link Achievement} entities to be display by
-     *                      the AchievementRecyclerViewAdapter
-     */
-    public AchievementRecyclerViewAdapter(List<Achievement> achievements) {
-        this.achievements = achievements;
+    private List<Achievement> achievements = new ArrayList<>();
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setElements(List<Achievement> newAchievements) {
+        achievements.clear();
+        if (newAchievements != null) {
+            achievements.addAll(newAchievements);
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -47,7 +49,7 @@ public class AchievementRecyclerViewAdapter extends
         }
         view.setLayoutParams(params);
         view.requestLayout();
-        return new AchievementRecyclerViewAdapter.AchievementCardViewHolder(view);
+        return new AchievementCardViewHolder(view);
     }
 
     @Override
