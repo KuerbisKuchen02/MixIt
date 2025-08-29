@@ -89,7 +89,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 view -> {
                     if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
                     assert getActivity() != null;
-                    ((GameActivity) getActivity()).setElementListVisible(true);
+                    ((GameActivity) getActivity()).setElementListCardVisible(true);
                     showElementListButton.hide();
 
                     // Apply OnClickListener to playground as long as the Elementlist is visible
@@ -97,7 +97,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                             playgroundView -> {
                                 if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
                                 assert getActivity() != null;
-                                ((GameActivity) getActivity()).setElementListVisible(false);
+                                ((GameActivity) getActivity()).setElementListCardVisible(false);
                                 showElementListButton.show();
                                 playground.setOnClickListener(null);
                             }

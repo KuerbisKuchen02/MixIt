@@ -3,15 +3,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.transition.platform.MaterialSharedAxis;
 
 import java.util.Objects;
 
@@ -75,7 +79,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        setElementListVisible(false);
+        setElementListCardVisible(false);
 
         this.startTime = System.currentTimeMillis();
         this.timeHandler = new Handler(Looper.getMainLooper());
@@ -97,28 +101,30 @@ public class GameActivity extends AppCompatActivity {
         timeHandler.removeCallbacks(updateTimerRunnable);
     }
 
+
     /**
-     * Shows or hides the ElementList Fragment within the Activity.
-     * @param visible whether to show or hide the ElementList Fragment.
+     * Shows or hides the ElementList Card containing the Fragment within the Activity.
+     * @param visible whether to show or hide the ElementList Card and Fragment.
      */
-    public void setElementListVisible(boolean visible) {
-        Fragment elementlist_fragment = fragmentManager
-                .findFragmentById(R.id.fragment_container_element_list);
-        FrameLayout container = findViewById(R.id.fragment_container_element_list);
-        if (elementlist_fragment == null) {
-            Log.e(TAG, "Error, elementlist fragment reference is null!");
-            return;
-        }
+    public void setElementListCardVisible(boolean visible) {
+        // Get ElementlistCard
+        MaterialCardView elementlistCard = findViewById(R.id.card_container_elementlist);
+
+        // Create Transition depending on new state
+        MaterialSharedAxis transition = new MaterialSharedAxis(MaterialSharedAxis.Z, visible);
+        transition.setDuration(300);
+
+        ViewGroup parent = (ViewGroup) elementlistCard.getParent();
+        TransitionManager.beginDelayedTransition(parent, transition);
 
         if (visible) {
-            Log.i(TAG, "GameActivity is showing elementlist fragment.");
-            container.setVisibility(View.VISIBLE);
-            fragmentManager.beginTransaction().show(elementlist_fragment).commit();
+            Log.i(TAG, "GameActivity is showing elementlist card / fragment.");
+            elementlistCard.setVisibility(View.VISIBLE);
         } else {
-            Log.i(TAG, "GameActivity is hiding elementlist fragment.");
-            container.setVisibility(View.GONE);
-            fragmentManager.beginTransaction().hide(elementlist_fragment).commit();
+            Log.i(TAG, "GameActivity is hiding elementlist card / fragment.");
+            elementlistCard.setVisibility(View.GONE);
         }
+
     }
 
     public boolean isArcade() {
