@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
+import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
@@ -121,6 +122,13 @@ public class GameActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().hide(elementlist_fragment).commit();
         }
     }
+
+    public void onBackButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 
     public boolean isArcade() {
         return isArcade;
