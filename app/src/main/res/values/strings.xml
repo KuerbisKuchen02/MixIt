@@ -20,7 +20,6 @@
     <string name="settings_title">Settings</string>
     <string name="settings_label_language">Language</string>
     <string name="settings_label_theme">Theme</string>
-    <string name="settings_label_font_size">Font Size</string>
     <string name="settings_label_danger_zone">Danger Zone</string>
     <string name="settings_button_reset_progress">Reset Progress</string>
     <string-array name="language_array">
@@ -42,11 +41,6 @@
         <item>system</item>
         <item>light</item>
         <item>dark</item>
-    </string-array>
-    <string-array name="font_size_array">
-        <item>Small</item>
-        <item>Medium</item>
-        <item>Large</item>
     </string-array>
     <string name="dialog_reset_progress_description">This option resets your current progress in free play. You will start again with the 4 basic terms. Achievements will be retained. This cannot be undone. Type \"MixIt\" to confirm!</string>
     <string name="dialog_reset_progress_title">ATTENTION</string>
