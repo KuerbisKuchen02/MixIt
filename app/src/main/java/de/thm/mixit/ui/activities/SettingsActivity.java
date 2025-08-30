@@ -17,15 +17,12 @@ import androidx.core.os.LocaleListCompat;
 import java.util.Objects;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.repository.ElementRepository;
-import de.thm.mixit.data.repository.GameStateRepository;
+import de.thm.mixit.ui.fragments.DialogResetProgress;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     private Spinner spinnerTheme;
-    private GameStateRepository gameStateRepository;
-
 
     /**
      * refs: <a href="https://developer.android.com/develop/ui/views/components/spinner">Spinners</a>
@@ -39,8 +36,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         }
 
         setContentView(R.layout.activity_settings);
-
-        gameStateRepository = GameStateRepository.create(this,false);
 
         Spinner spinnerLanguage = findViewById(R.id.spinner_settings_language);
 
@@ -152,9 +147,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     public void onResetProgressClicked(View view) {
         Log.i(TAG, "Reset Progress Button was clicked.");
 
-        gameStateRepository.deleteSavedGameState();
-        ElementRepository elementRepository = ElementRepository.create(this, false);
-        elementRepository.reset();
+        new DialogResetProgress().show(getSupportFragmentManager(), "DialogResetProgress");
     }
 
     @Override
