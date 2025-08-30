@@ -1,11 +1,15 @@
 package de.thm.mixit.ui.fragments;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,23 +23,26 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListUpdateCallback;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
+import de.thm.mixit.domain.logic.GenericListChangeHandler;
+import de.thm.mixit.domain.logic.GenericListUpdateCallback;
+import de.thm.mixit.ui.activities.ArcadeVictoryActivity;
 import de.thm.mixit.ui.activities.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
@@ -44,7 +51,7 @@ import de.thm.mixit.ui.viewmodel.GameViewModel;
  *
  * @author Oliver Schlalos
  */
-public class PlaygroundFragment extends Fragment{
+public class PlaygroundFragment extends Fragment implements GenericListChangeHandler<ElementChip> {
 
     private final static String TAG = PlaygroundFragment.class.getSimpleName();
     private GameViewModel viewModel;
@@ -55,6 +62,7 @@ public class PlaygroundFragment extends Fragment{
 
     private final List<ElementChip> currentElements = new ArrayList<>();
 
+    private final Map<Integer, ObjectAnimator> animations = new HashMap<>();
 
     @Nullable
     @Override
@@ -96,20 +104,80 @@ public class PlaygroundFragment extends Fragment{
                     );
                 });
 
-
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
         viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
             Log.d(TAG, "Registered new state after combining: " + error);
             String text = "Something went wrong! Please check your internet connection.";
+
             if (error != null) {
                 Snackbar.make(playground, text, 6000)
                         .setBackgroundTint(Color.RED)
                         .show();
+
+                ArrayList<Integer> deletedIds = new ArrayList<>();
+
+                for (Map.Entry<Integer, ObjectAnimator> entry : animations.entrySet()) {
+                    ElementChip chip = getChipById(entry.getKey());
+
+                    if (chip == null || !chip.isAnimated()) {
+                        entry.getValue().cancel();
+
+                        if (chip != null) {
+                            chip.setAnimated(false);
+                            View v = playground.findViewWithTag(chip.getId());
+                            v.setOnTouchListener(new TouchListener(chip));
+                            v.setAlpha(1f);
+                        }
+
+                        deletedIds.add(entry.getKey());
+                    }
+                }
+
+                for (Integer id : deletedIds) {
+                    animations.remove(id);
+                }
+            }
+        });
+
+        viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
+            if (gameActivity.isArcade() && isWon) {
+                Log.d(TAG, "The player found the goal word!");
+
+                List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
+                Element goalElement = list.get(list.size()-1).getElement();
+
+                Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, goalElement);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS, viewModel.getTurns().getValue());
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.getPassedTime().getValue());
+                startActivity(intent);
             }
         });
 
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onItemInserted(ElementChip item, int position) {
+        playground.addView(createElement(item));
+    }
+
+    @Override
+    public void onItemRemoved(ElementChip item, int position) {
+        View view = playground.findViewWithTag(item.getId());
+        if (view != null) {
+            playground.removeView(view);
+        }
+    }
+
+    @Override
+    public void onItemChanged(ElementChip item, int position) {
+        View view = playground.findViewWithTag(item.getId());
+        if (view != null) {
+            view.setX(item.getX());
+            view.setY(item.getY());
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -127,56 +195,7 @@ public class PlaygroundFragment extends Fragment{
 
         view.setX(chip.getX());
         view.setY(chip.getY());
-        view.setOnTouchListener(new View.OnTouchListener() {
-            float dX, dY;
-
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        dX = v.getX() - event.getRawX();
-                        dY = v.getY() - event.getRawY();
-                        v.bringToFront();
-                        v.invalidate();
-                        whenItemIsPickedUp();
-                        return true;
-
-                    case MotionEvent.ACTION_MOVE:
-                        if(event.getRawX() + dX < playground.getWidth() - v.getWidth() &&
-                                event.getRawX() + dX > 0) v.setX(event.getRawX() + dX);
-                        if(event.getRawY() + dY < playground.getHeight() - v.getHeight() &&
-                                event.getRawY() + dY > 0) v.setY(event.getRawY() + dY);
-                        return true;
-
-                    case MotionEvent.ACTION_UP:
-                        viewModel.updateElementPositonOnPlayground(chip, v.getX(), v.getY());
-                        whenItemIsDropped();
-                        if (!overlapsWithDeleteButton(v)){
-                            View other = checkOverlap((TextView) v);
-                            if(other != null){
-                                // while combining disable onTouchListener
-                                v.setOnTouchListener((dummy, e) -> false);
-                                other.setOnTouchListener((dummy, e) -> false);
-                                try {
-                                    viewModel.combineElements(
-                                            Objects.requireNonNull(getChipById((int) v.getTag())),
-                                            Objects.requireNonNull(
-                                                    getChipById((int) other.getTag())));
-                                    viewModel.increaseTurnCounter();
-                                } catch (Exception e) {
-                                    Log.e(TAG, "Error while combining elements: "
-                                            + e.getMessage());
-                                }
-                            }
-                        }
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-        });
+        view.setOnTouchListener(new TouchListener(chip));
         return view;
     }
 
@@ -198,9 +217,8 @@ public class PlaygroundFragment extends Fragment{
                 new ElementDiffCallback(currentElements, newElements)
         );
 
-        // Not perfect, for more info see note on ElementListUpdateCallback class
-        ElementListUpdateCallback callback =
-                new ElementListUpdateCallback(currentElements, newElements);
+        GenericListUpdateCallback<ElementChip> callback =
+                new GenericListUpdateCallback<>(currentElements, newElements, this);
         diffResult.dispatchUpdatesTo(callback);
         callback.finishInserts();
     }
@@ -332,117 +350,110 @@ public class PlaygroundFragment extends Fragment{
         return null;
     }
 
-    /**
-     * Convert the first list to the second list by applying the differences calculated by
-     * {@link ElementDiffCallback}.
-     * <p>
-     * <b>Important</b>:<br>
-     * After invoking with `dispatchUpdatesTo()` use the method {@link #finishInserts()}
-     * to complete the transformation. See below for more details.
-     * <p>
-     * FIXME: Better alternative for synchronizing playground with viewmodel data
-     * <p>
-     * This is definitely not the cleanest solution more like a dirty workaround for the time being
-     * <p>
-     * Problem:<br>
-     * It is not possible within onInserted for the inserted oldList item to
-     * identify its related position in the newList.
-     * Normally inserting new items causes the onInsert method to throw an IndexOutOfBoundsException
-     * Also see: <a href="https://issuetracker.google.com/issues/115701827">Google Issue Tracker</a>
-     * <p>
-     * Solution:<br>
-     * Insert a null-dummy list item in the oldList.
-     * After diffResult.dispatchUpdatesTo is done,
-     * replace the null-dummies with the newList items at same positions.
-     * Also see: <a href="https://stackoverflow.com/questions/56670162/how-to-fix-incorrect-position-i-get-when-dispatching-an-update-to-listupdatecall">StackOverflow</a>
-     * <p>
-     * Since this Issue is marked as won't fix we cannot expect an official solution for this
-     * anytime soon. As long as we don't find a better alternative we stick with the working
-     * but bit ugly workaround
-     * @author Josia Menger
-     */
-    private class ElementListUpdateCallback implements ListUpdateCallback {
+    private class TouchListener implements View.OnTouchListener {
+        float dX, dY;
+        boolean isDragging;
 
-        private final List<ElementChip> oldElements;
-        private final List<ElementChip> newElements;
-        private int inserts = 0;
+        GestureDetector gestureDetector;
 
-        public ElementListUpdateCallback(List<ElementChip> oldElements,
-                                         List<ElementChip> newElements) {
-            this.oldElements = oldElements;
-            this.newElements = newElements;
-        }
+        ElementChip chip;
 
-        public void finishInserts() {
-            if (inserts <= 0) return;
-
-            if (BuildConfig.DEBUG) Log.d(TAG, "finishInserts inserts=" + inserts);
-
-            ListIterator<ElementChip> oldListIterator = oldElements.listIterator();
-            ListIterator<ElementChip> newListIterator = newElements.listIterator();
-
-            while (inserts > 0 && oldListIterator.hasNext() && newListIterator.hasNext()) {
-                ElementChip oldElement = oldListIterator.next();
-                ElementChip newElement = newListIterator.next();
-
-                if (oldElement == null) {
-                    //Replaces the last element returned by next()
-                    oldListIterator.set(newElement);
-                    playground.addView(createElement(newElement));
-                    if (BuildConfig.DEBUG) Log.d(TAG, "new Element: " + newElement);
-                    inserts--;
+        public TouchListener(ElementChip chip) {
+            this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    // Duplicate the view here
+                    if(BuildConfig.DEBUG) Log.d(TAG, "Double Tap on " +
+                            chip.getElement() + " recognized");
+                    final int OFFSET = 20;
+                    viewModel.addElementToPlayground(new ElementChip(chip.getElement(),
+                            chip.getX()+OFFSET, chip.getY()+OFFSET));
+                    return true;
                 }
-            }
-
-            if (inserts > 0 || oldElements.contains(null)) {
-                //There must be something wrong
-                Log.e(TAG, "finishInserts inserts=" + inserts + " remaining");
-            }
+            });
+            this.chip = chip;
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         @Override
-        public void onInserted(int position, int count) {
-            if (BuildConfig.DEBUG) Log.d(TAG, "onInserted position=" + position
-                    + " count=" + count);
-            for (int i = 0; i < count; i++) {
-                // We don't know the related position of the newList, so we add null
-                oldElements.add(position + i, null);
-                inserts++;
-            }
-        }
+        public boolean onTouch(View v, MotionEvent event) {
 
-        @Override
-        public void onRemoved(int position, int count) {
-            if (BuildConfig.DEBUG) Log.d(TAG, "onRemoved position=" + position
-                    + " count=" + count);
-            for (int i = 0; i < count; i++) {
-                ElementChip e = oldElements.remove(position);
-                View viewToRemove = playground.findViewWithTag(e.getId());
-                if (viewToRemove != null) playground.removeView(viewToRemove);
-                if (BuildConfig.DEBUG) Log.d(TAG, "delete Element: " + e);
-            }
-        }
+            if(gestureDetector.onTouchEvent(event)) return true;
 
-        // Not important
-        @Override
-        public void onMoved(int fromPosition, int toPosition) {
-            if (BuildConfig.DEBUG) Log.d(TAG, "onMoved fromPosition=" + fromPosition
-                    + " toPosition=" + toPosition);
-            oldElements.add(toPosition, oldElements.remove(fromPosition));
-        }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    // when an item is picked up
+                    isDragging = false;
+                    dX = v.getX() - event.getRawX();
+                    dY = v.getY() - event.getRawY();
+                    v.bringToFront();
+                    whenItemIsPickedUp();
+                    return true;
 
-        @Override
-        public void onChanged(int position, int count, @Nullable Object payload) {
-            if (BuildConfig.DEBUG) Log.d(TAG, "onChanged position=" + position
-                    + " count=" + count);
-            for (int i = 0; i < count; i++ ) {
-                ElementChip e = newElements.get(position + i);
-                oldElements.set(position + i, e);
-                View v = playground.findViewById(position + i);
-                if (v != null) {
-                    v.setX(e.getX());
-                    v.setY(e.getY());
-                }
+                case MotionEvent.ACTION_MOVE:
+                    isDragging = true;
+                    // limit possible position of element to playground bounds
+                    if(event.getRawX() + dX < playground.getWidth() - v.getWidth() &&
+                            event.getRawX() + dX > 0) v.setX(event.getRawX() + dX);
+                    if(event.getRawY() + dY < playground.getHeight() - v.getHeight() &&
+                            event.getRawY() + dY > 0) v.setY(event.getRawY() + dY);
+                    return true;
+
+                case MotionEvent.ACTION_UP:
+                    whenItemIsDropped();
+                    if(!isDragging){
+                        return false;
+                    }
+                    viewModel.updateElementPositonOnPlayground(chip, v.getX(), v.getY());
+                    if (!overlapsWithDeleteButton(v)){
+                        View other = checkOverlap((TextView) v);
+                        if(other != null){
+                            // while combining disable onTouchListener
+                            try {
+                                ElementChip firstChip = Objects.requireNonNull(
+                                        getChipById((int) v.getTag()));
+                                ElementChip secondChip = Objects.requireNonNull(
+                                        getChipById((int) other.getTag()));
+
+                                firstChip.setAnimated(true);
+                                secondChip.setAnimated(true);
+
+                                v.setOnTouchListener((dummy, e) -> false);
+                                other.setOnTouchListener((dummy, e) -> false);
+
+                                ObjectAnimator fade1 = ObjectAnimator.ofFloat(v, "alpha", 1f, 0.2f);
+                                ObjectAnimator fade2 = ObjectAnimator.ofFloat(other, "alpha", 1f, 0.2f);
+
+                                fade1.setDuration(1000);
+                                fade2.setDuration(1000);
+
+                                fade1.setRepeatCount(ObjectAnimator.INFINITE);
+                                fade2.setRepeatCount(ObjectAnimator.INFINITE);
+
+                                fade1.setRepeatMode(ObjectAnimator.REVERSE);
+                                fade2.setRepeatMode(ObjectAnimator.REVERSE);
+
+                                AnimatorSet set = new AnimatorSet();
+                                set.playTogether(fade1, fade2);
+                                set.start();
+
+                                animations.put(firstChip.getId(), fade1);
+                                animations.put(secondChip.getId(), fade2);
+
+                                viewModel.combineElements(
+                                        Objects.requireNonNull(firstChip),
+                                        Objects.requireNonNull(secondChip));
+                                viewModel.increaseTurnCounter();
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error while combining elements: "
+                                        + e.getMessage());
+                            }
+                        }
+                    }
+                    return true;
+
+                default:
+                    return false;
             }
         }
     }

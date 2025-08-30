@@ -24,8 +24,10 @@ import de.thm.mixit.data.entities.Statistic;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
+import de.thm.mixit.domain.logic.ArcadeGoalChecker;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
 /**
@@ -48,18 +50,19 @@ public class GameViewModel extends ViewModel {
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
     private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
     private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
-    private final Handler timeHandler;
-    private final long startTime;
+    private long alreadySavedPassedTime;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isWon = new MutableLiveData<>();
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
      * @param elementRepository ElementRepository used for dependency injection
      * @param elementUseCase ElementUseCase used for dependency injection
      */
-    private GameViewModel(CombinationRepository combinationRepository,
+    @VisibleForTesting
+    GameViewModel(CombinationRepository combinationRepository,
                           ElementRepository elementRepository,
                           ElementUseCase elementUseCase,
                           GameStateRepository gameStateRepository,
@@ -74,9 +77,8 @@ public class GameViewModel extends ViewModel {
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
         loadElements();
-        this.timeHandler = new Handler();
-        this.timeHandler.post(updateTimerRunnable);
         this.combineError.setValue(null);
+        this.isWon.setValue(false);
 
         // TODO check with implementation of GameState Use Case
         if (gameStateRepository.hasSavedGameState()) {
@@ -84,16 +86,14 @@ public class GameViewModel extends ViewModel {
             GameState gameState = gameStateRepository.loadGameState();
             this.elementsOnPlayground.setValue(gameState.getElementChips());
             this.turns.setValue(gameState.getTurns());
-            this.passedTime.setValue(gameState.getTime());
-            this.startTime = System.currentTimeMillis() -
-                    Objects.requireNonNull(this.passedTime.getValue());
+            this.alreadySavedPassedTime = gameState.getTime();
+            this.passedTime.setValue(0L);
             this.targetElement.setValue(gameState.getGoalElement());
         } else {
             Log.i(TAG, "GameState is not there using default values");
             this.elementsOnPlayground.setValue(new ArrayList<>());
             this.turns.setValue(0);
             this.passedTime.setValue(0L);
-            this.startTime = System.currentTimeMillis();
             elementRepository.generateNewGoalWord(res -> {
                 if (res.isError()) {
                     // TODO add proper Error Handling
@@ -205,8 +205,7 @@ public class GameViewModel extends ViewModel {
             } else {
                 Log.d(TAG, "Elements successfully combined.");
                 combineError.postValue(null);
-                new Handler(Looper.getMainLooper()).post(() ->
-                        handleCombineElements(chip1, chip2, result.getData()));
+                handleCombineElements(chip1, chip2, result.getData());
                 statistics.setLongestElement(result.getData().name);
             }
         });
@@ -216,9 +215,18 @@ public class GameViewModel extends ViewModel {
         return combineError;
     }
 
-    public LiveData<Long> passedTime() {
+    public void setPassedTime(Long time) {
+        passedTime.setValue(time);
+    }
+
+    public LiveData<Long> getPassedTime() {
         return passedTime;
     }
+
+    public long getAlreadySavedPassedTime() {
+        return alreadySavedPassedTime;
+    }
+
 
     public LiveData<Integer> getTurns() {
         return turns;
@@ -226,6 +234,10 @@ public class GameViewModel extends ViewModel {
 
     public MutableLiveData<String[]> getTargetElement() {
         return targetElement;
+    }
+
+    public MutableLiveData<Boolean> getIsWon() {
+        return isWon;
     }
 
     public void increaseTurnCounter() {
@@ -268,7 +280,7 @@ public class GameViewModel extends ViewModel {
      * Should be called in onDestroy method of LifecycleOwner
      */
     public void onDestroy() {
-        timeHandler.removeCallbacks(updateTimerRunnable);
+        // TODO save current game state
     }
 
     /**
@@ -290,9 +302,22 @@ public class GameViewModel extends ViewModel {
     /**
      * Get all elements from the element repository
      */
-    private void loadElements() {
-        this.elementRepository.getAll((list) ->
-                new Handler(Looper.getMainLooper()).post(() -> this.elements.setValue(list)));
+    @VisibleForTesting
+    void loadElements() {
+        this.elementRepository.getAll(elements::postValue);
+    }
+
+    /**
+     * Takes a sequence of target words and returns true if the Game has been won.
+     * @param targetWords       The sequence of words to check for the newWord
+     * @param newWord           The word which must be inside targetElements in order to win.
+     */
+    private void checkIsWon(String[] targetWords, String newWord) {
+        if (targetWords == null) return;
+        if (ArcadeGoalChecker.matchesTargetElement(targetWords, newWord)) {
+            Log.d(TAG, newWord + " matches " + Arrays.toString(targetElement.getValue()));
+            isWon.postValue(true);
+        }
     }
 
     /**
@@ -307,22 +332,10 @@ public class GameViewModel extends ViewModel {
         list.remove(chip1);
         list.remove(chip2);
         list.add(new ElementChip(newElement, chip1.getX(), chip1.getY()));
-        elementsOnPlayground.setValue(list);
+        elementsOnPlayground.postValue(list);
         loadElements();
+        checkIsWon(targetElement.getValue(), newElement.name);
     }
-
-    /**
-     * Worker thread to measure current playtime
-     */
-    private final Runnable updateTimerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            passedTime.setValue(System.currentTimeMillis() - startTime);
-            statistics.setPlaytime(statistics.getPlaytime() + 1);
-            // Handler calls it again every second
-            timeHandler.postDelayed(this, 1000);
-        }
-    };
 
     /**
      * Creates a new {@link GameViewModel} instance or returns an existing one

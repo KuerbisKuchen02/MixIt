@@ -1,6 +1,8 @@
 package de.thm.mixit.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -33,6 +35,8 @@ public class GameActivity extends AppCompatActivity {
     private static final String TAG = GameActivity.class.getSimpleName();
     private GameViewModel viewModel;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
+    private long startTime;
+    private Handler timeHandler;
     private boolean isArcade = false;
     private boolean isNewGame = true;
 
@@ -73,6 +77,10 @@ public class GameActivity extends AppCompatActivity {
 
         setElementListVisible(false);
 
+        this.startTime = System.currentTimeMillis();
+        this.timeHandler = new Handler(Looper.getMainLooper());
+        this.timeHandler.post(updateTimerRunnable);
+
         Log.i(TAG, "GameActivity was created");
     }
 
@@ -87,6 +95,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         viewModel.onDestroy();
+        timeHandler.removeCallbacks(updateTimerRunnable);
     }
 
     /**
@@ -116,4 +125,17 @@ public class GameActivity extends AppCompatActivity {
     public boolean isArcade() {
         return isArcade;
     }
+    /**
+     * Worker thread to measure current playtime
+     */
+    private final Runnable updateTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            viewModel.setPassedTime(System.currentTimeMillis() - startTime
+                    + viewModel.getAlreadySavedPassedTime());
+
+            // Handler calls it again every second
+            timeHandler.postDelayed(this, 1000);
+        }
+    };
 }

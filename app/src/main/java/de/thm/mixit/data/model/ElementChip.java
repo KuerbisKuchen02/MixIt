@@ -21,10 +21,19 @@ public class ElementChip {
      * and we don't want to store views inside the viewmodel
      */
     private static int ID = 0;
+
+    private boolean isAnimated = false;
     private final int id;
     private final Element element;
     private float x;
     private float y;
+
+    public ElementChip(int id, Element element, float x, float y) {
+        this.id = id;
+        this.element = element;
+        this.x = x;
+        this.y = y;
+    }
 
     /**
      * Create a new chip representing an element on the playground
@@ -75,6 +84,14 @@ public class ElementChip {
         this.y = y;
     }
 
+    public boolean isAnimated() {
+        return isAnimated;
+    }
+
+    public void setAnimated(boolean animated) {
+        isAnimated = animated;
+    }
+
     public ElementChip withPosition(float x, float y) {
         this.x = x;
         this.y = y;
@@ -96,6 +113,7 @@ public class ElementChip {
     public boolean equals(Object o) {
         if (!(o instanceof ElementChip)) return false;
         return this.id == ((ElementChip) o).id
+                && this.element == ((ElementChip) o).element
                 && this.x == ((ElementChip) o).x
                 && this.y == ((ElementChip) o).y;
     }

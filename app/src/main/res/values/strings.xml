@@ -48,4 +48,8 @@
     <string name="achievement_desc_how_did_we_get_here">Discover a word containing at least 20 characters</string>
     <string name="achievement_name_the_cake_is_a_lie">The cake is a lie</string>
     <string name="achievement_desc_the_cake_is_a_lie">Discover chocolate cake</string>
+    <string name="arcade_victory_win1">Super, Du hast</string>
+    <string name="arcade_victory_win2">gefunden!</string>
+    <string name="arcade_victory_new_game_text">Neues Spiel</string>
+    <string name="arcade_victory_return_text">Zurück zum&#10;Hauptmenü</string>
 </resources>

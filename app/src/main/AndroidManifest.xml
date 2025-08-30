@@ -26,6 +26,8 @@
         <activity android:name=".ui.activities.AchievementActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <activity android:name=".ui.activities.ArcadeVictoryActivity" android:theme="@style/AppTheme"/>
+
     </application>
 
 </manifest>
