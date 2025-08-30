@@ -26,7 +26,8 @@ import de.thm.mixit.ui.fragments.DialogResetProgress;
  *
  * @author Jonathan Hildebrandt
  */
-public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class SettingsActivity
+        extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     private Spinner spinnerTheme;

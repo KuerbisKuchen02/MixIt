@@ -43,7 +43,11 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
-    <string name="dialog_reset_progress_description">Diese Option setzt die den bisherigen Fortschritt im freien Spiel zurück. Du  startest wieder mit den 4 Grundbegriffen.  Erfolge werden beibehalten. Dies kann nicht rückgängig gemacht werden. Schreibe \"MixIt\" zum Bestätigen!</string>
+    <string name="dialog_reset_progress_description">
+        Diese Option setzt die den bisherigen Fortschritt im freien Spiel zurück.
+        Du  startest wieder mit den 4 Grundbegriffen.  Erfolge werden ebenfalls zurückgesetzt.
+        Dies kann nicht rückgängig gemacht werden. Schreibe \"MixIt\" zum Bestätigen!
+    </string>
     <string name="dialog_reset_progress_title">ACHTUNG</string>
     <string name="dialog_reset_progress_button">Fortschritt zurücksetzen</string>
     <string name="mix_it">MixIt</string>

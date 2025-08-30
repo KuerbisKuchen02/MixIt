@@ -50,7 +50,8 @@ public class DialogResetProgress extends DialogFragment {
         ColorStateList initialBackgroundTintList = input.getBackgroundTintList();
 
         input.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* no-op */ }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            { /* no-op */ }
 
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // reset colors as user types
@@ -65,7 +66,8 @@ public class DialogResetProgress extends DialogFragment {
         confirm.setOnClickListener((View _view) -> {
             if (input.getText().toString().equals(REQUIRED)) {
                 gameStateRepository.deleteSavedGameState();
-                ElementRepository elementRepository = ElementRepository.create(context, false);
+                ElementRepository elementRepository =
+                        ElementRepository.create(context, false);
                 elementRepository.reset();
 
                 dismiss();

@@ -42,7 +42,11 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
-    <string name="dialog_reset_progress_description">This option resets your current progress in free play. You will start again with the 4 basic terms. Achievements will be retained. This cannot be undone. Type \"MixIt\" to confirm!</string>
+    <string name="dialog_reset_progress_description">
+        This option resets your current progress in free play.
+        You will start again with the 4 basic terms. Achievements will be reset as well.
+        This cannot be undone. Type \"MixIt\" to confirm!
+    </string>
     <string name="dialog_reset_progress_title">ATTENTION</string>
     <string name="dialog_reset_progress_button">Reset Progress</string>
     <string name="mix_it">MixIt</string>
