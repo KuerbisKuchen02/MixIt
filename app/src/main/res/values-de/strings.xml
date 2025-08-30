@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MixIt</string>
+    <string name="main_menu_button_endless">Freies Spiel</string>
+    <string name="main_menu_button_arcade">Arcade</string>
+    <string name="main_menu_button_achievemnets">Erfolge</string>
+    <string name="main_menu_button_settings">Einstellungen</string>
+    <string name="arcade_fragment_goal">Goal:\n%s</string>
+    <string formatted="false" name="arcade_fragment_time">Zeit: %02d:%02d:%02d</string>
+    <string name="arcade_fragment_turns">Züge: %d</string>
+    <string name="game_element_list_search_hint">Elemente suchen…</string>
+    <string name="game_element_list_content_description">Liste mit suchbaren Elementen</string>
+    <string name="game_playground_fab_clear">Spielfeld zurücksetzten</string>
+    <string name="game_playground_fab_add_element">Liste mit Elementen öffnen</string>
+    <string name="gamestate_shared_preferences_endless">de.thm.mixit.GAMESTATE_ENDLESS_FILE</string>
+    <string name="gamestate_shared_preferences_arcade">de.thm.mixit.GAMESTATE_ARCADE_FILE</string>
+    <string name="arcade_victory_win1">Super, Du hast</string>
+    <string name="arcade_victory_win2">gefunden!</string>
+    <string name="arcade_victory_new_game_text">Neues Spiel</string>
+    <string name="arcade_victory_return_text">Zurück zum&#10;Hauptmenü</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_label_language">Sprache</string>
+    <string name="settings_label_theme">Farbschema</string>
+    <string name="settings_label_danger_zone">Gefahrenzone</string>
+    <string name="settings_button_reset_progress">Fortschritt zurücksetzten</string>
+    <string-array name="language_array">
+        <item>System</item>
+        <item>English</item>
+        <item>Deutsch</item>
+    </string-array>
+    <string-array name="language_values">
+        <item>system</item>
+        <item>en</item>
+        <item>de</item>
+    </string-array>
+    <string-array name="theme_array">
+        <item>System</item>
+        <item>Hell</item>
+        <item>Dunkel</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string name="dialog_reset_progress_description">
+        Diese Option setzt die den bisherigen Fortschritt im freien Spiel zurück.
+        Du  startest wieder mit den 4 Grundbegriffen.  Erfolge werden ebenfalls zurückgesetzt.
+        Dies kann nicht rückgängig gemacht werden. Schreibe \"MixIt\" zum Bestätigen!
+    </string>
+    <string name="dialog_reset_progress_title">ACHTUNG</string>
+    <string name="dialog_reset_progress_button">Fortschritt zurücksetzen</string>
+    <string name="mix_it">MixIt</string>
+    <string name="reset_success">Fortschritt erfolgreich zurückgesetzt!</string>
+</resources>

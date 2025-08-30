@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MixIt</string>
-    <string name="main_menu_button_endless">Freies Spiel</string>
+    <string name="main_menu_button_endless">Free Play</string>
     <string name="main_menu_button_arcade">Arcade</string>
     <string name="main_menu_button_achievemnets">Achievements</string>
     <string name="main_menu_button_settings">Settings</string>
@@ -13,8 +13,42 @@
     <string name="game_playground_fab_add_element">open element list</string>
     <string name="gamestate_shared_preferences_endless">de.thm.mixit.GAMESTATE_ENDLESS_FILE</string>
     <string name="gamestate_shared_preferences_arcade">de.thm.mixit.GAMESTATE_ARCADE_FILE</string>
-    <string name="arcade_victory_win1">Super, Du hast</string>
-    <string name="arcade_victory_win2">gefunden!</string>
-    <string name="arcade_victory_new_game_text">Neues Spiel</string>
-    <string name="arcade_victory_return_text">Zurück zum&#10;Hauptmenü</string>
+    <string name="arcade_victory_win1">Congrats, you just found</string>
+    <string name="arcade_victory_win2">!</string>
+    <string name="arcade_victory_new_game_text">New Game</string>
+    <string name="arcade_victory_return_text">Back to&#10;main menu</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_label_language">Language</string>
+    <string name="settings_label_theme">Theme</string>
+    <string name="settings_label_danger_zone">Danger Zone</string>
+    <string name="settings_button_reset_progress">Reset Progress</string>
+    <string-array name="language_array">
+        <item>System</item>
+        <item>English</item>
+        <item>Deutsch</item>
+    </string-array>
+    <string-array name="language_values">
+        <item>system</item>
+        <item>en</item>
+        <item>de</item>
+    </string-array>
+    <string-array name="theme_array">
+        <item>System</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string name="dialog_reset_progress_description">
+        This option resets your current progress in free play.
+        You will start again with the 4 basic terms. Achievements will be reset as well.
+        This cannot be undone. Type \"MixIt\" to confirm!
+    </string>
+    <string name="dialog_reset_progress_title">ATTENTION</string>
+    <string name="dialog_reset_progress_button">Reset Progress</string>
+    <string name="mix_it">MixIt</string>
+    <string name="reset_success">Reset successfully!</string>
 </resources>
