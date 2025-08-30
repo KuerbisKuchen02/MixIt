@@ -1,7 +1,5 @@
 package de.thm.mixit.ui.activities;
 
-import android.app.UiModeManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -115,17 +113,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
      * </a>
      */
     private void preselectThemeSpinner() {
-        int selection = 0; // System theme
-        if (Build.VERSION.SDK_INT >= 31) {
-            UiModeManager uiModeManager = getSystemService(UiModeManager.class);
-            int mode = uiModeManager != null ? uiModeManager.getNightMode()
-                    : UiModeManager.MODE_NIGHT_AUTO; // System
-            if (mode == UiModeManager.MODE_NIGHT_NO) selection = 1; // Light
-            else if (mode == UiModeManager.MODE_NIGHT_YES) selection = 2; // Dark
-        } else {
-            int mode = AppCompatDelegate.getDefaultNightMode();
-            if (mode == AppCompatDelegate.MODE_NIGHT_NO) selection = 1; // Light
-            else if (mode == AppCompatDelegate.MODE_NIGHT_YES) selection = 2; // Dark
+        int selection = 0; // System
+        switch (AppCompatDelegate.getDefaultNightMode()) {
+            case AppCompatDelegate.MODE_NIGHT_NO:  selection = 1; break; // Light
+            case AppCompatDelegate.MODE_NIGHT_YES: selection = 2; break; // Dark
+            default: // System
         }
         spinnerTheme.setSelection(selection, false);
     }
@@ -138,34 +130,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
      * </a>
      */
     private void applyTheme(String themeValue) {
-        if (Build.VERSION.SDK_INT >= 31) {
-            UiModeManager uiModeManager = getSystemService(UiModeManager.class);
-            if (uiModeManager == null) return;
-
-            switch (themeValue) {
-                case "light":
-                    uiModeManager.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO);
-                    break;
-                case "dark":
-                    uiModeManager.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES);
-                    break;
-                default:
-                    uiModeManager.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO);
-                    break;
-            }
-        } else {
-            switch (themeValue) {
-                case "light":
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    break;
-                case "dark":
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    break;
-                default:
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                    break;
-            }
-        }
+        AppCompatDelegate.setDefaultNightMode(
+                "light".equals(themeValue) ? AppCompatDelegate.MODE_NIGHT_NO : // Light
+                        "dark".equals(themeValue)  ? AppCompatDelegate.MODE_NIGHT_YES : // Dark
+                                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM // System
+        );
     }
 
     public void onResetProgressClicked(View view) {
