@@ -25,6 +25,7 @@ import de.thm.mixit.data.entities.ProgressAchievement;
  * @author Jannik Heimann
  */
 public class AchievementDataSource {
+    private final Context context;
     private final SharedPreferences sp;
     private final Set<String> binaryAchievementNames;
     private final Set<String> progressAchievementNames;
@@ -39,6 +40,7 @@ public class AchievementDataSource {
      */
     public AchievementDataSource(Context context) {
         String filepath = context.getString(R.string.achievements_shared_preferences);
+        this.context = context;
         this.sp = context.getSharedPreferences(
                 filepath,
                 Context.MODE_PRIVATE);
@@ -87,13 +89,13 @@ public class AchievementDataSource {
         // Save Achievements in shared preferences and also in name lists
         for (Achievement achievement: achievements) {
             if (achievement instanceof BinaryAchievement) {
-                spEditor.putString(achievement.getName(), gson.toJson(achievement,
+                spEditor.putString(context.getString(achievement.getNameResId()), gson.toJson(achievement,
                         BinaryAchievement.class));
-                binaryAchievementNames.add(achievement.getName());
+                binaryAchievementNames.add(context.getString(achievement.getNameResId()));
             } else if (achievement instanceof ProgressAchievement) {
-                spEditor.putString(achievement.getName(), gson.toJson(achievement,
+                spEditor.putString(context.getString(achievement.getNameResId()), gson.toJson(achievement,
                         ProgressAchievement.class));
-                progressAchievementNames.add(achievement.getName());
+                progressAchievementNames.add(context.getString(achievement.getNameResId()));
             }
 
         }

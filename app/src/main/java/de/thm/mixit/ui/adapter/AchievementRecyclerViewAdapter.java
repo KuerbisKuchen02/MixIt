@@ -1,6 +1,7 @@
 package de.thm.mixit.ui.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -80,8 +81,10 @@ public class AchievementRecyclerViewAdapter extends
         }
 
         void bind(Achievement achievement) {
-            name.setText(achievement.getName());
-            description.setText(achievement.getDescription());
+            // Convert IDs from string.xml to their corresponding string representation
+            Context context = itemView.getContext();
+            name.setText(context.getString(achievement.getNameResId()));
+            description.setText(context.getString(achievement.getDescriptionResId()));
 
             // BinaryAchievements do not need a ProgressBar and can either
             // be unlocked or not unlocked. Default State is GONE.

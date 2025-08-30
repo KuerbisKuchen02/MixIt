@@ -10,8 +10,9 @@ public class ProgressAchievement extends Achievement {
     private int currentProgress;
     private final int targetProgress;
 
-    public ProgressAchievement(String name, String description, int currentProgress, int targetProgress) {
-        super(name, description);
+    public ProgressAchievement(int nameResId, int descriptionResId, int currentProgress,
+                               int targetProgress) {
+        super(nameResId, descriptionResId);
         this.currentProgress = currentProgress;
         this.targetProgress = targetProgress;
     }

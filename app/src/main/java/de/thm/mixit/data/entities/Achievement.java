@@ -2,33 +2,34 @@ package de.thm.mixit.data.entities;
 
 /**
  * Represents a generic Achievement. Meant to be extended to implement individual logic.
- *
+ * The attributes nameResId and descriptionResId are meant to be set to an ID from the strings.xml
+ * file in order to achieve multiple language support.
  * @author Justin Wolek
  */
 public abstract class Achievement {
-    private String name;
-    private String description;
+    private int nameResId;
+    private int descriptionResId;
 
-    public Achievement(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public Achievement(int nameResId, int descriptionResId) {
+        this.nameResId = nameResId;
+        this.descriptionResId = descriptionResId;
     }
 
     public abstract boolean isUnlocked();
 
-    public String getName() {
-        return name;
+    public int getNameResId() {
+        return nameResId;
     }
 
-    public String getDescription() {
-        return description;
+    public int getDescriptionResId() {
+        return descriptionResId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameResId(int nameResId) {
+        this.nameResId = nameResId;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionResId(int descriptionResId) {
+        this.descriptionResId = descriptionResId;
     }
 }

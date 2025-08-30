@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Achievement;
 import de.thm.mixit.data.entities.BinaryAchievement;
 import de.thm.mixit.data.entities.ProgressAchievement;
@@ -84,7 +85,7 @@ public class AchievementViewModel extends ViewModel {
      */
     public void saveAchievements() {
         Log.d(TAG, "Saving achievements: " +
-                Objects.requireNonNull(achievements.getValue()).toString());
+                Objects.requireNonNull(achievements.getValue()));
         achievementRepository.saveAchievements(achievements.getValue());
     }
 
@@ -95,7 +96,7 @@ public class AchievementViewModel extends ViewModel {
     private void loadAchievements() {
         achievements.setValue(achievementRepository.loadAchievements());
         Log.d(TAG, "Loaded achievements: " +
-                Objects.requireNonNull(achievements.getValue()).toString());
+                Objects.requireNonNull(achievements.getValue()));
 
         // No achievements saved yet. Initialise them the first time
         if (achievements.getValue().isEmpty()) {
@@ -103,55 +104,63 @@ public class AchievementViewModel extends ViewModel {
         }
     }
 
-    // TODO Replace achievement names with string resources
     /**
      * Update the progress of each achievement based on the saved statistics.
      */
     private void updateProgress() {
         Statistic statistic = statisticRepository.loadStatistic();
-
+        int nameId;
         for (Achievement achievement: Objects.requireNonNull(achievements.getValue())) {
-            switch (achievement.getName()) {
-                case "Hooked":
-                case "Addicted":
-                case "Get a life":
-                    ((ProgressAchievement) achievement).setCurrentProgress((int) (statistic.getPlaytime() / 3600));
-                    break;
-                case "Know the drill":
-                    ((ProgressAchievement) achievement).setCurrentProgress((int) statistic.getNumberOfCombinations());
-                    break;
-                case "The journey begins":
-                case "Word collector":
-                    ((ProgressAchievement) achievement).setCurrentProgress(statistic.getNumberOfUnlockedElements() - 4);
-                    break;
-                case "I like it clean":
-                    ((ProgressAchievement) achievement).setCurrentProgress((int) statistic.getNumberOfDiscardedElements());
-                    break;
-                case "Challenge accepted":
-                    ((ProgressAchievement) achievement).setCurrentProgress(statistic.getArcadeGamesWon());
-                    break;
-                case "Multiple recipes":
-                    ((ProgressAchievement) achievement).setCurrentProgress(statistic.getMostCombinationsForOneElement());
-                    break;
-                case "Winner":
-                    ((BinaryAchievement) achievement).setUnlocked(statistic.getArcadeGamesWon() > 0);
-                    break;
-                case "Fast as fuck boy":
-                    ((BinaryAchievement) achievement).setUnlocked(statistic.getShortestArcadeTimeToBeat() < 60);
-                    break;
-                case "Mastermind":
-                    ((BinaryAchievement) achievement).setUnlocked(statistic.getFewestArcadeTurnsToBeat() < 10);
-                    break;
-                case "Kärcher":
-                    ((BinaryAchievement) achievement).setUnlocked(statistic.getMostDiscardedElements() > 10);
-                    break;
-                case "How did we get here?":
-                    ((BinaryAchievement) achievement).setUnlocked(statistic.getLongestElement().length() >= 25);
-                    break;
-                case "The cake is a lie":
-                    // TODO find way to verify... maybe extra statistic to save?
-                    break;
-            }
+            nameId = achievement.getNameResId();
+            if (nameId == R.string.achievement_name_hooked ||
+                    nameId == R.string.achievement_name_addicted ||
+                    nameId == R.string.achievement_name_get_a_life)
+                ((ProgressAchievement) achievement).setCurrentProgress(
+                        (int) (statistic.getPlaytime() / 3600));
+
+            else if (nameId == R.string.achievement_name_know_the_drill)
+                ((ProgressAchievement) achievement).setCurrentProgress(
+                        (int) statistic.getNumberOfCombinations());
+
+            else if (nameId == R.string.achievement_name_the_journey_begins ||
+            nameId == R.string.achievement_name_word_collector)
+                ((ProgressAchievement) achievement).setCurrentProgress(
+                        statistic.getNumberOfUnlockedElements() - 4);
+
+            else if (nameId == R.string.achievement_name_I_like_it_clean)
+                ((ProgressAchievement) achievement).setCurrentProgress(
+                        (int) statistic.getNumberOfDiscardedElements());
+
+            else if (nameId == R.string.achievement_name_challenge_accepted)
+                ((ProgressAchievement) achievement).setCurrentProgress(
+                        statistic.getArcadeGamesWon());
+
+            else if (nameId == R.string.achievement_name_again_really)
+                ((ProgressAchievement) achievement).setCurrentProgress(
+                        statistic.getMostCombinationsForOneElement());
+
+            else if (nameId == R.string.achievement_name_winner)
+                ((BinaryAchievement) achievement).setUnlocked(statistic.getArcadeGamesWon() > 0);
+
+            else if (nameId == R.string.achievement_name_fast_as_fuck_boy)
+                ((BinaryAchievement) achievement).setUnlocked(
+                        statistic.getShortestArcadeTimeToBeat() < 60);
+
+            else if (nameId == R.string.achievement_name_mastermind)
+                ((BinaryAchievement) achievement).setUnlocked(
+                        statistic.getFewestArcadeTurnsToBeat() < 10);
+
+            else if (nameId == R.string.achievement_name_kaercher)
+                ((BinaryAchievement) achievement).setUnlocked(
+                        statistic.getMostDiscardedElements() > 10);
+
+            else if (nameId == R.string.achievement_name_how_did_we_get_here)
+                ((BinaryAchievement) achievement).setUnlocked(
+                        statistic.getLongestElement().length() >= 20);
+
+            else if (nameId == R.string.achievement_name_the_cake_is_a_lie)
+                // TODO find way to verify... maybe extra statistic to save?
+                continue;
         }
     }
 
@@ -161,23 +170,37 @@ public class AchievementViewModel extends ViewModel {
      */
     private void initAchievements() {
         Log.d(TAG, "Initialising achievements");
-
         achievements.setValue(Arrays.asList(
-                new ProgressAchievement("Hooked", "Play 1 hour", 0, 1),
-                new ProgressAchievement("Addicted", "Play 3 hours", 0, 3),
-                new ProgressAchievement("Get a life", "Play 5 hours", 0, 5),
-                new ProgressAchievement("Know the drill", "Combine 200 elements", 0, 200),
-                new ProgressAchievement("The journey begins", "Discover 10 new elements", 0, 10),
-                new ProgressAchievement("Word collector", "Discover 100 new elements", 0, 100),
-                new ProgressAchievement("I like it clean", "Delete 50 elements from the playground", 0, 50),
-                new ProgressAchievement("Challenge accepted!", "Win 10 arcade games", 0, 10),
-                new ProgressAchievement("Multiple recipes", "Get 5 combinations for a single element", 0, 15),
-                new BinaryAchievement("Winner", "Win your first arcade game", false),
-                new BinaryAchievement("Fast as fuck boy!", "Win a arcade game in under 1 minute", false),
-                new BinaryAchievement("Mastermind", "Win an arcade game in less then 10 turns.", false),
-                new BinaryAchievement("Kärcher", "Delete 10 elements at once", false),
-                new BinaryAchievement("How did we get here?", "Discover a word containing at least 25 characters", false),
-                new BinaryAchievement("The cake is a lie", "Discover chocolate cake", false)
+                new ProgressAchievement(R.string.achievement_name_hooked,
+                        R.string.achievement_desc_hooked, 0, 1),
+                new ProgressAchievement(R.string.achievement_name_addicted,
+                        R.string.achievement_desc_addicted, 0, 3),
+                new ProgressAchievement(R.string.achievement_name_get_a_life,
+                        R.string.achievement_desc_get_a_life, 0, 5),
+                new ProgressAchievement(R.string.achievement_name_know_the_drill,
+                        R.string.achievement_desc_know_the_drill, 0, 200),
+                new ProgressAchievement(R.string.achievement_name_the_journey_begins,
+                        R.string.achievement_desc_the_journey_begins, 0, 10),
+                new ProgressAchievement(R.string.achievement_name_word_collector,
+                        R.string.achievement_desc_word_collector, 0, 100),
+                new ProgressAchievement(R.string.achievement_name_I_like_it_clean,
+                        R.string.achievement_desc_I_like_it_clean, 0, 50),
+                new ProgressAchievement(R.string.achievement_name_challenge_accepted,
+                        R.string.achievement_desc_challenge_accepted, 0, 10),
+                new ProgressAchievement(R.string.achievement_name_again_really,
+                        R.string.achievement_desc_again_really, 0, 15),
+                new BinaryAchievement(R.string.achievement_name_winner,
+                        R.string.achievement_desc_winner, false),
+                new BinaryAchievement(R.string.achievement_name_fast_as_fuck_boy,
+                        R.string.achievement_desc_fast_as_fuck_boy, false),
+                new BinaryAchievement(R.string.achievement_name_mastermind,
+                        R.string.achievement_desc_mastermind, false),
+                new BinaryAchievement(R.string.achievement_name_kaercher,
+                        R.string.achievement_desc_kaercher, false),
+                new BinaryAchievement(R.string.achievement_name_how_did_we_get_here,
+                        R.string.achievement_desc_how_did_we_get_here, false),
+                new BinaryAchievement(R.string.achievement_name_the_cake_is_a_lie,
+                        R.string.achievement_name_the_cake_is_a_lie, false)
         ));
     }
 
