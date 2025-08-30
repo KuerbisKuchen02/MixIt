@@ -25,10 +25,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entities.Statistic;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.model.Result;
+import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
+import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 import de.thm.mixit.util.LiveDataTestUtil;
 
@@ -47,14 +50,15 @@ public class GameViewModelTest {
     public TestRule rule = new InstantTaskExecutorRule();
 
     @Mock
+    private CombinationRepository mockCombinationRepository;
+    @Mock
     private ElementRepository mockElementRepository;
-
     @Mock
     private ElementUseCase mockElementUseCase;
-
     @Mock
-    GameStateRepository gameStateRepository;
-
+    GameStateRepository mockGameStateRepository;
+    @Mock
+    StatisticRepository mockStatisticRepository;
     private GameViewModel viewModel;
 
     @Before
@@ -64,7 +68,9 @@ public class GameViewModelTest {
                 new Element("Erde", "\uD83C\uDF0D"),
                 new Element("Feuer", "\uD83D\uDD25"),
                 new Element("Luft", "\uD83C\uDF2C️")));
-        viewModel = new GameViewModel(mockElementRepository, mockElementUseCase, gameStateRepository);
+        mockStatisticRepositoryLoadStatistic();
+        viewModel = new GameViewModel(mockCombinationRepository, mockElementRepository,
+                mockElementUseCase, mockGameStateRepository, mockStatisticRepository);
     }
 
     @Test
@@ -225,5 +231,11 @@ public class GameViewModelTest {
             callback.accept(result);
             return null;
         }).when(mockElementUseCase).getElement(any(), any(), any());
+    }
+
+    private void mockStatisticRepositoryLoadStatistic() {
+        doAnswer(invocation -> {
+            return new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0);
+        }).when(mockStatisticRepository).loadStatistic();
     }
 }

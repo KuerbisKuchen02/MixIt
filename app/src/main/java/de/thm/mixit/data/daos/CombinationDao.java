@@ -36,6 +36,14 @@ public interface CombinationDao {
     Combination findByCombination(String inputA, String inputB);
 
     /**
+     * Returns the Amount of the most occurring OutputId.
+     * @return Amount of the most occurring OutputId.
+     */
+    @Query("SELECT COUNT(*) AS number FROM combinations GROUP BY outputId " +
+            "ORDER BY number DESC LIMIT 1")
+    Integer getAmountOfMostOccurringOutputId();
+
+    /**
      * Inserts one {@link Combination} into the database.
      *
      * @param combination Combination to insert into the database.
