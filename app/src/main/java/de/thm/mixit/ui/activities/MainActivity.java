@@ -75,12 +75,15 @@ public class MainActivity extends Activity {
 
     public void onAchievementsButtonClicked(View view) {
         Log.i(TAG, "Achievements Button was clicked.");
-        // TODO implement when Achievement Activity is added
+        Intent intent = new Intent(this, AchievementActivity.class);
+        startActivity(intent);
     }
 
     public void onSettingsButtonClicked(View view) {
         Log.i(TAG, "Settings Button was clicked.");
-        // TODO implement when Setting Activity is added
+
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     public void setVisibilityOfDeleteArcadeSaveStateButton(boolean visible) {

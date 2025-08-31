@@ -1,6 +1,8 @@
 package de.thm.mixit.ui.viewmodel;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,9 +21,13 @@ import java.util.stream.Collectors;
 
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.entities.GameState;
+import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.repository.CombinationRepository;
+import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
+import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.logic.ArcadeGoalChecker;
 import de.thm.mixit.domain.usecase.ElementUseCase;
 
@@ -34,10 +40,12 @@ import de.thm.mixit.domain.usecase.ElementUseCase;
  */
 public class GameViewModel extends ViewModel {
     private final static String TAG = GameViewModel.class.getSimpleName();
-
+    private final CombinationRepository combinationRepository;
     private final ElementRepository elementRepository;
     private final ElementUseCase elementUseCase;
     private final GameStateRepository gameStateRepository;
+    private final StatisticRepository statisticRepository;
+    private final Statistic statistics;
     private final MutableLiveData<List<Element>> elements = new MutableLiveData<>();
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
@@ -55,12 +63,18 @@ public class GameViewModel extends ViewModel {
      * @param elementUseCase ElementUseCase used for dependency injection
      */
     @VisibleForTesting
-    GameViewModel(ElementRepository elementRepository,
-                  ElementUseCase elementUseCase,
-                  GameStateRepository gameStateRepository) {
+    GameViewModel(CombinationRepository combinationRepository,
+                          ElementRepository elementRepository,
+                          ElementUseCase elementUseCase,
+                          GameStateRepository gameStateRepository,
+                          StatisticRepository statisticRepository) {
+        this.combinationRepository = combinationRepository;
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
         this.gameStateRepository = gameStateRepository;
+        this.statisticRepository = statisticRepository;
+        this.statistics = statisticRepository.loadStatistic();
+        Log.d(TAG, statistics.toString());
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
         loadElements();
@@ -168,6 +182,10 @@ public class GameViewModel extends ViewModel {
     }
 
     public void clearPlayground() {
+        int numCleared = Objects.requireNonNull(elementsOnPlayground.getValue()).size();
+        statistics.setNumberOfDiscardedElements(statistics.getNumberOfDiscardedElements() +
+                numCleared);
+        statistics.setMostDiscardedElements(numCleared);
         elementsOnPlayground.setValue(new ArrayList<>());
     }
 
@@ -179,6 +197,7 @@ public class GameViewModel extends ViewModel {
      * @param chip2 reactant 2
      */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
+        //TODO add statistic numberOfUnlockedElements increase
         elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
@@ -188,6 +207,7 @@ public class GameViewModel extends ViewModel {
                 Log.d(TAG, "Elements successfully combined.");
                 combineError.postValue(null);
                 handleCombineElements(chip1, chip2, result.getData());
+                statistics.setLongestElement(result.getData().name);
             }
         });
     }
@@ -224,6 +244,7 @@ public class GameViewModel extends ViewModel {
     public void increaseTurnCounter() {
         assert turns.getValue() != null;
         turns.setValue(turns.getValue() + 1);
+        statistics.setNumberOfCombinations(statistics.getNumberOfCombinations() + 1);
     }
 
     // TODO check with implementation of GameStateUseCase
@@ -233,6 +254,25 @@ public class GameViewModel extends ViewModel {
                 Objects.requireNonNull(this.turns.getValue()),
                 Objects.requireNonNull(this.targetElement.getValue()),
                 Objects.requireNonNull(this.elementsOnPlayground.getValue())));
+    }
+
+    /**
+     * Is Responsible for persisting the statistic object.
+     * Gets called when the Game Activity is paused.
+     */
+    public void saveStatistics() {
+        // Check via db query for a new Record for the most combinations for one element
+        this.combinationRepository.getAmountOfMostOccurringOutputId( res -> {
+            this.statistics.setMostCombinationsForOneElement(res);
+            this.statisticRepository.saveStatistic(statistics);
+        });
+
+        // Get via db query the amount of unlocked elements
+        this.elementRepository.getAll(res -> {
+            this.statistics.setNumberOfUnlockedElements(res.size());
+            this.statisticRepository.saveStatistic(statistics);
+        });
+
     }
 
     /**
@@ -304,15 +344,19 @@ public class GameViewModel extends ViewModel {
      */
     public static class Factory implements ViewModelProvider.Factory {
 
+        private final CombinationRepository combinationRepository;
         private final ElementRepository elementRepository;
         private final ElementUseCase elementUseCase;
         //TODO Change to GameStateUseCase instead of GameStateRepository
         private final GameStateRepository gameStateRepository;
+        private final StatisticRepository statisticRepository;
 
         public Factory(Context context, boolean isArcade) {
+            this.combinationRepository = CombinationRepository.create(context, isArcade);
             this.elementRepository = ElementRepository.create(context, isArcade);
             this.elementUseCase = new ElementUseCase(context, isArcade);
             this.gameStateRepository = GameStateRepository.create(context, isArcade);
+            this.statisticRepository = StatisticRepository.create(context);
         }
 
         @NonNull
@@ -320,11 +364,15 @@ public class GameViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == GameViewModel.class) {
-                return (T) new GameViewModel(elementRepository,
+                return (T) new GameViewModel(combinationRepository,
+                        elementRepository,
                         elementUseCase,
-                        gameStateRepository);
+                        gameStateRepository,
+                        statisticRepository);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }
+
+
 }
