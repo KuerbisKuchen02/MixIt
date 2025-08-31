@@ -58,7 +58,6 @@ public class GameActivityTest {
 
         // Clear database and shared preferences
         Context context = ApplicationProvider.getApplicationContext();
-        ElementRepository.create(context, false).reset();
         GameStateRepository.create(context, false).deleteSavedGameState();
         ElementRepository.create(context, true).reset();
         GameStateRepository.create(context, true).deleteSavedGameState();
@@ -162,7 +161,7 @@ public class GameActivityTest {
     }
 
     @Test
-    public void testCombiningElements() {
+    public void testCombiningElements() throws InterruptedException {
         startEndlessGame();
         // Open item list
         onView(withId(R.id.button_open_element_list))
@@ -176,6 +175,11 @@ public class GameActivityTest {
                 .perform(doubleClick())
                 .perform(dragFromTo(getView(onView(withTagValue(is(1))))));
 
+        // FIXME: Not ideal implementation and NOT recommended by the documentation
+        //  https://developer.android.com/training/testing/espresso/idling-resource
+        //  This approach was chosen to simplify the implementation, even if the test
+        //  result suffer, as this is not the focus of this project
+        Thread.sleep(100);
         // Verify last fire still on canvas
         onView(allOf(hasTag(), withText(containsString("Feuer"))))
                 .check(matches(isDisplayed()));
