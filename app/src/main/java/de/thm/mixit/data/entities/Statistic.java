@@ -39,7 +39,7 @@ public class Statistic {
     private int arcadeGamesWon;                 // Missing Win Detection in this Branch
     private long shortestArcadeTimeToBeat;      // Missing Win Detection in this Branch
     private int fewestArcadeTurnsToBeat;        // Missing Win Detection in this Branch
-
+    private boolean foundChocolateCake;
 
     public Statistic(long playtime,
                      long numberOfCombinations,
@@ -50,7 +50,8 @@ public class Statistic {
                      int mostCombinationsForOneElement,
                      int arcadeGamesWon,
                      long shortestArcadeTimeToBeat,
-                     int fewestArcadeTurnsToBeat) {
+                     int fewestArcadeTurnsToBeat,
+                     boolean foundChocolateCake) {
         this.playtime = playtime;
         this.numberOfCombinations = numberOfCombinations;
         this.longestElement = longestElement;
@@ -61,6 +62,7 @@ public class Statistic {
         this.arcadeGamesWon = arcadeGamesWon;
         this.shortestArcadeTimeToBeat = shortestArcadeTimeToBeat;
         this.fewestArcadeTurnsToBeat = fewestArcadeTurnsToBeat;
+        this.foundChocolateCake = foundChocolateCake;
     }
 
     public long getPlaytime() {
@@ -94,6 +96,8 @@ public class Statistic {
     public long getShortestArcadeTimeToBeat() { return this.shortestArcadeTimeToBeat; }
 
     public int getFewestArcadeTurnsToBeat() { return this.fewestArcadeTurnsToBeat; }
+
+    public boolean getFoundChocolateCake() { return this.foundChocolateCake; }
 
     public void setPlaytime(long playTime) {
         this.playtime = playTime;
@@ -138,6 +142,10 @@ public class Statistic {
 
     public void setFewestArcadeTurnsToBeat(int turns) {
         this.fewestArcadeTurnsToBeat = turns;
+    }
+
+    public void setFoundChocolateCake(boolean foundChocolateCake) {
+        this.foundChocolateCake = foundChocolateCake;
     }
 
     @Override

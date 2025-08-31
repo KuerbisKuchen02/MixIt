@@ -1,8 +1,6 @@
 package de.thm.mixit.ui.viewmodel;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,6 @@ import de.thm.mixit.data.entities.Statistic;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
-import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.logic.ArcadeGoalChecker;
@@ -197,7 +194,6 @@ public class GameViewModel extends ViewModel {
      * @param chip2 reactant 2
      */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
-        //TODO add statistic numberOfUnlockedElements increase
         elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
@@ -267,12 +263,13 @@ public class GameViewModel extends ViewModel {
             this.statisticRepository.saveStatistic(statistics);
         });
 
-        // Get via db query the amount of unlocked elements
+        // Get via db query the amount of unlocked elements and if chocolate cake was found
         this.elementRepository.getAll(res -> {
             this.statistics.setNumberOfUnlockedElements(res.size());
+            this.statistics.setFoundChocolateCake(res.stream().
+                    anyMatch(e -> e.name.equals("Schokokuchen")));
             this.statisticRepository.saveStatistic(statistics);
         });
-
     }
 
     /**
