@@ -1,5 +1,6 @@
 package de.thm.mixit.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.core.os.LocaleListCompat;
 
 import java.util.Objects;
 
+import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.ui.fragments.DialogResetProgress;
 
@@ -172,6 +174,12 @@ public class SettingsActivity
 
             Log.d(TAG, "Theme selected: " + selectedTheme);
         }
+    }
+
+    public void onBackButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override public void onNothingSelected(AdapterView<?> parent) {}
