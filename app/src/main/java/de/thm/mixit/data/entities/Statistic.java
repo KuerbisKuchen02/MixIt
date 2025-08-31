@@ -162,6 +162,7 @@ public class Statistic {
                 "Most Combinations for one Element: " + mostCombinationsForOneElement + "\n" +
                 "Arcade Games Won: " + arcadeGamesWon + "\n" +
                 "Shortest Arcade Playtime: " + shortestArcadeTimeToBeat + "\n" +
-                "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat;
+                "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat + "\n" +
+                "Discovered Chocolate Cake: " + foundChocolateCake;
     }
 }
