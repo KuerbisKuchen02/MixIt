@@ -1,6 +1,7 @@
 package de.thm.mixit;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -10,6 +11,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -79,10 +81,7 @@ public class GameActivityTest {
 
     @Test
     public void testArcadeModeInitialization() {
-        onView(withId(R.id.button_main_menu_delete_arcade_savestate))
-                .check(matches(not(isDisplayed())));
-        onView(withId(R.id.button_main_menu_arcade))
-                .perform(click());
+        startArcadeGame();
         onView(withId(R.id.textview_time_since_start))
                 .check(matches(isDisplayed()));
         onView(withId(R.id.textview_turns))
@@ -162,8 +161,66 @@ public class GameActivityTest {
         playground.check(matches(withMatchingChildCount(0, hasTag())));
     }
 
+    @Test
+    public void testCombiningElements() {
+        startEndlessGame();
+        // Open item list
+        onView(withId(R.id.button_open_element_list))
+                .perform(click());
+        // Add three Feuer to playground and combine the first two
+        onView(withId(R.id.recycler_game_item_list))
+                .perform(RecyclerViewActions.actionOnItem(
+                        withText(containsString("Feuer")), click()));
+        onView(withTagValue(is(0)))
+                .perform(doubleClick())
+                .perform(doubleClick())
+                .perform(dragFromTo(getView(onView(withTagValue(is(1))))));
+
+        // Verify last fire still on canvas
+        onView(allOf(hasTag(), withText(containsString("Feuer"))))
+                .check(matches(isDisplayed()));
+
+        // Verify combination was successful
+        onView(allOf(hasTag(), withText(containsString("FakeResult"))))
+                .check(matches(isDisplayed()));
+    }
+
+    public void testArcadeModePersistence() {
+        ViewInteraction arcadeSaveStateButton =
+                onView(withId(R.id.button_main_menu_delete_arcade_savestate));
+        ViewInteraction arcadePlayground = onView(withId(R.id.layout_playground));
+
+        arcadeSaveStateButton.check(matches(not(isDisplayed())));
+        startArcadeGame();
+        // Open item list
+        onView(withId(R.id.button_open_element_list))
+                .perform(click());
+        // Add Feuer to Playground
+        onView(withId(R.id.recycler_game_item_list))
+                .perform(RecyclerViewActions.actionOnItem(
+                        withText(containsString("Feuer")), click()));
+        // Close arcade check game state delete button is visible and restart arcade
+        pressBack();
+        arcadeSaveStateButton.check(matches(isDisplayed()));
+        startArcadeGame();
+        // Check element still on playground and close arcade
+        arcadePlayground.check(matches(hasItemCount(1)));
+        pressBack();
+        // Delete save state and check if button is no longer visible
+        arcadeSaveStateButton.perform(click());
+        arcadeSaveStateButton.check(matches(not(isDisplayed())));
+        // Start again and check if playground is empty
+        startArcadeGame();
+        arcadePlayground.check(matches(hasItemCount(0)));
+    }
+
     private void startEndlessGame() {
         onView(withId(R.id.button_main_menu_endless))
+                .perform(click());
+    }
+
+    private void startArcadeGame() {
+        onView(withId(R.id.button_main_menu_arcade))
                 .perform(click());
     }
 }
