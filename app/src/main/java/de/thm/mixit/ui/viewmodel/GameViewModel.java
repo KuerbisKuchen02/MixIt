@@ -87,6 +87,7 @@ public class GameViewModel extends ViewModel {
             Log.i(TAG, "GameState is there loading values");
             GameState gameState = gameStateRepository.loadGameState();
             this.elementsOnPlayground.setValue(gameState.getElementChips());
+            ElementChip.setId(gameState.getHighestElementChipID() + 1);
             this.turns.setValue(gameState.getTurns());
             this.alreadySavedPassedTime = gameState.getTime();
             this.passedTime.setValue(0L);
