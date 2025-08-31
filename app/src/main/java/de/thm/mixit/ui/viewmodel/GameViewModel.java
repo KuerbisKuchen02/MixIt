@@ -1,8 +1,6 @@
 package de.thm.mixit.ui.viewmodel;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,12 +17,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.entities.Statistic;
-import de.thm.mixit.data.repository.CombinationRepository;
-import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
@@ -56,6 +54,7 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isWon = new MutableLiveData<>();
+    private final boolean isArcade;
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
@@ -64,16 +63,18 @@ public class GameViewModel extends ViewModel {
      */
     @VisibleForTesting
     GameViewModel(CombinationRepository combinationRepository,
-                          ElementRepository elementRepository,
-                          ElementUseCase elementUseCase,
-                          GameStateRepository gameStateRepository,
-                          StatisticRepository statisticRepository) {
+                  ElementRepository elementRepository,
+                  ElementUseCase elementUseCase,
+                  GameStateRepository gameStateRepository,
+                  StatisticRepository statisticRepository,
+                  boolean isArcade) {
         this.combinationRepository = combinationRepository;
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
         this.gameStateRepository = gameStateRepository;
         this.statisticRepository = statisticRepository;
         this.statistics = statisticRepository.loadStatistic();
+        this.isArcade = isArcade;
         Log.d(TAG, statistics.toString());
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
@@ -90,21 +91,28 @@ public class GameViewModel extends ViewModel {
             this.alreadySavedPassedTime = gameState.getTime();
             this.passedTime.setValue(0L);
             this.targetElement.setValue(gameState.getGoalElement());
+            if (BuildConfig.DEBUG) Log.v(TAG, "Set target element to "
+                    + Arrays.toString(gameState.getGoalElement()));
         } else {
             Log.i(TAG, "GameState is not there using default values");
             this.elementsOnPlayground.setValue(new ArrayList<>());
             this.turns.setValue(0);
             this.passedTime.setValue(0L);
-            elementRepository.generateNewGoalWord(res -> {
-                if (res.isError()) {
-                    // TODO add proper Error Handling
-                    Log.e(TAG, "Could'nt fetch new Goal Word\n" + res.getError());
-                    this.targetElement.postValue(new String[]{"Error could'nt fetch new Word"});
-                } else {
-                    Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
-                    this.targetElement.postValue(res.getData());
-                }
-            });
+            if (isArcade) {
+                elementRepository.generateNewGoalWord(res -> {
+                    if (res.isError()) {
+                        // TODO add proper Error Handling
+                        Log.e(TAG, "Couldn't fetch new Goal Word\n" + res.getError());
+                        this.targetElement.postValue(new String[]{"Error couldn't fetch new Word"});
+                        if (BuildConfig.DEBUG) Log.v(TAG, "Set target element to [\"Error couldn't fetch new Word\"]");
+                    } else {
+                        Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
+                        this.targetElement.postValue(res.getData());
+                        if (BuildConfig.DEBUG) Log.v(TAG, "Set target element to "
+                                + Arrays.toString(res.getData()));
+                    }
+                });
+            }
         }
 
     }
@@ -252,7 +260,7 @@ public class GameViewModel extends ViewModel {
         this.gameStateRepository.saveGameState(new GameState(
                 Objects.requireNonNull(this.passedTime.getValue()),
                 Objects.requireNonNull(this.turns.getValue()),
-                Objects.requireNonNull(this.targetElement.getValue()),
+                this.targetElement.getValue(),
                 Objects.requireNonNull(this.elementsOnPlayground.getValue())));
     }
 
@@ -350,6 +358,7 @@ public class GameViewModel extends ViewModel {
         //TODO Change to GameStateUseCase instead of GameStateRepository
         private final GameStateRepository gameStateRepository;
         private final StatisticRepository statisticRepository;
+        private final boolean isArcade;
 
         public Factory(Context context, boolean isArcade) {
             this.combinationRepository = CombinationRepository.create(context, isArcade);
@@ -357,6 +366,7 @@ public class GameViewModel extends ViewModel {
             this.elementUseCase = new ElementUseCase(context, isArcade);
             this.gameStateRepository = GameStateRepository.create(context, isArcade);
             this.statisticRepository = StatisticRepository.create(context);
+            this.isArcade = isArcade;
         }
 
         @NonNull
@@ -368,11 +378,10 @@ public class GameViewModel extends ViewModel {
                         elementRepository,
                         elementUseCase,
                         gameStateRepository,
-                        statisticRepository);
+                        statisticRepository,
+                        isArcade);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }
-
-
 }
