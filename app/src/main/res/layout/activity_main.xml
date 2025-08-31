@@ -84,25 +84,22 @@
             style="@style/Widget.Material3.Button.IconButton.Filled"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
+            android:layout_weight="4"
             android:onClick="onAchievementsButtonClicked"
             android:text="@string/main_menu_button_achievemnets"
             android:textSize="@dimen/text_size_medium"/>
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_main_menu_settings"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="wrap_content"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:onClick="onSettingsButtonClicked"
-            android:text="@string/main_menu_button_settings"
-            android:textSize="@dimen/text_size_medium"/>
+            app:icon="@drawable/ic_outline_settings_24"
+            app:iconGravity="start|end"
+            app:iconTint="?attr/colorOnPrimary"/>
 
     </LinearLayout>
 
