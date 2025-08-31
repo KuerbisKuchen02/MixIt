@@ -235,7 +235,7 @@ public class GameViewModelTest {
 
     private void mockStatisticRepositoryLoadStatistic() {
         doAnswer(invocation -> {
-            return new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0);
+            return new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0, false);
         }).when(mockStatisticRepository).loadStatistic();
     }
 }
