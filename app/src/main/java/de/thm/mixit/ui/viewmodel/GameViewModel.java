@@ -315,6 +315,11 @@ public class GameViewModel extends ViewModel {
         if (ArcadeGoalChecker.matchesTargetElement(targetWords, newWord)) {
             Log.d(TAG, newWord + " matches " + Arrays.toString(targetElement.getValue()));
             isWon.postValue(true);
+
+            // Set Statistics
+            statistics.setArcadeGamesWon(statistics.getArcadeGamesWon() + 1);
+            statistics.setShortestArcadeTimeToBeat(passedTime.getValue() / 1000);
+            statistics.setFewestArcadeTurnsToBeat(turns.getValue());
         }
     }
 

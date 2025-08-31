@@ -27,7 +27,7 @@ package de.thm.mixit.data.entities;
  *
  * @author Jannik Heimann
  */
-// TODO clear comments as soon as the corresponding saving of data is done
+
 public class Statistic {
     private long playtime;
     private long numberOfCombinations;
@@ -36,9 +36,9 @@ public class Statistic {
     private long numberOfDiscardedElements;
     private int mostDiscardedElements;
     private int mostCombinationsForOneElement;
-    private int arcadeGamesWon;                 // Missing Win Detection in this Branch
-    private long shortestArcadeTimeToBeat;      // Missing Win Detection in this Branch
-    private int fewestArcadeTurnsToBeat;        // Missing Win Detection in this Branch
+    private int arcadeGamesWon;
+    private long shortestArcadeTimeToBeat;
+    private int fewestArcadeTurnsToBeat;
     private boolean foundChocolateCake;
 
     public Statistic(long playtime,
@@ -137,11 +137,13 @@ public class Statistic {
     }
 
     public void setShortestArcadeTimeToBeat(long time) {
-        this.shortestArcadeTimeToBeat = time;
+        if (time < shortestArcadeTimeToBeat)
+            this.shortestArcadeTimeToBeat = time;
     }
 
     public void setFewestArcadeTurnsToBeat(int turns) {
-        this.fewestArcadeTurnsToBeat = turns;
+        if (turns < fewestArcadeTurnsToBeat)
+            this.fewestArcadeTurnsToBeat = turns;
     }
 
     public void setFoundChocolateCake(boolean foundChocolateCake) {
