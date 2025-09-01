@@ -42,6 +42,11 @@ import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
 import de.thm.mixit.ui.activities.MainActivity;
 
+/**
+ * Ui tests for GameActivity class
+ *
+ * @author Josia Menger
+ */
 @RunWith(AndroidJUnit4.class)
 public class GameActivityTest {
 

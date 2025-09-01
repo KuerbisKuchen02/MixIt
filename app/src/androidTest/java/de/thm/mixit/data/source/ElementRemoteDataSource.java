@@ -7,6 +7,14 @@ import java.util.function.Consumer;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.model.Result;
 
+/**
+ * Test implementation of element remote data source. Overrides all implementations.
+ * <p>
+ * This implementation uses a CountingIdlingResource to synchronise the ui test thread
+ * and returns dummy values.
+ *
+ * @author Josia Menger
+ */
 public class ElementRemoteDataSource {
 
     private static final CountingIdlingResource idling =

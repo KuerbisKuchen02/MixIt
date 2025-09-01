@@ -19,6 +19,11 @@ import androidx.test.espresso.matcher.BoundedMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+/**
+ * Utility class for Ui tests
+ *
+ * @author Josia Menger
+ */
 public class TestUtil {
 
     public static Matcher<View> hasItemCount(final int count) {
