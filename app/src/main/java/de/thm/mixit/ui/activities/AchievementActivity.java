@@ -1,12 +1,16 @@
 package de.thm.mixit.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.databinding.ActivityAchievementBinding;
 import de.thm.mixit.ui.adapter.AchievementRecyclerViewAdapter;
@@ -41,6 +45,12 @@ public class AchievementActivity extends AppCompatActivity {
 
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
+    }
+
+    public void onBackButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
