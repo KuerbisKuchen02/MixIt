@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.exception.CombinationException;
+import de.thm.mixit.data.exception.InvalidGoalWordException;
 import de.thm.mixit.data.model.Result;
 
 /**
@@ -103,15 +105,16 @@ public class ElementRemoteDataSource {
                     // When an error has occurred when calling the OpenAI API, the response in
                     // chatCompletion is null and throwable contains an error.
                     if (throwable != null) {
-                        callback.accept(Result.failure(throwable));
+                        callback.accept(Result.failure(
+                                new CombinationException("Internal error", throwable)));
                         return null;
                     } else if (chatCompletion.choices().isEmpty()) {
                         callback.accept(Result.failure(
-                                new RuntimeException("No choices returned from OpenAI API")
+                                new CombinationException("No choices returned from OpenAI API")
                         ));
                     } else if (chatCompletion.choices().get(0).message().content().isEmpty()) {
                         callback.accept(Result.failure(
-                                new RuntimeException("Empty content returned from OpenAI API")
+                                new CombinationException("Empty content returned from OpenAI API")
                         ));
                     }
 
@@ -119,7 +122,7 @@ public class ElementRemoteDataSource {
 
                     if (!isValidElement(content)) {
                         callback.accept(Result.failure(
-                                new RuntimeException("Invalid element format: " + content)
+                                new CombinationException("Invalid element format: " + content)
                         ));
 
                         return null;
@@ -151,13 +154,14 @@ public class ElementRemoteDataSource {
         client.chat().completions().create(createParams).handle(
                 (chatCompletion, throwable) -> {
                     if (throwable != null) {
-                        callback.accept(Result.failure(throwable));
+                        callback.accept(Result.failure(
+                                new InvalidGoalWordException("Internal error", throwable)));
                         return null;
                     }
 
                     if (chatCompletion.choices().isEmpty()) {
                         callback.accept(Result.failure(
-                                new RuntimeException("No choices returned from OpenAI API")
+                                new InvalidGoalWordException("No choices returned from OpenAI API")
                         ));
                         return null;
                     }
@@ -170,13 +174,15 @@ public class ElementRemoteDataSource {
                             callback.accept(Result.success(words));
                         } else {
                             callback.accept(Result.failure(
-                                    new RuntimeException("Invalid goal word response format: " + content.get())
+                                    new InvalidGoalWordException(
+                                            "Invalid goal word response format: " + content.get())
                             ));
                         }
 
                     } else {
                         callback.accept(Result.failure(
-                                new RuntimeException("Empty content returned from OpenAI API")
+                                new InvalidGoalWordException(
+                                        "Empty content returned from OpenAI API")
                         ));
                     }
 

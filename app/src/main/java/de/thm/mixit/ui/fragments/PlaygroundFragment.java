@@ -37,6 +37,8 @@ import java.util.Random;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.exception.CombinationException;
+import de.thm.mixit.data.exception.InvalidGoalWordException;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
@@ -105,39 +107,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 });
 
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
-        viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
-            Log.d(TAG, "Registered new state after combining: " + error);
-            String text = "Something went wrong! Please check your internet connection.";
-
-            if (error != null) {
-                Snackbar.make(playground, text, 6000)
-                        .setBackgroundTint(Color.RED)
-                        .show();
-
-                ArrayList<Integer> deletedIds = new ArrayList<>();
-
-                for (Map.Entry<Integer, ObjectAnimator> entry : animations.entrySet()) {
-                    ElementChip chip = getChipById(entry.getKey());
-
-                    if (chip == null || !chip.isAnimated()) {
-                        entry.getValue().cancel();
-
-                        if (chip != null) {
-                            chip.setAnimated(false);
-                            View v = playground.findViewWithTag(chip.getId());
-                            v.setOnTouchListener(new TouchListener(chip));
-                            v.setAlpha(1f);
-                        }
-
-                        deletedIds.add(entry.getKey());
-                    }
-                }
-
-                for (Integer id : deletedIds) {
-                    animations.remove(id);
-                }
-            }
-        });
+        viewModel.getError().observe(getViewLifecycleOwner(), this::handleError);
 
         viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
             if (gameActivity.isArcade() && isWon) {
@@ -156,6 +126,50 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
 
         return binding.getRoot();
+    }
+
+    private void handleError(Throwable error) {
+        if (error == null) return;
+        Log.d(TAG, "An error occurred " + error);
+
+        String text;
+        if (error instanceof CombinationException) {
+            text = "Cannot combine elements! Please check your internet connection.";
+            cancelCombination();
+        } else if (error instanceof InvalidGoalWordException) {
+            text = "Cannot generate goal word! Please check your internet connection.";
+        } else {
+            text = "An error occurred!";
+        }
+
+        Snackbar.make(playground, text, 6000)
+                .setBackgroundTint(Color.RED)
+                .show();
+    }
+
+    private void cancelCombination() {
+        ArrayList<Integer> deletedIds = new ArrayList<>();
+
+        for (Map.Entry<Integer, ObjectAnimator> entry : animations.entrySet()) {
+            ElementChip chip = getChipById(entry.getKey());
+
+            if (chip == null || !chip.isAnimated()) {
+                entry.getValue().cancel();
+
+                if (chip != null) {
+                    chip.setAnimated(false);
+                    View v = playground.findViewWithTag(chip.getId());
+                    v.setOnTouchListener(new TouchListener(chip));
+                    v.setAlpha(1f);
+                }
+
+                deletedIds.add(entry.getKey());
+            }
+        }
+
+        for (Integer id : deletedIds) {
+            animations.remove(id);
+        }
     }
 
     @Override
