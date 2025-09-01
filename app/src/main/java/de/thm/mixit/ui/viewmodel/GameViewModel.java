@@ -1,8 +1,6 @@
 package de.thm.mixit.ui.viewmodel;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,14 +20,14 @@ import java.util.stream.Collectors;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.entities.Statistic;
-import de.thm.mixit.data.repository.CombinationRepository;
-import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.model.ElementChip;
+import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.logic.ArcadeGoalChecker;
 import de.thm.mixit.domain.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.GameStateUseCase;
 
 /**
  * UI state for the {@link de.thm.mixit.ui.activities.GameActivity}
@@ -40,17 +38,15 @@ import de.thm.mixit.domain.usecase.ElementUseCase;
  */
 public class GameViewModel extends ViewModel {
     private final static String TAG = GameViewModel.class.getSimpleName();
-    private final CombinationRepository combinationRepository;
-    private final ElementRepository elementRepository;
     private final ElementUseCase elementUseCase;
-    private final GameStateRepository gameStateRepository;
-    private final StatisticRepository statisticRepository;
-    private final Statistic statistics;
+    private final GameStateUseCase gameStateUseCase;
+    private Statistic statistics;
     private final MutableLiveData<List<Element>> elements = new MutableLiveData<>();
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
-    private final MutableLiveData<List<ElementChip>> elementsOnPlayground = new MutableLiveData<>();
-    private final MutableLiveData<Throwable> combineError = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<ElementChip>> elementsOnPlayground =
+            new MutableLiveData<>();
+    private final MutableLiveData<Throwable> error = new MutableLiveData<>();
     private long alreadySavedPassedTime;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
@@ -59,55 +55,22 @@ public class GameViewModel extends ViewModel {
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
-     * @param elementRepository ElementRepository used for dependency injection
      * @param elementUseCase ElementUseCase used for dependency injection
+     * @param gameStateUseCase ElementUseCase used for dependency injection
      */
     @VisibleForTesting
-    GameViewModel(CombinationRepository combinationRepository,
-                          ElementRepository elementRepository,
-                          ElementUseCase elementUseCase,
-                          GameStateRepository gameStateRepository,
-                          StatisticRepository statisticRepository) {
-        this.combinationRepository = combinationRepository;
-        this.elementRepository = elementRepository;
+    GameViewModel(ElementUseCase elementUseCase,
+                  GameStateUseCase gameStateUseCase) {
         this.elementUseCase = elementUseCase;
-        this.gameStateRepository = gameStateRepository;
-        this.statisticRepository = statisticRepository;
-        this.statistics = statisticRepository.loadStatistic();
-        Log.d(TAG, statistics.toString());
+        this.gameStateUseCase = gameStateUseCase;
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
-        loadElements();
-        this.combineError.setValue(null);
+        this.elementsOnPlayground.setValue(new ArrayList<>());
+        this.error.setValue(null);
+        this.alreadySavedPassedTime = 0;
+        this.turns.setValue(0);
+        this.passedTime.setValue(0L);
         this.isWon.setValue(false);
-
-        // TODO check with implementation of GameState Use Case
-        if (gameStateRepository.hasSavedGameState()) {
-            Log.i(TAG, "GameState is there loading values");
-            GameState gameState = gameStateRepository.loadGameState();
-            this.elementsOnPlayground.setValue(gameState.getElementChips());
-            ElementChip.setId(gameState.getHighestElementChipID() + 1);
-            this.turns.setValue(gameState.getTurns());
-            this.alreadySavedPassedTime = gameState.getTime();
-            this.passedTime.setValue(0L);
-            this.targetElement.setValue(gameState.getGoalElement());
-        } else {
-            Log.i(TAG, "GameState is not there using default values");
-            this.elementsOnPlayground.setValue(new ArrayList<>());
-            this.turns.setValue(0);
-            this.passedTime.setValue(0L);
-            elementRepository.generateNewGoalWord(res -> {
-                if (res.isError()) {
-                    // TODO add proper Error Handling
-                    Log.e(TAG, "Could'nt fetch new Goal Word\n" + res.getError());
-                    this.targetElement.postValue(new String[]{"Error could'nt fetch new Word"});
-                } else {
-                    Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
-                    this.targetElement.postValue(res.getData());
-                }
-            });
-        }
-
     }
 
     /**
@@ -130,7 +93,7 @@ public class GameViewModel extends ViewModel {
      * Get all element chips currently on the playground
      * @return element chips
      */
-    public LiveData<List<ElementChip>> getElementsOnPlayground() {
+    public LiveData<ArrayList<ElementChip>> getElementsOnPlayground() {
         return elementsOnPlayground;
     }
 
@@ -155,7 +118,7 @@ public class GameViewModel extends ViewModel {
      * @param element chip to add
      */
     public void addElementToPlayground(ElementChip element) {
-        List<ElementChip> list = elementsOnPlayground.getValue();
+        ArrayList<ElementChip> list = elementsOnPlayground.getValue();
         assert list != null;
         list.add(element);
         elementsOnPlayground.setValue(list);
@@ -163,7 +126,7 @@ public class GameViewModel extends ViewModel {
 
     public void updateElementPositonOnPlayground(ElementChip chip, float x, float y) {
         List<ElementChip> current = elementsOnPlayground.getValue();
-        List<ElementChip> updated = new ArrayList<>();
+        ArrayList<ElementChip> updated = new ArrayList<>();
         assert current != null;
         for (ElementChip e : current) {
             if (e.equals(chip)) {
@@ -176,7 +139,7 @@ public class GameViewModel extends ViewModel {
     }
 
     public void removeElementFromPlayground(ElementChip element) {
-        List<ElementChip> list = elementsOnPlayground.getValue();
+        ArrayList<ElementChip> list = elementsOnPlayground.getValue();
         assert list != null;
         list.remove(element);
         elementsOnPlayground.setValue(list);
@@ -203,22 +166,22 @@ public class GameViewModel extends ViewModel {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
                 Log.e(TAG, "An error occurred while combining: " + result.getError());
-                combineError.postValue(result.getError());
+                error.postValue(result.getError());
             } else {
                 Log.d(TAG, "Elements successfully combined.");
-                combineError.postValue(null);
+                error.postValue(null);
                 handleCombineElements(chip1, chip2, result.getData());
                 statistics.setLongestElement(result.getData().name);
             }
         });
     }
 
-    public LiveData<Throwable> getCombineError() {
-        return combineError;
+    public LiveData<Throwable> getError() {
+        return error;
     }
 
     public void setPassedTime(Long time) {
-        passedTime.setValue(time);
+        passedTime.postValue(time);
     }
 
     public LiveData<Long> getPassedTime() {
@@ -248,41 +211,31 @@ public class GameViewModel extends ViewModel {
         statistics.setNumberOfCombinations(statistics.getNumberOfCombinations() + 1);
     }
 
-    // TODO check with implementation of GameStateUseCase
-    public void saveGameState() {
-        this.gameStateRepository.saveGameState(new GameState(
+    public void load() {
+        loadElements();
+
+        GameState gameState = gameStateUseCase.load(res -> {
+            if (res.isError()){
+                this.error.postValue(res.getError());
+            }
+            this.targetElement.postValue(res.getData().getGoalElement());
+        });
+        this.elementsOnPlayground.postValue(gameState.getElementChips());
+        this.turns.postValue(gameState.getTurns());
+        this.alreadySavedPassedTime = gameState.getTime();
+        this.targetElement.postValue(gameState.getGoalElement());
+
+        this.statistics = gameStateUseCase.getStatistics();
+        Log.d(TAG, statistics.toString());
+    }
+
+    public void save() {
+        gameStateUseCase.save(new GameState(
                 Objects.requireNonNull(this.passedTime.getValue()),
                 Objects.requireNonNull(this.turns.getValue()),
-                Objects.requireNonNull(this.targetElement.getValue()),
-                Objects.requireNonNull(this.elementsOnPlayground.getValue())));
-    }
-
-    /**
-     * Is Responsible for persisting the statistic object.
-     * Gets called when the Game Activity is paused.
-     */
-    public void saveStatistics() {
-        // Check via db query for a new Record for the most combinations for one element
-        this.combinationRepository.getAmountOfMostOccurringOutputId( res -> {
-            this.statistics.setMostCombinationsForOneElement(res);
-            this.statisticRepository.saveStatistic(statistics);
-        });
-
-        // Get via db query the amount of unlocked elements
-        this.elementRepository.getAll(res -> {
-            this.statistics.setNumberOfUnlockedElements(res.size());
-            this.statisticRepository.saveStatistic(statistics);
-        });
-
-    }
-
-    /**
-     * Removes all callbacks
-     * <p>
-     * Should be called in onDestroy method of LifecycleOwner
-     */
-    public void onDestroy() {
-        // TODO save current game state
+                this.targetElement.getValue(),
+                Objects.requireNonNull(this.elementsOnPlayground.getValue())),
+                statistics);
     }
 
     /**
@@ -306,7 +259,7 @@ public class GameViewModel extends ViewModel {
      */
     @VisibleForTesting
     void loadElements() {
-        this.elementRepository.getAll(elements::postValue);
+        this.gameStateUseCase.getAllElements(elements::postValue);
     }
 
     /**
@@ -329,7 +282,7 @@ public class GameViewModel extends ViewModel {
      * @param newElement product
      */
     private void handleCombineElements(ElementChip chip1, ElementChip chip2, Element newElement) {
-        List<ElementChip> list = elementsOnPlayground.getValue();
+        ArrayList<ElementChip> list = elementsOnPlayground.getValue();
         assert list != null;
         list.remove(chip1);
         list.remove(chip2);
@@ -345,19 +298,19 @@ public class GameViewModel extends ViewModel {
      */
     public static class Factory implements ViewModelProvider.Factory {
 
-        private final CombinationRepository combinationRepository;
-        private final ElementRepository elementRepository;
         private final ElementUseCase elementUseCase;
-        //TODO Change to GameStateUseCase instead of GameStateRepository
-        private final GameStateRepository gameStateRepository;
-        private final StatisticRepository statisticRepository;
+        private final GameStateUseCase gameStateUseCase;
 
         public Factory(Context context, boolean isArcade) {
-            this.combinationRepository = CombinationRepository.create(context, isArcade);
-            this.elementRepository = ElementRepository.create(context, isArcade);
-            this.elementUseCase = new ElementUseCase(context, isArcade);
-            this.gameStateRepository = GameStateRepository.create(context, isArcade);
-            this.statisticRepository = StatisticRepository.create(context);
+            CombinationRepository combinationRepository =
+                    CombinationRepository.create(context, isArcade);
+            ElementRepository elementRepository = ElementRepository.create(context, isArcade);
+            GameStateRepository gameStateRepository = GameStateRepository.create(context, isArcade);
+            StatisticRepository statisticRepository = StatisticRepository.create(context);
+
+            this.elementUseCase = new ElementUseCase(combinationRepository, elementRepository);
+            this.gameStateUseCase = new GameStateUseCase(combinationRepository, elementRepository,
+                    gameStateRepository, statisticRepository);
         }
 
         @NonNull
@@ -365,11 +318,7 @@ public class GameViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == GameViewModel.class) {
-                return (T) new GameViewModel(combinationRepository,
-                        elementRepository,
-                        elementUseCase,
-                        gameStateRepository,
-                        statisticRepository);
+                return (T) new GameViewModel(elementUseCase, gameStateUseCase);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

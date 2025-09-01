@@ -19,20 +19,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.entities.Statistic;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.model.Result;
-import de.thm.mixit.data.repository.CombinationRepository;
-import de.thm.mixit.data.repository.ElementRepository;
-import de.thm.mixit.data.repository.GameStateRepository;
-import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.GameStateUseCase;
 import de.thm.mixit.util.LiveDataTestUtil;
 
 /**
@@ -50,32 +49,27 @@ public class GameViewModelTest {
     public TestRule rule = new InstantTaskExecutorRule();
 
     @Mock
-    private CombinationRepository mockCombinationRepository;
-    @Mock
-    private ElementRepository mockElementRepository;
-    @Mock
     private ElementUseCase mockElementUseCase;
     @Mock
-    GameStateRepository mockGameStateRepository;
-    @Mock
-    StatisticRepository mockStatisticRepository;
+    private GameStateUseCase mockGameStateUseCase;
+
     private GameViewModel viewModel;
 
     @Before
     public void setup() {
-        mockElementRepositoryGetAll(Arrays.asList(
+        mockGameStateUseCaseGetAllElements(Arrays.asList(
                 new Element("Wasser", "\uD83D\uDCA7"),
                 new Element("Erde", "\uD83C\uDF0D"),
                 new Element("Feuer", "\uD83D\uDD25"),
                 new Element("Luft", "\uD83C\uDF2C️")));
-        mockStatisticRepositoryLoadStatistic();
-        viewModel = new GameViewModel(mockCombinationRepository, mockElementRepository,
-                mockElementUseCase, mockGameStateRepository, mockStatisticRepository);
+        viewModel = new GameViewModel(mockElementUseCase, mockGameStateUseCase);
+        mockGameStateRepositoryLoad();
+        viewModel.load();
     }
 
     @Test
     public void loadElements_onInit_callsRepository() {
-        verify(mockElementRepository, times(1)).getAll(any());
+        verify(mockGameStateUseCase, times(1)).getAllElements(any());
         List<Element> elements = viewModel.getElements().getValue();
         assertNotNull(elements);
         assertEquals(4, elements.size());
@@ -93,7 +87,7 @@ public class GameViewModelTest {
 
     @Test
     public void filter_WithEmptyElementList_ReturnsEmptyFilteredList() throws InterruptedException {
-        mockElementRepositoryGetAll(Collections.emptyList());
+        mockGameStateUseCaseGetAllElements(Collections.emptyList());
         viewModel.loadElements();
 
         viewModel.onSearchQueryChanged("Was");
@@ -162,7 +156,7 @@ public class GameViewModelTest {
         viewModel.combineElements(chip1, chip2);
         List<ElementChip> result =
                 LiveDataTestUtil.getOrAwaitValue(viewModel.getElementsOnPlayground());
-        Throwable error = LiveDataTestUtil.getOrAwaitValue(viewModel.getCombineError());
+        Throwable error = LiveDataTestUtil.getOrAwaitValue(viewModel.getError());
 
         assertNull(error);
         assertEquals(1, result.size());
@@ -182,7 +176,7 @@ public class GameViewModelTest {
         viewModel.combineElements(chip1, chip2);
         List<ElementChip> result =
                 LiveDataTestUtil.getOrAwaitValue(viewModel.getElementsOnPlayground());
-        Throwable error = LiveDataTestUtil.getOrAwaitValue(viewModel.getCombineError());
+        Throwable error = LiveDataTestUtil.getOrAwaitValue(viewModel.getError());
 
         assertEquals("An error occurred", error.getMessage());
         assertEquals(2, result.size());
@@ -217,12 +211,12 @@ public class GameViewModelTest {
         assertTrue(result.isEmpty());
     }
 
-    private void mockElementRepositoryGetAll(List<Element> list) {
+    private void mockGameStateUseCaseGetAllElements(List<Element> list) {
         doAnswer(invocation -> {
             Consumer<List<Element>> callback = invocation.getArgument(0);
             callback.accept(list);
             return null;
-        }).when(mockElementRepository).getAll(any());
+        }).when(mockGameStateUseCase).getAllElements(any());
     }
 
     private void mockElementUseCaseGetElement(Result<Element> result) {
@@ -233,9 +227,13 @@ public class GameViewModelTest {
         }).when(mockElementUseCase).getElement(any(), any(), any());
     }
 
-    private void mockStatisticRepositoryLoadStatistic() {
-        doAnswer(invocation -> {
-            return new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0);
-        }).when(mockStatisticRepository).loadStatistic();
+    private void mockGameStateRepositoryLoad() {
+        GameState dummyGameState = new GameState(0, 0, new String[0], new ArrayList<>());
+        Statistic dummyStatistics = new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0);
+
+        doAnswer(invocation -> dummyGameState)
+                .when(mockGameStateUseCase).load(any());
+        doAnswer(invocation -> dummyStatistics)
+                .when(mockGameStateUseCase).getStatistics();
     }
 }
