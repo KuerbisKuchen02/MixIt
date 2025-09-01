@@ -64,8 +64,9 @@ public class GameActivityTest {
         // Clear database and shared preferences
         Context context = ApplicationProvider.getApplicationContext();
         GameStateRepository.create(context, false).deleteSavedGameState();
-        ElementRepository.create(context, true).reset();
+        ElementRepository.create(context, false).reset();
         GameStateRepository.create(context, true).deleteSavedGameState();
+        ElementRepository.create(context, true).reset();
     }
 
     @After

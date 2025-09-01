@@ -70,7 +70,7 @@ public class GameViewModelTest {
                 new Element("Luft", "\uD83C\uDF2C️")));
         mockStatisticRepositoryLoadStatistic();
         viewModel = new GameViewModel(mockCombinationRepository, mockElementRepository,
-                mockElementUseCase, mockGameStateRepository, mockStatisticRepository, false);
+                mockElementUseCase, mockGameStateRepository, mockStatisticRepository);
     }
 
     @Test
