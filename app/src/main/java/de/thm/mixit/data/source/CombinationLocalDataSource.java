@@ -1,5 +1,7 @@
 package de.thm.mixit.data.source;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -17,6 +19,8 @@ import de.thm.mixit.data.entities.Combination;
  * @author Justin Wolek
  */
 public class CombinationLocalDataSource {
+
+    private static final String TAG = CombinationLocalDataSource.class.getSimpleName();
     private final CombinationDao combinationDAO;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
@@ -73,7 +77,12 @@ public class CombinationLocalDataSource {
      */
     public void getAmountOfMostOccurringOutputId(Consumer<Integer> callback) {
         executor.execute(() -> {
-           callback.accept(combinationDAO.getAmountOfMostOccurringOutputId());
+            Integer i = combinationDAO.getAmountOfMostOccurringOutputId();
+            if (i == null) {
+                i = 0;
+                Log.d(TAG, "getAmountOfMostOccurringOutputId returned null");
+            }
+            callback.accept(i);
         });
     }
 

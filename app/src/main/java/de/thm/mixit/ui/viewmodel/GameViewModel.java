@@ -17,12 +17,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.data.entities.GameState;
 import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
-import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.logic.ArcadeGoalChecker;
@@ -61,10 +62,10 @@ public class GameViewModel extends ViewModel {
      */
     @VisibleForTesting
     GameViewModel(CombinationRepository combinationRepository,
-                          ElementRepository elementRepository,
-                          ElementUseCase elementUseCase,
-                          GameStateRepository gameStateRepository,
-                          StatisticRepository statisticRepository) {
+                  ElementRepository elementRepository,
+                  ElementUseCase elementUseCase,
+                  GameStateRepository gameStateRepository,
+                  StatisticRepository statisticRepository) {
         this.combinationRepository = combinationRepository;
         this.elementRepository = elementRepository;
         this.elementUseCase = elementUseCase;
@@ -83,10 +84,13 @@ public class GameViewModel extends ViewModel {
             Log.i(TAG, "GameState is there loading values");
             GameState gameState = gameStateRepository.loadGameState();
             this.elementsOnPlayground.setValue(gameState.getElementChips());
+            ElementChip.setId(gameState.getHighestElementChipID() + 1);
             this.turns.setValue(gameState.getTurns());
             this.alreadySavedPassedTime = gameState.getTime();
             this.passedTime.setValue(0L);
             this.targetElement.setValue(gameState.getGoalElement());
+            if (BuildConfig.DEBUG) Log.v(TAG, "Set target element to "
+                    + Arrays.toString(gameState.getGoalElement()));
         } else {
             Log.i(TAG, "GameState is not there using default values");
             this.elementsOnPlayground.setValue(new ArrayList<>());
@@ -95,11 +99,14 @@ public class GameViewModel extends ViewModel {
             elementRepository.generateNewGoalWord(res -> {
                 if (res.isError()) {
                     // TODO add proper Error Handling
-                    Log.e(TAG, "Could'nt fetch new Goal Word\n" + res.getError());
-                    this.targetElement.postValue(new String[]{"Error could'nt fetch new Word"});
+                    Log.e(TAG, "Couldn't fetch new Goal Word\n" + res.getError());
+                    this.targetElement.postValue(new String[]{"Error couldn't fetch new Word"});
+                    if (BuildConfig.DEBUG) Log.v(TAG, "Set target element to [\"Error couldn't fetch new Word\"]");
                 } else {
                     Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
                     this.targetElement.postValue(res.getData());
+                    if (BuildConfig.DEBUG) Log.v(TAG, "Set target element to "
+                            + Arrays.toString(res.getData()));
                 }
             });
         }
@@ -248,7 +255,7 @@ public class GameViewModel extends ViewModel {
         this.gameStateRepository.saveGameState(new GameState(
                 Objects.requireNonNull(this.passedTime.getValue()),
                 Objects.requireNonNull(this.turns.getValue()),
-                Objects.requireNonNull(this.targetElement.getValue()),
+                this.targetElement.getValue(),
                 Objects.requireNonNull(this.elementsOnPlayground.getValue())));
     }
 
@@ -375,6 +382,4 @@ public class GameViewModel extends ViewModel {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }
-
-
 }

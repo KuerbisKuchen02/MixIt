@@ -1,11 +1,13 @@
 [versions]
 agp = "8.11.0"
 coreTesting = "2.2.0"
+espressoContrib = "3.7.0"
 gson = "2.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.1"
+konfettiXml = "2.0.5"
 material = "1.12.0"
 mockitoCore = "5.18.0"
 openaiJava = "2.12.0"
@@ -19,11 +21,13 @@ lifecycleViewmodelAndroid = "2.9.2"
 
 [libraries]
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoContrib" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+konfetti-xml = { module = "nl.dionsegijn:konfetti-xml", version.ref = "konfettiXml" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 openai-java = { module = "com.openai:openai-java", version.ref = "openaiJava" }

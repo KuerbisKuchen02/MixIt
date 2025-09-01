@@ -64,6 +64,10 @@ public class ElementChip {
         return id;
     }
 
+    public static void setId(int id) {
+        ID = id;
+    }
+
     public Element getElement() {
         return element;
     }
