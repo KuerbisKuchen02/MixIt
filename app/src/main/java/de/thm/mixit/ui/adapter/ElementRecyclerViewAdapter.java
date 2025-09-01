@@ -72,7 +72,8 @@ public class ElementRecyclerViewAdapter extends
     public void setElements(List<Element> elements) {
         this.elements = elements;
         this.filteredElements.clear();
-        this.filteredElements.addAll(elements);
+        // on initial call elements might be null
+        if(elements != null) this.filteredElements.addAll(elements);
         notifyDataSetChanged();
     }
 

@@ -69,7 +69,7 @@ public class DialogResetProgress extends DialogFragment {
                 ElementRepository elementRepository =
                         ElementRepository.create(context, false);
                 elementRepository.reset();
-
+                // TODO also delete statistics and achievements ?
                 dismiss();
 
                 Toast.makeText(context, R.string.reset_success, Toast.LENGTH_SHORT).show();

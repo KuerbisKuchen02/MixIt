@@ -84,8 +84,9 @@ public class GameStateUseCase {
         // Get via db query the amount of unlocked elements
         elementRepository.getAll(res -> {
             this.statistics.setNumberOfUnlockedElements(res.size());
-            statisticRepository.saveStatistic(this.statistics);
+            this.statistics.setFoundChocolateCake(res.stream()
+                    .anyMatch(e -> e.name.equals("Schokokuchen")));
+            statisticRepository.saveStatistic(statistics);
         });
-
     }
 }

@@ -229,7 +229,7 @@ public class GameViewModelTest {
 
     private void mockGameStateRepositoryLoad() {
         GameState dummyGameState = new GameState(0, 0, new String[0], new ArrayList<>());
-        Statistic dummyStatistics = new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0);
+        Statistic dummyStatistics = new Statistic(0,0, "Wasser", 0, 0,0,0,0,0,0, false);
 
         doAnswer(invocation -> dummyGameState)
                 .when(mockGameStateUseCase).load(any());
