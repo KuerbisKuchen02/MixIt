@@ -159,8 +159,8 @@ public class AchievementViewModel extends ViewModel {
                         statistic.getLongestElement().length() >= 20);
 
             else if (nameId == R.string.achievement_name_the_cake_is_a_lie)
-                // TODO find way to verify... maybe extra statistic to save?
-                continue;
+                ((BinaryAchievement) achievement).setUnlocked(
+                        statistic.getFoundChocolateCake());
         }
     }
 
@@ -200,7 +200,7 @@ public class AchievementViewModel extends ViewModel {
                 new BinaryAchievement(R.string.achievement_name_how_did_we_get_here,
                         R.string.achievement_desc_how_did_we_get_here, false),
                 new BinaryAchievement(R.string.achievement_name_the_cake_is_a_lie,
-                        R.string.achievement_name_the_cake_is_a_lie, false)
+                        R.string.achievement_desc_the_cake_is_a_lie, false)
         ));
     }
 

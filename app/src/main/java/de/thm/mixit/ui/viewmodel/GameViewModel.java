@@ -201,7 +201,6 @@ public class GameViewModel extends ViewModel {
      * @param chip2 reactant 2
      */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
-        //TODO add statistic numberOfUnlockedElements increase
         elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
@@ -271,12 +270,13 @@ public class GameViewModel extends ViewModel {
             this.statisticRepository.saveStatistic(statistics);
         });
 
-        // Get via db query the amount of unlocked elements
+        // Get via db query the amount of unlocked elements and if chocolate cake was found
         this.elementRepository.getAll(res -> {
             this.statistics.setNumberOfUnlockedElements(res.size());
+            this.statistics.setFoundChocolateCake(res.stream().
+                    anyMatch(e -> e.name.equals("Schokokuchen")));
             this.statisticRepository.saveStatistic(statistics);
         });
-
     }
 
     /**
@@ -322,6 +322,11 @@ public class GameViewModel extends ViewModel {
         if (ArcadeGoalChecker.matchesTargetElement(targetWords, newWord)) {
             Log.d(TAG, newWord + " matches " + Arrays.toString(targetElement.getValue()));
             isWon.postValue(true);
+
+            // Set Statistics
+            statistics.setArcadeGamesWon(statistics.getArcadeGamesWon() + 1);
+            statistics.setShortestArcadeTimeToBeat(passedTime.getValue() / 1000);
+            statistics.setFewestArcadeTurnsToBeat(turns.getValue());
         }
     }
 

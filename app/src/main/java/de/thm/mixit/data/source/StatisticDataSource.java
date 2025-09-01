@@ -27,6 +27,7 @@ public class StatisticDataSource {
     private static final String PREF_ARCADE_GAMES_WON = "ARCADE_GAMES_WON";
     private static final String PREF_SHORTEST_TIME_TO_BEAT = "SHORTEST_TIME_TO_BEAT";
     private static final String PREF_FEWEST_TURNS_TO_BEAT = "FEWEST_TURNS_TO_BEAT";
+    private static final String PREF_FOUND_CHOCOLATE_CAKE = "FOUND_CHOCOLATE_CAKE";
 
     /**
      * Creates a Shared Preference to store a GameState object.
@@ -60,11 +61,11 @@ public class StatisticDataSource {
         int arcadeGamesWon = sp.getInt(PREF_ARCADE_GAMES_WON, 0);
         long shortestTimeToBeat = sp.getLong(PREF_SHORTEST_TIME_TO_BEAT, Long.MAX_VALUE);
         int fewestTurnsToBeat = sp.getInt(PREF_FEWEST_TURNS_TO_BEAT, Integer.MAX_VALUE);
-
+        boolean foundChocolateCake = sp.getBoolean(PREF_FOUND_CHOCOLATE_CAKE, false);
 
         return new Statistic(playtime, combinations, longestElement, numUnlockedElements,
                 numDiscardedElements, mostDiscardedElements, mostElementCombinations,
-                arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat);
+                arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat, foundChocolateCake);
     }
 
     /**
@@ -86,6 +87,7 @@ public class StatisticDataSource {
         spEditor.putInt(PREF_ARCADE_GAMES_WON, statistic.getArcadeGamesWon());
         spEditor.putLong(PREF_SHORTEST_TIME_TO_BEAT, statistic.getShortestArcadeTimeToBeat());
         spEditor.putInt(PREF_FEWEST_TURNS_TO_BEAT, statistic.getFewestArcadeTurnsToBeat());
+        spEditor.putBoolean(PREF_FOUND_CHOCOLATE_CAKE, statistic.getFoundChocolateCake());
         spEditor.apply();
     }
 
