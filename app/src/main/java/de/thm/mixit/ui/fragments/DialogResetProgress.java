@@ -11,14 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import de.thm.mixit.R;
+import de.thm.mixit.data.repository.AchievementRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
+import de.thm.mixit.data.repository.StatisticRepository;
 
 /**
  * Ref: Custom Dialog Layout
@@ -27,6 +30,8 @@ import de.thm.mixit.data.repository.GameStateRepository;
 public class DialogResetProgress extends DialogFragment {
 
     GameStateRepository gameStateRepository;
+    StatisticRepository statisticRepository;
+    AchievementRepository achievementRepository;
 
     @NonNull
     @Override
@@ -35,6 +40,8 @@ public class DialogResetProgress extends DialogFragment {
 
         Context context = requireContext();
         gameStateRepository = GameStateRepository.create(context,false);
+        statisticRepository = StatisticRepository.create(context);
+        achievementRepository = AchievementRepository.create(context);
 
         // Inflate custom layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -42,12 +49,15 @@ public class DialogResetProgress extends DialogFragment {
 
         EditText input = view.findViewById(R.id.editText_reset_progress_dialog_confirm);
         Button confirm = view.findViewById(R.id.button_reset_progress_dialog_confirm);
+        ImageButton close = view.findViewById(R.id.imageButton_reset_progress_dialog_close);
 
         final String REQUIRED = getString(R.string.mix_it);
 
         int initialHintColor = input.getCurrentHintTextColor();
         int initialTextColor = input.getCurrentTextColor();
         ColorStateList initialBackgroundTintList = input.getBackgroundTintList();
+
+        close.setOnClickListener(v -> dismiss());
 
         input.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -69,7 +79,10 @@ public class DialogResetProgress extends DialogFragment {
                 ElementRepository elementRepository =
                         ElementRepository.create(context, false);
                 elementRepository.reset();
-                // TODO also delete statistics and achievements ?
+
+                statisticRepository.deleteSavedStatistic();
+                achievementRepository.deleteSavedAchievements();
+
                 dismiss();
 
                 Toast.makeText(context, R.string.reset_success, Toast.LENGTH_SHORT).show();

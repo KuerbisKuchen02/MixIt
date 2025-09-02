@@ -86,4 +86,5 @@
     <string name="dialog_reset_progress_button">Reset Progress</string>
     <string name="mix_it">MixIt</string>
     <string name="reset_success">Reset successfully!</string>
+    <string name="dialog_reset_progress_close_button">Close Reset Progress Dialog</string>
 </resources>
