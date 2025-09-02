@@ -285,7 +285,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
      */
     private void whenItemIsPickedUp(){
         clearElementsButton.setImageResource(R.drawable.ic_remove_24px);
-        int color = ContextCompat.getColor(requireContext(), R.color.red);
+        int color = ContextCompat.getColor(requireContext(), R.color.fab_on_drop_delete);
         clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
         clearElementsButton.setAlpha(0.8f);
         showElementListButton.setClickable(false);

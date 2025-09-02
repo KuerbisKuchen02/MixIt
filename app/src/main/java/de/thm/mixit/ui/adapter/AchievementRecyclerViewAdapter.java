@@ -2,6 +2,7 @@ package de.thm.mixit.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -107,8 +108,17 @@ public class AchievementRecyclerViewAdapter extends
                 );
             }
 
-            // TODO: Use the correct MaterialUI color here
-            if (achievement.isUnlocked()) card.setBackgroundColor(Color.GREEN);
+            // Set the color of the achievement card based on current app theme
+            boolean isDarkTheme =
+                    (context.getResources().getConfiguration().uiMode
+                            & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+            if (achievement.isUnlocked()) {
+                if (isDarkTheme) {
+                    card.setBackgroundColor(context.getColor(R.color.md_theme_dark_tertiary));
+                } else {
+                    card.setBackgroundColor(context.getColor(R.color.md_theme_light_tertiary));
+                }
+            }
         }
     }
 }

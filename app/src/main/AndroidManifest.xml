@@ -34,12 +34,9 @@
         </activity>
 
         <activity android:name=".ui.activities.GameActivity"/>
-        <activity android:name=".ui.activities.AchievementActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
+        <activity android:name=".ui.activities.AchievementActivity"/>
         <activity android:name=".ui.activities.SettingsActivity"/>
-
-        <activity android:name=".ui.activities.ArcadeVictoryActivity" android:theme="@style/AppTheme"/>
+        <activity android:name=".ui.activities.ArcadeVictoryActivity"/>
 
     </application>
 

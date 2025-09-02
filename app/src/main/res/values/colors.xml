@@ -12,6 +12,12 @@
     <color name="md_theme_light_secondaryContainer">#FFDAD0</color>
     <color name="md_theme_light_onSecondaryContainer">#400100</color>
 
+    <!-- Light Tertiary TODO define-->
+    <color name="md_theme_light_tertiary">#FE733C</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFDAD0</color>
+    <color name="md_theme_light_onTertiaryContainer">#400100</color>
+
     <!-- Light Surface -->
     <color name="md_theme_light_surface">#FFFFFF</color>
     <color name="md_theme_light_onSurface">#1C1B1F</color>
@@ -28,20 +34,16 @@
     <color name="md_theme_dark_secondaryContainer">#882E12</color>
     <color name="md_theme_dark_onSecondaryContainer">#FFDAD0</color>
 
+    <!-- Dark Tertiary TODO define -->
+    <color name="md_theme_dark_tertiary">#FE733C</color>
+    <color name="md_theme_dark_onTertiary">#FFFFFF</color>
+    <color name="md_theme_dark_tertiaryContainer">#FFDAD0</color>
+    <color name="md_theme_dark_onTertiaryContainer">#400100</color>
+
     <!-- Dark Surface -->
     <color name="md_theme_dark_surface">#1C1B1F</color>
     <color name="md_theme_dark_onSurface">#E6E1E5</color>
 
-
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="item_bg_grey">#DDDDDD</color>
-    <color name="red">#C51D34</color>
-    <color name="green">#3DDC84</color>
-    <color name="darker_green">#30B069</color>
+    <!-- FAB delete mode -->
+    <color name="fab_on_drop_delete">#FF0000</color>
 </resources>

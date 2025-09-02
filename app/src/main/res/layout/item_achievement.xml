@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:backgroundTint="?attr/colorPrimaryContainer">
 
     <LinearLayout
         android:id="@+id/card_achievement"
@@ -11,18 +12,18 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_achievement_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="@dimen/text_size_large" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_achievement_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/teal_700"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="@dimen/text_size_medium" />
 
         <LinearLayout
@@ -32,14 +33,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ProgressBar
+            <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progress_achievement_bar"
-                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_achievement_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,4 +49,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
