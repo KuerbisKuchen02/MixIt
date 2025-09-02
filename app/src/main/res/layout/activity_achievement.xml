@@ -10,7 +10,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_achievement_header"
@@ -37,6 +38,8 @@
             app:indicatorColor="?attr/colorPrimary"
             app:trackColor="?attr/colorPrimaryContainer"
             app:trackCornerRadius="4dp"
+            app:trackStopIndicatorSize="0dp"
+            app:indicatorTrackGapSize="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_achievement_header" />

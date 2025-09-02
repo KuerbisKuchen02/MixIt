@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="?attr/colorPrimaryContainer">
+    android:backgroundTint="?attr/colorTertiaryContainer">
 
     <LinearLayout
         android:id="@+id/card_achievement"
@@ -16,14 +16,14 @@
             android:id="@+id/text_achievement_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColor="?attr/colorOnTertiaryContainer"
             android:textSize="@dimen/text_size_large" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_achievement_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textColor="?attr/colorOnTertiaryContainer"
             android:textSize="@dimen/text_size_medium" />
 
         <LinearLayout
@@ -37,7 +37,11 @@
                 android:id="@+id/progress_achievement_bar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                app:indicatorColor="?attr/colorTertiary"
+                app:trackColor="?attr/colorOnTertiary"
+                app:trackStopIndicatorSize="0dp"
+                app:indicatorTrackGapSize="0dp"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_achievement_progress_text"
