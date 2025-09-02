@@ -65,7 +65,6 @@ public class GameActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this, new GameViewModel.Factory(this, isArcade))
                 .get(GameViewModel.class);
-        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_game);
 
         if (!isArcade) {
