@@ -12,11 +12,11 @@
     <color name="md_theme_light_secondaryContainer">#FFDAD0</color>
     <color name="md_theme_light_onSecondaryContainer">#400100</color>
 
-    <!-- Light Tertiary TODO define-->
-    <color name="md_theme_light_tertiary">#FE733C</color>
-    <color name="md_theme_light_onTertiary">#FFFFFF</color>
-    <color name="md_theme_light_tertiaryContainer">#FFDAD0</color>
-    <color name="md_theme_light_onTertiaryContainer">#400100</color>
+    <!-- Light Tertiary -->
+    <color name="md_theme_light_tertiary">#5DE2E7</color>
+    <color name="md_theme_light_onTertiary">#00363B</color>
+    <color name="md_theme_light_tertiaryContainer">#AFFFFF</color>
+    <color name="md_theme_light_onTertiaryContainer">#002023</color>
 
     <!-- Light Surface -->
     <color name="md_theme_light_surface">#FFFFFF</color>
@@ -34,11 +34,11 @@
     <color name="md_theme_dark_secondaryContainer">#882E12</color>
     <color name="md_theme_dark_onSecondaryContainer">#FFDAD0</color>
 
-    <!-- Dark Tertiary TODO define -->
-    <color name="md_theme_dark_tertiary">#FE733C</color>
-    <color name="md_theme_dark_onTertiary">#FFFFFF</color>
-    <color name="md_theme_dark_tertiaryContainer">#FFDAD0</color>
-    <color name="md_theme_dark_onTertiaryContainer">#400100</color>
+    <!-- Dark Tertiary -->
+    <color name="md_theme_dark_tertiary">#2AC6CD</color>
+    <color name="md_theme_dark_onTertiary">#00363B</color>
+    <color name="md_theme_dark_tertiaryContainer">#004F54</color>
+    <color name="md_theme_dark_onTertiaryContainer">#AFFFFF</color>
 
     <!-- Dark Surface -->
     <color name="md_theme_dark_surface">#1C1B1F</color>
