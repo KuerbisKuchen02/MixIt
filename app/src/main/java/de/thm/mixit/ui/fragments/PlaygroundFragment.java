@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -349,6 +350,18 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             }
         }
         return null;
+    }
+
+    public boolean isInPlaygroundBounds(int x, int y) {
+        if(x  > playground.getWidth() || x < 0) return false;
+        else if (y > playground.getHeight() || y < 0) return false;
+        return true;
+    }
+
+    public boolean isInPlaygroundBounds(View v) {
+        if(v.getX() + v.getWidth() > playground.getWidth() || v.getX() < 0) return false;
+        else if (v.getY() + v.getHeight() > playground.getHeight() || v.getY() < 0) return false;
+        return true;
     }
 
     private class TouchListener implements View.OnTouchListener {
