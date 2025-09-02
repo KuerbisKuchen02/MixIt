@@ -22,6 +22,12 @@
     <color name="md_theme_light_surface">#FFFFFF</color>
     <color name="md_theme_light_onSurface">#1C1B1F</color>
 
+    <!-- Light Error -->
+    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#F9DEDC</color>
+    <color name="md_theme_light_onErrorContainer">#410E0B</color>
+
     <!-- Dark Primary -->
     <color name="md_theme_dark_primary">#E3B4F4</color>
     <color name="md_theme_dark_onPrimary">#500F69</color>
@@ -43,6 +49,12 @@
     <!-- Dark Surface -->
     <color name="md_theme_dark_surface">#1C1B1F</color>
     <color name="md_theme_dark_onSurface">#E6E1E5</color>
+
+    <!-- Dark Error -->
+    <color name="md_theme_dark_error">#F2B8B5</color>
+    <color name="md_theme_dark_onError">#601410</color>
+    <color name="md_theme_dark_errorContainer">#8C1D18</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
 
     <!-- FAB delete mode -->
     <color name="fab_on_drop_delete">#FF0000</color>

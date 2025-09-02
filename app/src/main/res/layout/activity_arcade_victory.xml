@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_arc_vic_return"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toBottomOf="@+id/button_arc_vic_new_game"
         app:layout_constraintWidth_percent="0.8" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_arc_vic_new_game"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,12 +37,12 @@
         app:layout_constraintTop_toBottomOf="@+id/text_arc_vic_turns"
         app:layout_constraintWidth_percent="0.8" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_arc_vic_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="time"
+        android:text="@string/arcade_victory_time"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_size_medium"
         app:drawableRightCompat="@drawable/baseline_hourglass_empty_24"
@@ -50,12 +50,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_arc_vic_turns"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="turns"
+        android:text="@string/arcade_victory_turns"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_size_medium"
         app:drawableRightCompat="@drawable/outline_barefoot_24"
@@ -64,7 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_arc_vic_static1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,19 +77,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_arc_vic_goal_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="goal word"
+        android:text="@string/arcade_victory_goal_word"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_size_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_arc_vic_static1" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_arc_vic_static2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

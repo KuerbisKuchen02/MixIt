@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,8 +32,8 @@ public class SettingsActivity
         extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
-    private Spinner spinnerTheme;
-    private Spinner spinnerLanguage;
+    private AutoCompleteTextView autoCompleteTextViewTheme;
+    private AutoCompleteTextView autoCompleteTextViewLanguage;
 
     /**
      * Binding spinner items to spinners.
@@ -43,16 +43,10 @@ public class SettingsActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Hide Action Bar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
         setContentView(R.layout.activity_settings);
 
-        // Language Spinner
-
-        spinnerLanguage = findViewById(R.id.spinner_settings_language);
+        // Language
+        autoCompleteTextViewLanguage = findViewById(R.id.dropdown_settings_language);
 
         ArrayAdapter<CharSequence> adapterLanguage = ArrayAdapter.createFromResource(
                 this, R.array.language_array, android.R.layout.simple_spinner_item
@@ -60,13 +54,14 @@ public class SettingsActivity
 
         adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinnerLanguage.setAdapter(adapterLanguage);
+        autoCompleteTextViewLanguage.setAdapter(adapterLanguage);
 
-        preselectLanguageSpinner();
+        preselectLanguage();
 
-        // Theme Spinner
+        autoCompleteTextViewLanguage.setOnItemClickListener(this::onItemSelected);
 
-        spinnerTheme = findViewById(R.id.spinner_settings_theme);
+        // Theme
+        autoCompleteTextViewTheme = findViewById(R.id.dropdown_settings_theme);
 
         ArrayAdapter<CharSequence> adapterTheme = ArrayAdapter.createFromResource(
                 this, R.array.theme_array, android.R.layout.simple_spinner_item
@@ -74,21 +69,20 @@ public class SettingsActivity
 
         adapterTheme.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinnerTheme.setAdapter(adapterTheme);
+        autoCompleteTextViewTheme.setAdapter(adapterTheme);
 
         // set initial selection based on current mode
-        preselectThemeSpinner();
+        preselectTheme();
 
-        spinnerLanguage.setOnItemSelectedListener(this);
-        spinnerTheme.setOnItemSelectedListener(this);
+        autoCompleteTextViewTheme.setOnItemClickListener(this::onItemSelected);
 
         Log.i(TAG, "SettingsActivity was created");
     }
 
     /**
-     * This method preselects the language spinner based on the set app language.
+     * This method preselects the language based on the set app language.
      */
-    private void preselectLanguageSpinner() {
+    private void preselectLanguage() {
         LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
 
         if (!currentLocales.isEmpty()) {
@@ -96,33 +90,33 @@ public class SettingsActivity
 
             switch (langTag) {
                 case "en":
-                    spinnerLanguage.setSelection(1);
+                    autoCompleteTextViewLanguage.setSelection(1);
                     break;
                 case "de":
-                    spinnerLanguage.setSelection(2);
+                    autoCompleteTextViewLanguage.setSelection(2);
                     break;
                 default:
-                    spinnerLanguage.setSelection(0);
+                    autoCompleteTextViewLanguage.setSelection(0);
                     break;
             }
         }
     }
 
     /**
-     * This Method preselects the theme spinner based on the uiModeManager mode.
+     * This Method preselects the theme based on the uiModeManager mode.
      * ref:
      * <a href="https://developer.android.com/develop/ui/views/theming/darktheme#change-themes">
      *     In app dark theme changes
      * </a>
      */
-    private void preselectThemeSpinner() {
+    private void preselectTheme() {
         int selection = 0; // System
         switch (AppCompatDelegate.getDefaultNightMode()) {
             case AppCompatDelegate.MODE_NIGHT_NO:  selection = 1; break; // Light
             case AppCompatDelegate.MODE_NIGHT_YES: selection = 2; break; // Dark
             default: // System
         }
-        spinnerTheme.setSelection(selection, false);
+        autoCompleteTextViewTheme.setSelection(selection);
     }
 
     /**
@@ -138,6 +132,7 @@ public class SettingsActivity
                         "dark".equals(themeValue)  ? AppCompatDelegate.MODE_NIGHT_YES : // Dark
                                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM // System
         );
+        recreate();
     }
 
     public void onResetProgressClicked(View view) {
@@ -147,9 +142,9 @@ public class SettingsActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int viewId = parent.getId();
+        int viewId = view.getId();
 
-        if (viewId == R.id.spinner_settings_language) {
+        if (viewId == R.id.dropdown_settings_language) {
             // "system", "en", "de"
             String[] values = getResources().getStringArray(R.array.language_values);
             String selectedLangTag = values[position];
@@ -164,7 +159,7 @@ public class SettingsActivity
             // ref:
             // https://developer.android.com/guide/topics/resources/app-languages#androidx-impl
             AppCompatDelegate.setApplicationLocales(locales);
-        } else if (viewId == R.id.spinner_settings_theme) {
+        } else if (viewId == R.id.dropdown_settings_theme) {
             // "system","light","dark"
             String[] values = getResources().getStringArray(R.array.theme_values);
 
