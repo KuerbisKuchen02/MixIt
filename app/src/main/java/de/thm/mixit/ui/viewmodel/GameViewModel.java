@@ -252,6 +252,13 @@ public class GameViewModel extends ViewModel {
 
     // TODO check with implementation of GameStateUseCase
     public void saveGameState() {
+        // Don't save game state if target element hasn't been loaded yet
+        // This prevents crashes when users immediately go back after starting a new arcade game
+        if (this.targetElement.getValue() == null) {
+            Log.i(TAG, "Skipping game state save: target element not yet loaded");
+            return;
+        }
+        
         this.gameStateRepository.saveGameState(new GameState(
                 Objects.requireNonNull(this.passedTime.getValue()),
                 Objects.requireNonNull(this.turns.getValue()),

@@ -217,6 +217,31 @@ public class GameViewModelTest {
         assertTrue(result.isEmpty());
     }
 
+    @Test
+    public void saveGameState_WithNullTargetElement_DoesNotCrash() {
+        // Arrange: Create a new ViewModel instance that simulates a fresh start
+        // without loading target element (which happens asynchronously)
+        mockElementRepositoryGetAll(Arrays.asList(
+                new Element("Wasser", "\uD83D\uDCA7"),
+                new Element("Erde", "\uD83C\uDF0D")));
+        mockStatisticRepositoryLoadStatistic();
+        
+        // Mock gameStateRepository to return false for hasSavedGameState
+        // This simulates starting a new game
+        doAnswer(invocation -> false).when(mockGameStateRepository).hasSavedGameState();
+        
+        GameViewModel testViewModel = new GameViewModel(mockCombinationRepository, 
+                mockElementRepository, mockElementUseCase, mockGameStateRepository, 
+                mockStatisticRepository);
+        
+        // Act: Call saveGameState immediately before target element is loaded
+        // This simulates the user pressing back right after starting arcade game
+        testViewModel.saveGameState();
+        
+        // Assert: No exception should be thrown, method should return gracefully
+        // The test passes if no exception is thrown
+    }
+
     private void mockElementRepositoryGetAll(List<Element> list) {
         doAnswer(invocation -> {
             Consumer<List<Element>> callback = invocation.getArgument(0);
