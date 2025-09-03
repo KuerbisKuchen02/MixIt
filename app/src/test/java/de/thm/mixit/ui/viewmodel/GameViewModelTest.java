@@ -227,8 +227,16 @@ public class GameViewModelTest {
         mockStatisticRepositoryLoadStatistic();
         
         // Mock gameStateRepository to return false for hasSavedGameState
-        // This simulates starting a new game
+        // This simulates starting a new game where targetElement is loaded asynchronously
         doAnswer(invocation -> false).when(mockGameStateRepository).hasSavedGameState();
+        
+        // Mock generateNewGoalWord to NOT call the callback immediately
+        // This simulates the real-world scenario where the async call hasn't completed yet
+        doAnswer(invocation -> {
+            // Do nothing - don't call the callback
+            // This leaves targetElement as null, simulating the race condition
+            return null;
+        }).when(mockElementRepository).generateNewGoalWord(any());
         
         GameViewModel testViewModel = new GameViewModel(mockCombinationRepository, 
                 mockElementRepository, mockElementUseCase, mockGameStateRepository, 
@@ -239,7 +247,8 @@ public class GameViewModelTest {
         testViewModel.saveGameState();
         
         // Assert: No exception should be thrown, method should return gracefully
-        // The test passes if no exception is thrown
+        // Verify that the gameStateRepository.saveGameState was NOT called
+        verify(mockGameStateRepository, times(0)).saveGameState(any());
     }
 
     private void mockElementRepositoryGetAll(List<Element> list) {
