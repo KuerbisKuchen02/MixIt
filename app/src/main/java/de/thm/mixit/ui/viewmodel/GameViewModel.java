@@ -165,6 +165,9 @@ public class GameViewModel extends ViewModel {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
                 Log.e(TAG, "An error occurred while combining: " + result.getError());
+                // Flag the elements to remove the ongoing animation
+                chip1.setAnimated(false);
+                chip2.setAnimated(false);
                 error.postValue(result.getError());
             } else {
                 Log.d(TAG, "Elements successfully combined.");
@@ -229,11 +232,19 @@ public class GameViewModel extends ViewModel {
     }
 
     public void save() {
+        assert turns.getValue() != null;
+        assert passedTime.getValue() != null;
+        assert elementsOnPlayground.getValue() != null;
+
+        // We need to reset this flag before persisting the elements to ensure
+        // that elements that are in an ongoing combination do not get stuck in an invalid state
+        // and can be recombined if the game is restarted
+        elementsOnPlayground.getValue().forEach(e -> e.setAnimated(false));
         gameStateUseCase.save(new GameState(
-                Objects.requireNonNull(this.passedTime.getValue()),
-                Objects.requireNonNull(this.turns.getValue()),
-                this.targetElement.getValue(),
-                Objects.requireNonNull(this.elementsOnPlayground.getValue())),
+                passedTime.getValue(),
+                turns.getValue(),
+                targetElement.getValue(),
+                elementsOnPlayground.getValue()),
                 statistics);
     }
 

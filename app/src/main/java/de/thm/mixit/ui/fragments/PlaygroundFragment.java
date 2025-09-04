@@ -68,8 +68,8 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
-            @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         this.inflater = inflater;
         FragmentPlaygroundBinding binding =
@@ -155,15 +155,13 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
             if (chip == null || !chip.isAnimated()) {
                 entry.getValue().cancel();
+                deletedIds.add(entry.getKey());
 
                 if (chip != null) {
-                    chip.setAnimated(false);
                     View v = playground.findViewWithTag(chip.getId());
                     v.setOnTouchListener(new TouchListener(chip));
                     v.setAlpha(1f);
                 }
-
-                deletedIds.add(entry.getKey());
             }
         }
 
@@ -376,6 +374,36 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return true;
     }
 
+    private void combine(View view1, View view2) {
+        ElementChip chip1 = Objects.requireNonNull(getChipById((int) view1.getTag()));
+        ElementChip chip2 = Objects.requireNonNull(getChipById((int) view2.getTag()));
+
+        // An element cannot be combined with an element
+        // that is already part of an ongoing combination.
+        if (chip1.isAnimated() || chip2.isAnimated()) return;
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(animateView(view1, chip1), animateView(view2, chip2));
+        set.start();
+
+        viewModel.combineElements(chip1, chip2);
+        viewModel.increaseTurnCounter();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private ObjectAnimator animateView(View view, ElementChip chip)
+    {
+        chip.setAnimated(true);
+        // while combining disable touch listener
+        view.setOnTouchListener((dummy, e) -> false);
+        ObjectAnimator fade = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.2f);
+        fade.setDuration(1000);
+        fade.setRepeatCount(ObjectAnimator.INFINITE);
+        fade.setRepeatMode(ObjectAnimator.REVERSE);
+        animations.put(chip.getId(), fade);
+        return fade;
+    }
+
     private class TouchListener implements View.OnTouchListener {
         float dX, dY;
         boolean isDragging;
@@ -434,46 +462,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                     if (!overlapsWithDeleteButton(v)){
                         View other = checkOverlap((TextView) v);
                         if(other != null){
-                            // while combining disable onTouchListener
-                            try {
-                                ElementChip firstChip = Objects.requireNonNull(
-                                        getChipById((int) v.getTag()));
-                                ElementChip secondChip = Objects.requireNonNull(
-                                        getChipById((int) other.getTag()));
-
-                                firstChip.setAnimated(true);
-                                secondChip.setAnimated(true);
-
-                                v.setOnTouchListener((dummy, e) -> false);
-                                other.setOnTouchListener((dummy, e) -> false);
-
-                                ObjectAnimator fade1 = ObjectAnimator.ofFloat(v, "alpha", 1f, 0.2f);
-                                ObjectAnimator fade2 = ObjectAnimator.ofFloat(other, "alpha", 1f, 0.2f);
-
-                                fade1.setDuration(1000);
-                                fade2.setDuration(1000);
-
-                                fade1.setRepeatCount(ObjectAnimator.INFINITE);
-                                fade2.setRepeatCount(ObjectAnimator.INFINITE);
-
-                                fade1.setRepeatMode(ObjectAnimator.REVERSE);
-                                fade2.setRepeatMode(ObjectAnimator.REVERSE);
-
-                                AnimatorSet set = new AnimatorSet();
-                                set.playTogether(fade1, fade2);
-                                set.start();
-
-                                animations.put(firstChip.getId(), fade1);
-                                animations.put(secondChip.getId(), fade2);
-
-                                viewModel.combineElements(
-                                        Objects.requireNonNull(firstChip),
-                                        Objects.requireNonNull(secondChip));
-                                viewModel.increaseTurnCounter();
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error while combining elements: "
-                                        + e.getMessage());
-                            }
+                            combine(v, other);
                         }
                     }
                     return true;
