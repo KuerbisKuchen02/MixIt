@@ -87,6 +87,7 @@
     <string name="achievement_desc_winner">Gewinne dein erstes Arcade Spiel</string>
     <string name="achievement_name_get_a_life">Such dir ein Job</string>
     <string name="achievement_desc_get_a_life">Spiele 5 Stunden</string>
+    <string name="dialog_reset_progress_close_button">Schließ den Fortschritt zurücksetzten Dialog</string>
     <string name="arcade_victory_time">Zeit</string>
     <string name="arcade_victory_turns">Züge</string>
     <string name="arcade_victory_goal_word">Zielwort</string>
