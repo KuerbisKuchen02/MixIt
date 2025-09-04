@@ -28,8 +28,7 @@ import de.thm.mixit.ui.fragments.DialogResetProgress;
  *
  * @author Jonathan Hildebrandt
  */
-public class SettingsActivity
-        extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class SettingsActivity extends AppCompatActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
     private AutoCompleteTextView autoCompleteTextViewTheme;
@@ -55,10 +54,12 @@ public class SettingsActivity
         adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         autoCompleteTextViewLanguage.setAdapter(adapterLanguage);
+        // Workaround Solution to prevent options to disappear
+        autoCompleteTextViewLanguage.setThreshold(Integer.MAX_VALUE);
 
-        preselectLanguage();
+        preselectLanguage(adapterLanguage);
 
-        autoCompleteTextViewLanguage.setOnItemClickListener(this::onItemSelected);
+        autoCompleteTextViewLanguage.setOnItemClickListener(this::onLanguageSelected);
 
         // Theme
         autoCompleteTextViewTheme = findViewById(R.id.dropdown_settings_theme);
@@ -70,11 +71,13 @@ public class SettingsActivity
         adapterTheme.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         autoCompleteTextViewTheme.setAdapter(adapterTheme);
+        // Workaround Solution to prevent options to disappear
+        autoCompleteTextViewTheme.setThreshold(Integer.MAX_VALUE);
 
         // set initial selection based on current mode
-        preselectTheme();
+        preselectTheme(adapterTheme);
 
-        autoCompleteTextViewTheme.setOnItemClickListener(this::onItemSelected);
+        autoCompleteTextViewTheme.setOnItemClickListener(this::onThemeSelected);
 
         Log.i(TAG, "SettingsActivity was created");
     }
@@ -82,24 +85,30 @@ public class SettingsActivity
     /**
      * This method preselects the language based on the set app language.
      */
-    private void preselectLanguage() {
+    private void preselectLanguage(ArrayAdapter<CharSequence> adapter) {
         LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
 
-        if (!currentLocales.isEmpty()) {
-            String langTag = Objects.requireNonNull(currentLocales.get(0)).toLanguageTag();
+        autoCompleteTextViewLanguage.post(() -> {
+            if (!currentLocales.isEmpty()) {
+                int selection = 0;
+                String langTag = Objects.requireNonNull(currentLocales.get(0)).toLanguageTag();
 
-            switch (langTag) {
-                case "en":
-                    autoCompleteTextViewLanguage.setSelection(1);
-                    break;
-                case "de":
-                    autoCompleteTextViewLanguage.setSelection(2);
-                    break;
-                default:
-                    autoCompleteTextViewLanguage.setSelection(0);
-                    break;
+                switch (langTag) {
+                    case "en": selection = 1; break;
+                    case "de": selection = 2; break;
+                    default: // System
+                }
+
+                if (selection < adapter.getCount()) {
+                    autoCompleteTextViewLanguage.setText(adapter.getItem(selection).toString(),
+                            false);
+                    Log.d(TAG, "Preselected language: " + adapter.getItem(selection));
+                } else {
+                    Log.e(TAG, "Index " + selection + " out of bounds, adapter count = " +
+                            adapter.getCount());
+                }
             }
-        }
+        });
     }
 
     /**
@@ -109,14 +118,25 @@ public class SettingsActivity
      *     In app dark theme changes
      * </a>
      */
-    private void preselectTheme() {
-        int selection = 0; // System
-        switch (AppCompatDelegate.getDefaultNightMode()) {
-            case AppCompatDelegate.MODE_NIGHT_NO:  selection = 1; break; // Light
-            case AppCompatDelegate.MODE_NIGHT_YES: selection = 2; break; // Dark
-            default: // System
-        }
-        autoCompleteTextViewTheme.setSelection(selection);
+    private void preselectTheme(ArrayAdapter<CharSequence> adapter) {
+        autoCompleteTextViewTheme.post(() -> {
+            int selection = 0;
+            switch (AppCompatDelegate.getDefaultNightMode()) {
+                case AppCompatDelegate.MODE_NIGHT_NO: selection = 1; break;
+                case AppCompatDelegate.MODE_NIGHT_YES: selection = 2; break;
+                default: // System
+
+            }
+            if (selection < adapter.getCount()) {
+                autoCompleteTextViewTheme.setText(adapter.getItem(selection).toString(),
+                        false);
+                Log.d(TAG, "Preselected theme: " + adapter.getItem(selection));
+            } else {
+                Log.e(TAG, "Index " + selection + " out of bounds, adapter count = " +
+                        adapter.getCount());
+            }
+
+        });
     }
 
     /**
@@ -140,35 +160,32 @@ public class SettingsActivity
         new DialogResetProgress().show(getSupportFragmentManager(), "DialogResetProgress");
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int viewId = view.getId();
+    public void onLanguageSelected(AdapterView<?> parent, View view, int position, long id) {
+        // "system", "en", "de"
+        String[] values = getResources().getStringArray(R.array.language_values);
+        String selectedLangTag = values[position];
 
-        if (viewId == R.id.dropdown_settings_language) {
-            // "system", "en", "de"
-            String[] values = getResources().getStringArray(R.array.language_values);
-            String selectedLangTag = values[position];
+        Log.d(TAG, "Language selected (tag): " + selectedLangTag);
 
-            Log.d(TAG, "Language selected (tag): " + selectedLangTag);
+        // if local is system, clear locale list if not set it to selected locale
+        LocaleListCompat locales = "system".equals(selectedLangTag)
+                ? LocaleListCompat.getEmptyLocaleList()
+                : LocaleListCompat.forLanguageTags(selectedLangTag);
 
-            // if local is system, clear locale list if not set it to selected locale
-            LocaleListCompat locales = "system".equals(selectedLangTag)
-                    ? LocaleListCompat.getEmptyLocaleList()
-                    : LocaleListCompat.forLanguageTags(selectedLangTag);
+        // ref:
+        // https://developer.android.com/guide/topics/resources/app-languages#androidx-impl
+        AppCompatDelegate.setApplicationLocales(locales);
+    }
 
-            // ref:
-            // https://developer.android.com/guide/topics/resources/app-languages#androidx-impl
-            AppCompatDelegate.setApplicationLocales(locales);
-        } else if (viewId == R.id.dropdown_settings_theme) {
-            // "system","light","dark"
-            String[] values = getResources().getStringArray(R.array.theme_values);
+    public void onThemeSelected(AdapterView<?> parent, View view, int position, long id) {
+        // "system","light","dark"
+        String[] values = getResources().getStringArray(R.array.theme_values);
 
-            String selectedTheme = values[position];
+        String selectedTheme = values[position];
 
-            applyTheme(selectedTheme);
+        applyTheme(selectedTheme);
 
-            Log.d(TAG, "Theme selected: " + selectedTheme);
-        }
+        Log.d(TAG, "Theme selected: " + selectedTheme);
     }
 
     public void onBackButtonClicked(View view){
@@ -177,5 +194,4 @@ public class SettingsActivity
         startActivity(intent);
     }
 
-    @Override public void onNothingSelected(AdapterView<?> parent) {}
 }
