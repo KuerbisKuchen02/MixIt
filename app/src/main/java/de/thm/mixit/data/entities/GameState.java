@@ -1,6 +1,6 @@
 package de.thm.mixit.data.entities;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import de.thm.mixit.data.model.ElementChip;
 
@@ -21,12 +21,12 @@ public class GameState {
     private long time;
     private int turns;
     private String[] goalElement;
-    private List<ElementChip> elementChips;
+    private ArrayList<ElementChip> elementChips;
 
     public GameState(long time,
                      int turns,
                      String[] goalElement,
-                     List<ElementChip> elementchips) {
+                     ArrayList<ElementChip> elementchips) {
         this.time = time;
         this.turns = turns;
         this.goalElement = goalElement;
@@ -45,7 +45,7 @@ public class GameState {
         return this.goalElement;
     }
 
-    public List<ElementChip> getElementChips() {
+    public ArrayList<ElementChip> getElementChips() {
         return this.elementChips;
     }
 
@@ -61,7 +61,7 @@ public class GameState {
         this.goalElement = element;
     }
 
-    public void setElementChips(List<ElementChip> elementChips) {
+    public void setElementChips(ArrayList<ElementChip> elementChips) {
         this.elementChips = elementChips;
     }
 

@@ -7,8 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.GameState;
@@ -62,7 +62,7 @@ public class GameStateDataSource {
         int turns;
         String rawJson;
         String[] goalElement = null;
-        List<ElementChip> elementChips = new ArrayList<>();
+        ArrayList<ElementChip> elementChips = new ArrayList<>();
 
         time = sp.getLong(PREF_TIME, 0L);
         turns = sp.getInt(PREF_TURNS, 0);

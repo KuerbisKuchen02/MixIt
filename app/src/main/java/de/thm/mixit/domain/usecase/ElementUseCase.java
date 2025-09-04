@@ -1,15 +1,14 @@
 package de.thm.mixit.domain.usecase;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.util.function.Consumer;
 
 import de.thm.mixit.data.entities.Combination;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
-import de.thm.mixit.data.model.Result;
 
 /**
  * Use case for handling element combinations in the Infinite Craft game.
@@ -35,9 +34,10 @@ public class ElementUseCase {
      * @param context The Android context used to create the repositories.
      * @param isArcade Whether the use case is called in endless or arcade mode.
      */
-    public ElementUseCase(Context context, boolean isArcade) {
-        this.combinationRepository = CombinationRepository.create(context, isArcade);
-        this.elementRepository = ElementRepository.create(context, isArcade);
+    public ElementUseCase(CombinationRepository combinationRepository,
+                          ElementRepository elementRepository) {
+        this.combinationRepository = combinationRepository;
+        this.elementRepository = elementRepository;
     }
 
     /**

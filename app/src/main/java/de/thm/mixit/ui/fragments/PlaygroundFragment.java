@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -38,6 +37,8 @@ import java.util.Random;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.exception.CombinationException;
+import de.thm.mixit.data.exception.InvalidGoalWordException;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
@@ -67,8 +68,8 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, 
-            @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         this.inflater = inflater;
         FragmentPlaygroundBinding binding =
@@ -106,39 +107,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 });
 
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
-        viewModel.getCombineError().observe(getViewLifecycleOwner(), error -> {
-            Log.d(TAG, "Registered new state after combining: " + error);
-            String text = "Something went wrong! Please check your internet connection.";
-
-            if (error != null) {
-                Snackbar.make(playground, text, 6000)
-                        .setBackgroundTint(Color.RED)
-                        .show();
-
-                ArrayList<Integer> deletedIds = new ArrayList<>();
-
-                for (Map.Entry<Integer, ObjectAnimator> entry : animations.entrySet()) {
-                    ElementChip chip = getChipById(entry.getKey());
-
-                    if (chip == null || !chip.isAnimated()) {
-                        entry.getValue().cancel();
-
-                        if (chip != null) {
-                            chip.setAnimated(false);
-                            View v = playground.findViewWithTag(chip.getId());
-                            v.setOnTouchListener(new TouchListener(chip));
-                            v.setAlpha(1f);
-                        }
-
-                        deletedIds.add(entry.getKey());
-                    }
-                }
-
-                for (Integer id : deletedIds) {
-                    animations.remove(id);
-                }
-            }
-        });
+        viewModel.getError().observe(getViewLifecycleOwner(), this::handleError);
 
         viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
             if (gameActivity.isArcade() && isWon) {
@@ -157,6 +126,48 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
 
         return binding.getRoot();
+    }
+
+    private void handleError(Throwable error) {
+        if (error == null) return;
+        Log.d(TAG, "An error occurred " + error);
+
+        String text;
+        if (error instanceof CombinationException) {
+            text = "Cannot combine elements! Please check your internet connection.";
+            cancelCombination();
+        } else if (error instanceof InvalidGoalWordException) {
+            text = "Cannot generate goal word! Please check your internet connection.";
+        } else {
+            text = "An error occurred!";
+        }
+
+        Snackbar.make(playground, text, 6000)
+                .setBackgroundTint(Color.RED)
+                .show();
+    }
+
+    private void cancelCombination() {
+        ArrayList<Integer> deletedIds = new ArrayList<>();
+
+        for (Map.Entry<Integer, ObjectAnimator> entry : animations.entrySet()) {
+            ElementChip chip = getChipById(entry.getKey());
+
+            if (chip == null || !chip.isAnimated()) {
+                entry.getValue().cancel();
+                deletedIds.add(entry.getKey());
+
+                if (chip != null) {
+                    View v = playground.findViewWithTag(chip.getId());
+                    v.setOnTouchListener(new TouchListener(chip));
+                    v.setAlpha(1f);
+                }
+            }
+        }
+
+        for (Integer id : deletedIds) {
+            animations.remove(id);
+        }
     }
 
     @Override
@@ -363,6 +374,36 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return true;
     }
 
+    private void combine(View view1, View view2) {
+        ElementChip chip1 = Objects.requireNonNull(getChipById((int) view1.getTag()));
+        ElementChip chip2 = Objects.requireNonNull(getChipById((int) view2.getTag()));
+
+        // An element cannot be combined with an element
+        // that is already part of an ongoing combination.
+        if (chip1.isAnimated() || chip2.isAnimated()) return;
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(animateView(view1, chip1), animateView(view2, chip2));
+        set.start();
+
+        viewModel.combineElements(chip1, chip2);
+        viewModel.increaseTurnCounter();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private ObjectAnimator animateView(View view, ElementChip chip)
+    {
+        chip.setAnimated(true);
+        // while combining disable touch listener
+        view.setOnTouchListener((dummy, e) -> false);
+        ObjectAnimator fade = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.2f);
+        fade.setDuration(1000);
+        fade.setRepeatCount(ObjectAnimator.INFINITE);
+        fade.setRepeatMode(ObjectAnimator.REVERSE);
+        animations.put(chip.getId(), fade);
+        return fade;
+    }
+
     private class TouchListener implements View.OnTouchListener {
         float dX, dY;
         boolean isDragging;
@@ -421,46 +462,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                     if (!overlapsWithDeleteButton(v)){
                         View other = checkOverlap((TextView) v);
                         if(other != null){
-                            // while combining disable onTouchListener
-                            try {
-                                ElementChip firstChip = Objects.requireNonNull(
-                                        getChipById((int) v.getTag()));
-                                ElementChip secondChip = Objects.requireNonNull(
-                                        getChipById((int) other.getTag()));
-
-                                firstChip.setAnimated(true);
-                                secondChip.setAnimated(true);
-
-                                v.setOnTouchListener((dummy, e) -> false);
-                                other.setOnTouchListener((dummy, e) -> false);
-
-                                ObjectAnimator fade1 = ObjectAnimator.ofFloat(v, "alpha", 1f, 0.2f);
-                                ObjectAnimator fade2 = ObjectAnimator.ofFloat(other, "alpha", 1f, 0.2f);
-
-                                fade1.setDuration(1000);
-                                fade2.setDuration(1000);
-
-                                fade1.setRepeatCount(ObjectAnimator.INFINITE);
-                                fade2.setRepeatCount(ObjectAnimator.INFINITE);
-
-                                fade1.setRepeatMode(ObjectAnimator.REVERSE);
-                                fade2.setRepeatMode(ObjectAnimator.REVERSE);
-
-                                AnimatorSet set = new AnimatorSet();
-                                set.playTogether(fade1, fade2);
-                                set.start();
-
-                                animations.put(firstChip.getId(), fade1);
-                                animations.put(secondChip.getId(), fade2);
-
-                                viewModel.combineElements(
-                                        Objects.requireNonNull(firstChip),
-                                        Objects.requireNonNull(secondChip));
-                                viewModel.increaseTurnCounter();
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error while combining elements: "
-                                        + e.getMessage());
-                            }
+                            combine(v, other);
                         }
                     }
                     return true;

@@ -80,23 +80,22 @@ public class GameActivity extends AppCompatActivity {
 
         this.startTime = System.currentTimeMillis();
         this.timeHandler = new Handler(Looper.getMainLooper());
-        this.timeHandler.post(updateTimerRunnable);
 
         Log.i(TAG, "GameActivity was created");
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        viewModel.saveGameState();
-        viewModel.saveStatistics();
+    protected void onResume() {
+        super.onResume();
+        viewModel.load();
+        timeHandler.post(updateTimerRunnable);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        viewModel.onDestroy();
+    protected void onPause() {
+        super.onPause();
         timeHandler.removeCallbacks(updateTimerRunnable);
+        viewModel.save();
     }
 
     /**

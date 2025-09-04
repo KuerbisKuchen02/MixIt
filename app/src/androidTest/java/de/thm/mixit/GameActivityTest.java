@@ -134,7 +134,7 @@ public class GameActivityTest {
                 .perform(RecyclerViewActions.actionOnItem(
                         withText(containsString("Feuer")), click()));
         // Check item on playground and duplicate
-        onView(withTagValue(is(0)))
+        onView(withTagValue(is(1)))
                 .check(matches(isDisplayed()))
                 .perform(doubleClick());
         // Check for two elements
@@ -155,7 +155,7 @@ public class GameActivityTest {
         onView(withId(R.id.recycler_game_item_list))
                 .perform(RecyclerViewActions.actionOnItem(
                         withText(containsString("Feuer")), click()));
-        onView(withTagValue(is(0)))
+        onView(withTagValue(is(1)))
                 .perform(doubleClick())
                 .perform(doubleClick())
                 .perform(dragFromTo(getView(clearButton)));
@@ -176,7 +176,7 @@ public class GameActivityTest {
         onView(withId(R.id.recycler_game_item_list))
                 .perform(RecyclerViewActions.actionOnItem(
                         withText(containsString("Feuer")), click()));
-        onView(withTagValue(is(0)))
+        onView(withTagValue(is(1)))
                 .perform(doubleClick())
                 .perform(doubleClick())
                 .perform(dragFromTo(getView(onView(withTagValue(is(1))))));
