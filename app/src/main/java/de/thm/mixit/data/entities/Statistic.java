@@ -99,8 +99,8 @@ public class Statistic {
 
     public boolean getFoundChocolateCake() { return this.foundChocolateCake; }
 
-    public void setPlaytime(long playTime) {
-        this.playtime = playTime;
+    public void addPlaytime(long playTime) {
+        this.playtime += playTime;
     }
 
     public void setNumberOfCombinations(long numberOfCombinations) {
