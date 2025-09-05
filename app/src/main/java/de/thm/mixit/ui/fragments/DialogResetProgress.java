@@ -4,18 +4,22 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import de.thm.mixit.R;
 import de.thm.mixit.data.repository.AchievementRepository;
@@ -29,6 +33,7 @@ import de.thm.mixit.data.repository.StatisticRepository;
  */
 public class DialogResetProgress extends DialogFragment {
 
+    private static final String TAG = DialogResetProgress.class.getSimpleName();
     GameStateRepository gameStateRepository;
     StatisticRepository statisticRepository;
     AchievementRepository achievementRepository;
@@ -47,15 +52,15 @@ public class DialogResetProgress extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_reset_progress, null);
 
-        EditText input = view.findViewById(R.id.editText_reset_progress_dialog_confirm);
-        Button confirm = view.findViewById(R.id.button_reset_progress_dialog_confirm);
+        TextInputLayout inputContainer = view.findViewById(R.id.textInputLayout_reset_progress);
+        TextInputEditText input = view.findViewById(R.id.editText_reset_progress_dialog_confirm);
+        MaterialButton confirm = view.findViewById(R.id.button_reset_progress_dialog_confirm);
         ImageButton close = view.findViewById(R.id.imageButton_reset_progress_dialog_close);
 
         final String REQUIRED = getString(R.string.mix_it);
 
-        int initialHintColor = input.getCurrentHintTextColor();
+        ColorStateList initialHintColor = inputContainer.getHintTextColor();
         int initialTextColor = input.getCurrentTextColor();
-        ColorStateList initialBackgroundTintList = input.getBackgroundTintList();
 
         close.setOnClickListener(v -> dismiss());
 
@@ -65,9 +70,9 @@ public class DialogResetProgress extends DialogFragment {
 
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // reset colors as user types
-                input.setBackgroundTintList(initialBackgroundTintList);
                 input.setTextColor(initialTextColor);
-                input.setHintTextColor(initialHintColor);
+                inputContainer.setHintTextColor(initialHintColor);
+                inputContainer.setDefaultHintTextColor(initialHintColor);
             }
 
             @Override public void afterTextChanged(android.text.Editable s) { /* no-op */ }
@@ -88,9 +93,21 @@ public class DialogResetProgress extends DialogFragment {
                 Toast.makeText(context, R.string.reset_success, Toast.LENGTH_SHORT).show();
 
             } else {
-                input.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
-                input.setTextColor(Color.RED);
-                input.setHintTextColor(Color.RED);
+                // Set the Error highlighting based on the current theme
+                int errorColor;
+                int nightModeFlag = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                if (nightModeFlag == Configuration.UI_MODE_NIGHT_NO) {
+                    errorColor = ContextCompat.getColor(context, R.color.md_theme_light_error);
+                } else if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
+                    errorColor = ContextCompat.getColor(context, R.color.md_theme_dark_error);
+                } else {
+                    Log.w(TAG, "Could not get the current configuration of the App Theme using light error colors.");
+                    errorColor = ContextCompat.getColor(context, R.color.md_theme_light_error);
+                }
+
+                input.setTextColor(errorColor);
+                inputContainer.setHintTextColor(ColorStateList.valueOf(errorColor));
+                inputContainer.setDefaultHintTextColor(ColorStateList.valueOf(errorColor));
             }
         });
 
