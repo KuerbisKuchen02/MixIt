@@ -115,8 +115,8 @@ public class SettingsViewModel extends ViewModel {
     public void load() {
         Log.d(TAG, "Loading saved Settings.");
         this.settings = settingsRepository.loadSettings();
-        this.language.setValue(settings.getLanguage());
-        this.theme.setValue(settings.getTheme());
+        setLanguage(settings.getLanguage());
+        setTheme(settings.getTheme());
     }
 
     public void save() {
