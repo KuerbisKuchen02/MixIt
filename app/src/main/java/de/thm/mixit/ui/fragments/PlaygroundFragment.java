@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -298,9 +299,20 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         clearElementsButton.setImageResource(R.drawable.ic_broom_24px);
         clearElementsButton.requestLayout();
         clearElementsButton.setAlpha(1f);
-        int color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
-        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
         showElementListButton.setClickable(true);
+
+        // Set the FAB color based on the current theme
+        int color;
+        int nightModeFlag = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeFlag == Configuration.UI_MODE_NIGHT_NO) {
+            color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
+        } else if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
+            color = ContextCompat.getColor(requireContext(), R.color.md_theme_dark_secondary);
+        } else {
+            Log.w(TAG, "Could not get the current configuration of the App Theme using light colors.");
+            color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
+        }
+        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
     /**
