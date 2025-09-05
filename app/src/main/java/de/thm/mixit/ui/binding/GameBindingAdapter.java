@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.Locale;
 
-import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Element;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
@@ -56,7 +55,7 @@ public class GameBindingAdapter {
 
         String time = String.format(
                 Locale.getDefault(),
-                view.getContext().getString(R.string.arcade_fragment_time),
+                "%02d:%02d:%02d",
                 hours, minutes, seconds);
         view.setText(time);
     }

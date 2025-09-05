@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
 
     <ImageView
         android:id="@+id/imageView_main_menu_icon"
@@ -19,12 +20,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_main_menu_endless"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:onClick="onEndlessGameButtonClicked"
         android:text="@string/main_menu_button_endless"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,22 +45,28 @@
         app:layout_constraintTop_toBottomOf="@id/button_main_menu_endless"
         app:layout_constraintWidth_percent="0.8">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_main_menu_arcade"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:onClick="onArcadeButtonClicked"
             android:text="@string/main_menu_button_arcade"
+            android:textSize="@dimen/text_size_medium"
             app:layout_constraintWidth_percent="0.8" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_main_menu_delete_arcade_savestate"
+            style="@style/Widget.Material3.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:onClick="onArcadeDeleteSaveStateButtonClicked"
-            android:drawableStart="@drawable/outline_delete_24" />
+            app:icon="@drawable/outline_delete_24"
+            app:iconGravity="start|end"
+            app:iconTint="?attr/colorOnPrimary" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,26 +79,27 @@
         app:layout_constraintTop_toBottomOf="@id/linearlayout_arcade_buttons"
         app:layout_constraintWidth_percent="0.8">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_main_menu_achievements"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
+            android:layout_weight="4"
             android:onClick="onAchievementsButtonClicked"
-            android:text="@string/main_menu_button_achievemnets" />
+            android:text="@string/main_menu_button_achievemnets"
+            android:textSize="@dimen/text_size_medium"/>
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_main_menu_settings"
-            android:layout_width="wrap_content"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:onClick="onSettingsButtonClicked"
-            android:text="@string/main_menu_button_settings" />
+            app:icon="@drawable/ic_outline_settings_24"
+            app:iconGravity="start|end"
+            app:iconTint="?attr/colorOnPrimary"/>
 
     </LinearLayout>
 

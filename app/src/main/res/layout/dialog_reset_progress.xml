@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="?attr/colorSurface">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView_reset_progress_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,13 +22,13 @@
         android:id="@+id/imageButton_reset_progress_dialog_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/screen_background_light_transparent"
+        android:background="?attr/colorSurface"
         android:contentDescription="@string/dialog_reset_progress_close_button"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
         app:layout_constraintEnd_toEndOf="@+id/textView_reset_progress_dialog_description"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView_reset_progress_dialog_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,22 +40,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_reset_progress_dialog_title" />
 
-    <EditText
-        android:id="@+id/editText_reset_progress_dialog_confirm"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_reset_progress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:ems="10"
         android:gravity="center"
-        android:hint="@string/mix_it"
-        android:importantForAutofill="no"
-        android:inputType="text"
         android:minHeight="48dp"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_reset_progress_dialog_description" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_reset_progress_dialog_description">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editText_reset_progress_dialog_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/mix_it"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_reset_progress_dialog_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,6 +70,5 @@
         android:text="@string/dialog_reset_progress_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_reset_progress_dialog_confirm" />
-
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout_reset_progress" />
 </androidx.constraintlayout.widget.ConstraintLayout>

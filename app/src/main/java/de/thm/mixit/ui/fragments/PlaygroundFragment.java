@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -91,7 +92,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 view -> {
                     if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
                     assert getActivity() != null;
-                    ((GameActivity) getActivity()).setElementListVisible(true);
+                    ((GameActivity) getActivity()).setElementListCardVisible(true);
                     showElementListButton.hide();
 
                     // Apply OnClickListener to playground as long as the Elementlist is visible
@@ -99,7 +100,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                             playgroundView -> {
                                 if (BuildConfig.DEBUG) Log.d(TAG, "tipped on playground fragment");
                                 assert getActivity() != null;
-                                ((GameActivity) getActivity()).setElementListVisible(false);
+                                ((GameActivity) getActivity()).setElementListCardVisible(false);
                                 showElementListButton.show();
                                 playground.setOnClickListener(null);
                             }
@@ -296,7 +297,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
      */
     private void whenItemIsPickedUp(){
         clearElementsButton.setImageResource(R.drawable.ic_remove_24px);
-        int color = ContextCompat.getColor(requireContext(), R.color.red);
+        int color = ContextCompat.getColor(requireContext(), R.color.fab_on_drop_delete);
         clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
         clearElementsButton.setAlpha(0.8f);
         showElementListButton.setClickable(false);
@@ -309,8 +310,20 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         clearElementsButton.setImageResource(R.drawable.ic_broom_24px);
         clearElementsButton.requestLayout();
         clearElementsButton.setAlpha(1f);
-        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
         showElementListButton.setClickable(true);
+
+        // Set the FAB color based on the current theme
+        int color;
+        int nightModeFlag = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightModeFlag == Configuration.UI_MODE_NIGHT_NO) {
+            color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
+        } else if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
+            color = ContextCompat.getColor(requireContext(), R.color.md_theme_dark_secondary);
+        } else {
+            Log.w(TAG, "Could not get the current configuration of the App Theme using light colors.");
+            color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
+        }
+        clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
     /**
