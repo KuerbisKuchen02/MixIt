@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="?attr/colorSurface">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView_reset_progress_dialog_title"
@@ -21,11 +22,11 @@
         android:id="@+id/imageButton_reset_progress_dialog_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/screen_background_light_transparent"
+        android:background="?attr/colorSurface"
         android:contentDescription="@string/dialog_reset_progress_close_button"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
         app:layout_constraintEnd_toEndOf="@+id/textView_reset_progress_dialog_description"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView_reset_progress_dialog_description"
