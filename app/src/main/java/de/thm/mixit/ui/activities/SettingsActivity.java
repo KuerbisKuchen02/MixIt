@@ -89,24 +89,28 @@ public class SettingsActivity extends AppCompatActivity {
         LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
 
         autoCompleteTextViewLanguage.post(() -> {
+            int selection;
+            String langTag;
+
             if (!currentLocales.isEmpty()) {
-                int selection = 0;
-                String langTag = Objects.requireNonNull(currentLocales.get(0)).toLanguageTag();
+                langTag = Objects.requireNonNull(currentLocales.get(0)).toLanguageTag();
+            } else {
+                langTag = "system";
+            }
 
-                switch (langTag) {
-                    case "en": selection = 1; break;
-                    case "de": selection = 2; break;
-                    default: // System
-                }
+            switch (langTag) {
+                case "en": selection = 1; break;
+                case "de": selection = 2; break;
+                default: selection = 0; break;
+            }
 
-                if (selection < adapter.getCount()) {
-                    autoCompleteTextViewLanguage.setText(adapter.getItem(selection).toString(),
-                            false);
-                    Log.d(TAG, "Preselected language: " + adapter.getItem(selection));
-                } else {
-                    Log.e(TAG, "Index " + selection + " out of bounds, adapter count = " +
-                            adapter.getCount());
-                }
+            if (selection < adapter.getCount()) {
+                autoCompleteTextViewLanguage.setText(adapter.getItem(selection).toString(),
+                        false);
+                Log.d(TAG, "Preselected language: " + adapter.getItem(selection));
+            } else {
+                Log.e(TAG, "Index " + selection + " out of bounds, adapter count = " +
+                        adapter.getCount());
             }
         });
     }
