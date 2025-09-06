@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.CombinationDao;
 import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.CombinationLocalDataSource;
 
@@ -94,7 +95,7 @@ public class CombinationRepository {
      * @param combination The Combination to insert.
      */
     public void insertCombination(Combination combination,
-                                  Consumer<Combination> callback) {
+                                  Consumer<Result<Combination>> callback) {
         // Order alphabetically when necessary
         if (combination.inputA.compareTo(combination.inputB) > 0) {
             String temp = combination.inputA;
