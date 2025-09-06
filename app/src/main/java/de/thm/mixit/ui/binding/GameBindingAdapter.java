@@ -49,9 +49,9 @@ public class GameBindingAdapter {
     @BindingAdapter("timestampText")
     public static void setTimestampAsHumanReadableString(@NonNull TextView view,
                                                          @NonNull Long timestamp) {
-        int seconds = (int) (timestamp / 1000) % 60;
-        int minutes = (int) (timestamp / (1000 * 60)) % 60;
-        int hours = (int) (timestamp / (1000 * 60 * 60));
+        int seconds = (int) (timestamp % 60);
+        int minutes = (int) (timestamp / 60 % 60);
+        int hours = (int) (timestamp / 3600);
 
         String time = String.format(
                 Locale.getDefault(),

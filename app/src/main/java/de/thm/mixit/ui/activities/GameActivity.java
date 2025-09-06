@@ -40,7 +40,6 @@ public class GameActivity extends AppCompatActivity {
     private static final String TAG = GameActivity.class.getSimpleName();
     private GameViewModel viewModel;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
-    private long startTime;
     private Handler timeHandler;
     private boolean isArcade = false;
     private boolean isNewGame = true;
@@ -81,7 +80,6 @@ public class GameActivity extends AppCompatActivity {
 
         setElementListCardVisible(false);
 
-        this.startTime = System.currentTimeMillis();
         this.timeHandler = new Handler(Looper.getMainLooper());
 
         Log.i(TAG, "GameActivity was created");
@@ -149,15 +147,8 @@ public class GameActivity extends AppCompatActivity {
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (isArcade) {
-                viewModel.setPassedTime(System.currentTimeMillis()
-                        - startTime
-                        - viewModel.getTimeToFetchGoalElement()
-                        + viewModel.getAlreadySavedPassedTime());
-            } else {
-                viewModel.setPassedTime(System.currentTimeMillis() - startTime
-                        + viewModel.getAlreadySavedPassedTime());
-            }
+            assert viewModel.getPassedTime().getValue() != null;
+            viewModel.setPassedTime(viewModel.getPassedTime().getValue() + 1);
 
             // Handler calls it again every second
             timeHandler.postDelayed(this, 1000);

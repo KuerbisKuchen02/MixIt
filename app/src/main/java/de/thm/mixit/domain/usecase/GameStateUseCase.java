@@ -71,7 +71,7 @@ public class GameStateUseCase {
 
     public void save(GameState gameState, Statistic statistics) {
         // Add playtime of session to sum of playtime
-        statistics.addPlaytime((gameState.getTime() - this.gameState.getTime()) / 1000);
+        statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
         this.gameState = gameState;
         this.statistics = statistics;
         gameStateRepository.saveGameState(gameState);
