@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.ElementDao;
 import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
-import de.thm.mixit.data.model.Result;
 
 
 /**
@@ -66,8 +66,9 @@ public class ElementRepository {
      *
      * @throws RuntimeException if the remote data source fails to generate new goal words.
      */
-    public void generateNewGoalWord(Consumer<Result<String[]>> callback) throws RuntimeException {
-        ElementRemoteDataSource.generateNewGoalWord(callback);
+    public void generateNewGoalWord(List<String> lastGoalWords,
+                                    Consumer<Result<String[]>> callback) throws RuntimeException {
+        ElementRemoteDataSource.generateNewGoalWord(lastGoalWords, callback);
     }
 
     /**

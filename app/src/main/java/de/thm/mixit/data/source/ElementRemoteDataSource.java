@@ -5,6 +5,7 @@ import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
@@ -69,6 +70,7 @@ public class ElementRemoteDataSource {
                     "Groß-/Kleinschreibung gemäß deutscher Rechtschreibung.\n" +
             "- **Wenn unsicher:** Nutze ausschließlich Flexions- und Kompositavarianten " +
                     "mit dem Zielwort als Bestandteil.\n" +
+            "- Das Zielwort darf KEIN Wort aus der folgenden Liste sein: %s" +
             "\n" +
             "Beispielausgabe:\n" +
             "Kerze, Kerzen, Wachskerze\n";
@@ -79,7 +81,7 @@ public class ElementRemoteDataSource {
     }
 
     private static boolean isValidGoalResponse(String response) {
-        return response.matches("^([a-zA-Z 0-9ÜüÄäÖö-]+, )+([a-zA-Z 0-9ÜüÄäÖö-]+)$");
+        return response.matches("^([a-zA-Z 0-9ÜüÄäÖöß-]+, )+([a-zA-Z 0-9ÜüÄäÖöß-]+)$");
     }
 
     /**
@@ -145,9 +147,10 @@ public class ElementRemoteDataSource {
      * - no choices
      * - an empty content
      */
-    public static void generateNewGoalWord(Consumer<Result<String[]>> callback) {
+    public static void generateNewGoalWord(List<String> lastGoalWords,
+                                           Consumer<Result<String[]>> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
-                .addDeveloperMessage(GOAL_WORD_PROMPT)
+                .addDeveloperMessage(String.format(GOAL_WORD_PROMPT, lastGoalWords.toString()))
                 .model(ChatModel.CHATGPT_4O_LATEST)
                 .build();
 

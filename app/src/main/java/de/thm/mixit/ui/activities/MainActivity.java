@@ -1,6 +1,5 @@
 package de.thm.mixit.ui.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,10 +7,13 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import de.thm.mixit.R;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
+import de.thm.mixit.data.repository.SettingsRepository;
 
 /**
  * Activity for the main menu.
@@ -20,32 +22,45 @@ import de.thm.mixit.data.repository.GameStateRepository;
  * Endless -> Starts the GameActivity in endless mode.
  * Arcade -> Starts the GameActivity in arcade mode.
  * Delete Arcade Save State -> Deletes the saved GameState of the Arcade Mode
- * Achievements -> Starts the AchievementsActivity. (Not implemented yet)
- * Settings _> Starts the SettingsActivity. (Not implemented yet)
+ * Achievements -> Starts the AchievementsActivity.
+ * Settings -> Starts the SettingsActivity.
  * </p>
  *
  * @author Jannik Heimann
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
     private GameStateRepository gameStateRepository;
+    private SettingsRepository settingsRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        gameStateRepository = GameStateRepository.create(this,true);
+        settingsRepository = SettingsRepository.create(this);
+
+        String currentTheme = settingsRepository.loadSettings().getTheme();
+
+        switch (currentTheme) {
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        gameStateRepository = GameStateRepository.create(this,true);
-
         Log.i(TAG, "MainActivity was created");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         // Show or hide delete Button for Arcade GameState depending on an existing saved GameState
         setVisibilityOfDeleteArcadeSaveStateButton(gameStateRepository.hasSavedGameState());
     }
