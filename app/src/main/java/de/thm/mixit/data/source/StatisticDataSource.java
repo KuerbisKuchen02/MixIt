@@ -3,6 +3,12 @@ package de.thm.mixit.data.source;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.thm.mixit.R;
 import de.thm.mixit.data.entities.Statistic;
 
@@ -28,6 +34,7 @@ public class StatisticDataSource {
     private static final String PREF_SHORTEST_TIME_TO_BEAT = "SHORTEST_TIME_TO_BEAT";
     private static final String PREF_FEWEST_TURNS_TO_BEAT = "FEWEST_TURNS_TO_BEAT";
     private static final String PREF_FOUND_CHOCOLATE_CAKE = "FOUND_CHOCOLATE_CAKE";
+    private static final String PREF_LAST_GOAL_WORDS = "LAST_GOAL_WORDS";
 
     /**
      * Creates a Shared Preference to store a GameState object.
@@ -51,6 +58,7 @@ public class StatisticDataSource {
      * @author Jannik Heimann
      */
     public Statistic loadStatistic() {
+        Gson gson = new Gson();
         long playtime = sp.getLong(PREF_TOTAL_PLAYTIME, 0L);
         long combinations = sp.getLong(PREF_TOTAL_COMBINATIONS, 0);
         String longestElement = sp.getString(PREF_LONGEST_ELEMENT, "");
@@ -62,10 +70,18 @@ public class StatisticDataSource {
         long shortestTimeToBeat = sp.getLong(PREF_SHORTEST_TIME_TO_BEAT, Long.MAX_VALUE);
         int fewestTurnsToBeat = sp.getInt(PREF_FEWEST_TURNS_TO_BEAT, Integer.MAX_VALUE);
         boolean foundChocolateCake = sp.getBoolean(PREF_FOUND_CHOCOLATE_CAKE, false);
+        String rawJson = sp.getString(PREF_LAST_GOAL_WORDS, null);
+        List<String> lastGoalWords;
+        if (rawJson != null) {
+            lastGoalWords = gson.fromJson(rawJson, new TypeToken<ArrayList<String>>(){}.getType());
+        } else {
+            lastGoalWords = new ArrayList<>();
+        }
 
         return new Statistic(playtime, combinations, longestElement, numUnlockedElements,
                 numDiscardedElements, mostDiscardedElements, mostElementCombinations,
-                arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat, foundChocolateCake);
+                arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat, foundChocolateCake,
+                lastGoalWords);
     }
 
     /**
@@ -75,6 +91,7 @@ public class StatisticDataSource {
      * @author Jannik Heimann
      */
     public void saveStatistic(Statistic statistic) {
+        Gson gson = new Gson();
         SharedPreferences.Editor spEditor = sp.edit();
         spEditor.putLong(PREF_TOTAL_PLAYTIME, statistic.getPlaytime());
         spEditor.putLong(PREF_TOTAL_COMBINATIONS, statistic.getNumberOfCombinations());
@@ -88,6 +105,7 @@ public class StatisticDataSource {
         spEditor.putLong(PREF_SHORTEST_TIME_TO_BEAT, statistic.getShortestArcadeTimeToBeat());
         spEditor.putInt(PREF_FEWEST_TURNS_TO_BEAT, statistic.getFewestArcadeTurnsToBeat());
         spEditor.putBoolean(PREF_FOUND_CHOCOLATE_CAKE, statistic.getFoundChocolateCake());
+        spEditor.putString(PREF_LAST_GOAL_WORDS, gson.toJson(statistic.getLastGoalWords()));
         spEditor.apply();
     }
 

@@ -1,6 +1,10 @@
 package de.thm.mixit.data.entities;
 
 
+import androidx.annotation.NonNull;
+
+import java.util.List;
+
 /**
  * Represents all collectable data of the Arcade and Endless Game mode.
  * It also serves as raw data used to track achievement progress.
@@ -29,6 +33,8 @@ package de.thm.mixit.data.entities;
  */
 
 public class Statistic {
+
+    private static final int NUMBER_OF_GOAL_WORDS_SAVED = 20;
     private long playtime;
     private long numberOfCombinations;
     private String longestElement;
@@ -41,6 +47,8 @@ public class Statistic {
     private int fewestArcadeTurnsToBeat;
     private boolean foundChocolateCake;
 
+    private final List<String> lastGoalWords;
+
     public Statistic(long playtime,
                      long numberOfCombinations,
                      String longestElement,
@@ -51,7 +59,8 @@ public class Statistic {
                      int arcadeGamesWon,
                      long shortestArcadeTimeToBeat,
                      int fewestArcadeTurnsToBeat,
-                     boolean foundChocolateCake) {
+                     boolean foundChocolateCake,
+                     List<String> lastGoalWords) {
         this.playtime = playtime;
         this.numberOfCombinations = numberOfCombinations;
         this.longestElement = longestElement;
@@ -63,6 +72,7 @@ public class Statistic {
         this.shortestArcadeTimeToBeat = shortestArcadeTimeToBeat;
         this.fewestArcadeTurnsToBeat = fewestArcadeTurnsToBeat;
         this.foundChocolateCake = foundChocolateCake;
+        this.lastGoalWords = lastGoalWords;
     }
 
     public long getPlaytime() {
@@ -98,6 +108,10 @@ public class Statistic {
     public int getFewestArcadeTurnsToBeat() { return this.fewestArcadeTurnsToBeat; }
 
     public boolean getFoundChocolateCake() { return this.foundChocolateCake; }
+
+    public List<String> getLastGoalWords() {
+        return lastGoalWords;
+    }
 
     public void addPlaytime(long playTime) {
         this.playtime += playTime;
@@ -150,10 +164,16 @@ public class Statistic {
         this.foundChocolateCake = foundChocolateCake;
     }
 
-    @Override
+    public void addGoalWord(String goalWords) {
+        lastGoalWords.add(goalWords);
+        if (lastGoalWords.size() > NUMBER_OF_GOAL_WORDS_SAVED) lastGoalWords.remove(0);
+    }
+
     /**
      * Override for Debug Purposes
      */
+    @NonNull
+    @Override
     public String toString() {
         return "Played Time: " + playtime + "\n" +
                 "Number of Combinations: " + numberOfCombinations + "\n" +
@@ -165,6 +185,7 @@ public class Statistic {
                 "Arcade Games Won: " + arcadeGamesWon + "\n" +
                 "Shortest Arcade Playtime: " + shortestArcadeTimeToBeat + "\n" +
                 "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat + "\n" +
-                "Discovered Chocolate Cake: " + foundChocolateCake;
+                "Discovered Chocolate Cake: " + foundChocolateCake + "\n" +
+                "Last " + NUMBER_OF_GOAL_WORDS_SAVED + " goal words: " + lastGoalWords.toString();
     }
 }
