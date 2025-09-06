@@ -1,5 +1,6 @@
 package de.thm.mixit.data.source;
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.function.Consumer;
 
 import de.thm.mixit.data.daos.CombinationDao;
 import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.data.exception.CombinationException;
+import de.thm.mixit.data.model.Result;
 
 /**
  * Local data source for accessing and modifying {@link Combination} data.
@@ -92,10 +95,17 @@ public class CombinationLocalDataSource {
      * @param combination The Combination to insert.
      */
     public void insertCombination(Combination combination,
-                                  Consumer<Combination> callback) {
+                                  Consumer<Result<Combination>> callback) {
         executor.execute(() -> {
-            combinationDAO.insertCombination(combination);
-            callback.accept(combination);
+            try {
+                combinationDAO.insertCombination(combination);
+                callback.accept(Result.success(combination));
+            } catch (SQLiteConstraintException e) {
+                callback.accept(Result.failure(
+                        new CombinationException("Combination already exists in database!")));
+            }
+
+
         });
     }
 

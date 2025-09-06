@@ -80,8 +80,7 @@ public class ElementUseCase {
                             return;
                         }
 
-                        handleGenerateNew(element1, element2, result.getData(),
-                                element -> callback.accept(Result.success(element)));
+                        handleGenerateNew(element1, element2, result.getData(), callback);
                     });
                 });
     }
@@ -97,7 +96,7 @@ public class ElementUseCase {
      * @param callback A callback to be executed with the resulting ElementEntity.
      */
     private void handleGenerateNew(Element element1, Element element2, Element newElement,
-                                   Consumer<Element> callback) {
+                                   Consumer<Result<Element>> callback) {
         Log.d(TAG, "Generated new element: " + newElement.emoji + " " + newElement.name);
 
         // Check if the new element already exists in the repository
@@ -134,12 +133,18 @@ public class ElementUseCase {
      */
     private void insertCombination(Element element1, Element element2,
                                    Element outputElement,
-                                   Consumer<Element> callback) {
+                                   Consumer<Result<Element>> callback) {
         combinationRepository.insertCombination(
                 new Combination(element1.toString(), element2.toString(), outputElement.id),
-                c -> {
-                    Log.d(TAG, "Combination inserted for: " + element1 + " + " + element2);
-                    callback.accept(outputElement);
+                result -> {
+                    if(result.isError()) {
+                        Log.d(TAG, "Combination could not be inserted for: "
+                                + element1 + " + " + element2);
+                        callback.accept(Result.failure(result.getError()));
+                    } else {
+                        Log.d(TAG, "Combination inserted for: " + element1 + " + " + element2);
+                        callback.accept(Result.success(outputElement));
+                    }
                 });
     }
 }
