@@ -48,6 +48,7 @@ public class GameViewModel extends ViewModel {
             new MutableLiveData<>();
     private final MutableLiveData<Throwable> error = new MutableLiveData<>();
     private long alreadySavedPassedTime;
+    private long timeToFetchGoalElement;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
@@ -68,6 +69,7 @@ public class GameViewModel extends ViewModel {
         this.elementsOnPlayground.setValue(new ArrayList<>());
         this.error.setValue(null);
         this.alreadySavedPassedTime = 0;
+        this.timeToFetchGoalElement = 0;
         this.turns.setValue(0);
         this.passedTime.setValue(0L);
         this.isWon.setValue(false);
@@ -182,9 +184,7 @@ public class GameViewModel extends ViewModel {
         return error;
     }
 
-    public void setPassedTime(Long time) {
-        passedTime.postValue(time);
-    }
+    public void setPassedTime(Long time) { passedTime.postValue(time); }
 
     public LiveData<Long> getPassedTime() {
         return passedTime;
@@ -194,6 +194,7 @@ public class GameViewModel extends ViewModel {
         return alreadySavedPassedTime;
     }
 
+    public long getTimeToFetchGoalElement() { return this.timeToFetchGoalElement; }
 
     public LiveData<Integer> getTurns() {
         return turns;
@@ -214,6 +215,8 @@ public class GameViewModel extends ViewModel {
     }
 
     public void load() {
+        long timestampLoadMethod = System.currentTimeMillis();
+
         loadElements();
 
         GameState gameState = gameStateUseCase.load(res -> {
@@ -221,6 +224,7 @@ public class GameViewModel extends ViewModel {
                 this.error.postValue(res.getError());
             }
             this.targetElement.postValue(res.getData().getGoalElement());
+            this.timeToFetchGoalElement = System.currentTimeMillis() - timestampLoadMethod;
         });
         this.elementsOnPlayground.postValue(gameState.getElementChips());
         this.turns.postValue(gameState.getTurns());

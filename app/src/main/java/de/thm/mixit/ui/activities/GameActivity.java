@@ -149,8 +149,15 @@ public class GameActivity extends AppCompatActivity {
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override
         public void run() {
-            viewModel.setPassedTime(System.currentTimeMillis() - startTime
-                    + viewModel.getAlreadySavedPassedTime());
+            if (isArcade) {
+                viewModel.setPassedTime(System.currentTimeMillis()
+                        - startTime
+                        - viewModel.getTimeToFetchGoalElement()
+                        + viewModel.getAlreadySavedPassedTime());
+            } else {
+                viewModel.setPassedTime(System.currentTimeMillis() - startTime
+                        + viewModel.getAlreadySavedPassedTime());
+            }
 
             // Handler calls it again every second
             timeHandler.postDelayed(this, 1000);
