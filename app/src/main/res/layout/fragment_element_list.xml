@@ -28,12 +28,13 @@
             android:id="@+id/auto_text_game_item_list_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:textColor="?attr/colorOnPrimaryContainer"
             android:drawableStart="@drawable/ic_search"
-            app:drawableTint="?attr/colorOnPrimaryContainer"
             android:hint="@string/game_element_list_search_hint"
-            app:elements="@{viewModel.elements}"/>
+            android:textColor="?attr/colorOnPrimaryContainer"
+            app:drawableTint="?attr/colorOnPrimaryContainer"
+            app:elements="@{viewModel.elements}" />
 
         <ScrollView
             android:layout_width="match_parent"
