@@ -133,35 +133,9 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
     public void onResume() {
         super.onResume();
 
-        View root = getView();
-        if (root != null) {
-            root.post(() -> {
-                // Check if any ElementChips are out of bounds,
-                // if so give them a new random position within the bounds
-               int width = root.getWidth();
-               int height = root.getHeight();
-               Log.d(TAG, "Width: " + width + " / Height: " + height);
-
-               for (ElementChip elementChip : currentElements) {
-                   TextView elementView = getTextViewFromElementChip(elementChip);
-                   if (elementView != null) {
-                       if (elementView.getX() + elementView.getWidth() > root.getWidth()
-                               || elementView.getY() + elementView.getHeight() > root.getHeight())
-                       {
-                           Log.d(TAG, "ElementChip " + elementChip.getElement().name
-                                   + " is out of bounds!");
-
-                           float[] newCords = getFreeSpace();
-                           elementChip.setX(newCords[0]);
-                           elementChip.setY(newCords[1]);
-                           elementView.setX(newCords[0]);
-                           elementView.setY(newCords[1]);
-
-                       }
-                   }
-
-               }
-            });
+        // Check if elements were placed out of bounds e.g. after a change of orientation
+        if (getView()!= null) {
+            getView().post(this::checkForOutOfBoundsElements);
         }
     }
 
@@ -409,6 +383,40 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             }
         }
         return null;
+    }
+
+    /**
+     * checks whether all TextViews corresponding to the ElementChips on the playground are
+     * within the bounds of the playground and therefore visible for the player.
+     */
+    private void checkForOutOfBoundsElements() {
+        // Check if any ElementChips are out of bounds,
+        // if so give them a new random position within the bounds
+        View root = getView();
+        if (root != null) {
+            int width = root.getWidth();
+            int height = root.getHeight();
+            Log.d(TAG, "Width: " + width + " / Height: " + height);
+
+            for (ElementChip elementChip : currentElements) {
+                TextView elementView = getTextViewFromElementChip(elementChip);
+                if (elementView != null) {
+                    if (elementView.getX() + elementView.getWidth() > root.getWidth()
+                            || elementView.getY() + elementView.getHeight() > root.getHeight())
+                    {
+                        Log.d(TAG, "ElementChip " + elementChip.getElement().name
+                                + " is out of bounds!");
+
+                        float[] newCords = getFreeSpace();
+                        elementChip.setX(newCords[0]);
+                        elementChip.setY(newCords[1]);
+                        elementView.setX(newCords[0]);
+                        elementView.setY(newCords[1]);
+
+                    }
+                }
+            }
+        }
     }
 
     /**
