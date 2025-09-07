@@ -78,6 +78,8 @@
             app:backgroundTint="?attr/colorSurface"
             app:borderWidth="0dp"
             app:elevation="0dp"
+            app:fabCustomSize="32dp"
+            app:fabSize="auto"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:rippleColor="@android:color/transparent"
