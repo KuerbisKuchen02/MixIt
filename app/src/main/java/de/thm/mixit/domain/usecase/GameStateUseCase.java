@@ -71,7 +71,7 @@ public class GameStateUseCase {
 
     public void save(GameState gameState, Statistic statistics) {
         // Add playtime of session to sum of playtime
-        statistics.addPlaytime((gameState.getTime() - this.gameState.getTime()) / 1000);
+        statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
         // If the goal word wasn't recorded, add it to the list of the last goal words
         List<String> lastGoalWords = statistics.getLastGoalWords();
         if (lastGoalWords.isEmpty()

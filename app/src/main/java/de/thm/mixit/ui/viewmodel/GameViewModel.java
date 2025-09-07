@@ -47,7 +47,6 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<ElementChip>> elementsOnPlayground =
             new MutableLiveData<>();
     private final MutableLiveData<Throwable> error = new MutableLiveData<>();
-    private long alreadySavedPassedTime;
     private final MutableLiveData<Long> passedTime = new MutableLiveData<>();
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
@@ -67,7 +66,6 @@ public class GameViewModel extends ViewModel {
         this.filteredElements.addSource(searchQuery, query -> filter());
         this.elementsOnPlayground.setValue(new ArrayList<>());
         this.error.setValue(null);
-        this.alreadySavedPassedTime = 0;
         this.turns.setValue(0);
         this.passedTime.setValue(0L);
         this.isWon.setValue(false);
@@ -183,17 +181,14 @@ public class GameViewModel extends ViewModel {
     }
 
     public void setPassedTime(Long time) {
+        // Don't increase the counter if no goal is generated
+        if (targetElement.getValue() == null) return;
         passedTime.postValue(time);
     }
 
     public LiveData<Long> getPassedTime() {
         return passedTime;
     }
-
-    public long getAlreadySavedPassedTime() {
-        return alreadySavedPassedTime;
-    }
-
 
     public LiveData<Integer> getTurns() {
         return turns;
@@ -224,7 +219,7 @@ public class GameViewModel extends ViewModel {
         });
         this.elementsOnPlayground.postValue(gameState.getElementChips());
         this.turns.postValue(gameState.getTurns());
-        this.alreadySavedPassedTime = gameState.getTime();
+        this.passedTime.postValue(gameState.getTime());
         this.targetElement.postValue(gameState.getGoalElement());
 
         this.statistics = gameStateUseCase.getStatistics();
@@ -278,6 +273,9 @@ public class GameViewModel extends ViewModel {
      * @param newWord           The word which must be inside targetElements in order to win.
      */
     private void checkIsWon(String[] targetWords, String newWord) {
+        assert passedTime.getValue() != null;
+        assert turns.getValue() != null;
+
         if (targetWords == null) return;
         if (ArcadeGoalChecker.matchesTargetElement(targetWords, newWord)) {
             Log.d(TAG, newWord + " matches " + Arrays.toString(targetElement.getValue()));
@@ -285,7 +283,7 @@ public class GameViewModel extends ViewModel {
 
             // Set Statistics
             statistics.setArcadeGamesWon(statistics.getArcadeGamesWon() + 1);
-            statistics.setShortestArcadeTimeToBeat(passedTime.getValue() / 1000);
+            statistics.setShortestArcadeTimeToBeat(passedTime.getValue());
             statistics.setFewestArcadeTurnsToBeat(turns.getValue());
         }
     }
