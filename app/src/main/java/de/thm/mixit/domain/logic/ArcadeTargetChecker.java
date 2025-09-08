@@ -13,8 +13,8 @@ public class ArcadeTargetChecker {
      * Checks if a word is the one which is searched for inside an Arcade Session. The word
      * is compared to multiple synonyms of the given target word. Comparison is case-insensitive.
      *
-     * @param targetWords An {@code ArrayList}, containing the actual target word, as well as synonyms
-     *                  of it.
+     * @param targetWords An {@code ArrayList}, containing the actual target word,
+     *                    as well as synonyms of it.
      * @param word      The word to be checked against all target-word variations.
      * @return          A {@code boolean} representing if the given word is the word
      *                  which should be found.
