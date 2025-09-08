@@ -211,12 +211,15 @@ public class GameViewModel extends ViewModel {
     public void load() {
         loadElements();
 
-        GameState gameState = gameStateUseCase.load(res -> {
+        gameStateUseCase.load(res -> {
             if (res.isError()){
                 this.error.postValue(res.getError());
             }
             this.targetElement.postValue(res.getData().getTargetElement());
         });
+
+        GameState gameState = this.gameStateUseCase.getGameState();
+
         this.elementsOnPlayground.postValue(gameState.getElementChips());
         this.turns.postValue(gameState.getTurns());
         this.passedTime.postValue(gameState.getTime());

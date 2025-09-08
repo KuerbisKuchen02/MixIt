@@ -16,6 +16,11 @@ import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 
+/**
+ * Use case for handling the game state for the game view model.
+ *
+ * @author Josia Menger
+ */
 public class GameStateUseCase {
     private static final String TAG = GameStateUseCase.class.getSimpleName();
     private final CombinationRepository combinationRepository;
@@ -25,6 +30,15 @@ public class GameStateUseCase {
     private Statistic statistics;
     private GameState gameState;
 
+    /**
+     * Constructor for CombinationUseCase.
+     * Initializes the repositories needed for game state operations
+     * @param combinationRepository The combination repository
+     *                              that is used for managing combinations.
+     * @param elementRepository The element repository that is used for managing elements.
+     * @param gameStateRepository The game state repository that is used for managing combinations.
+     * @param statisticRepository The statistic repository that is used for managing combinations.
+     */
     public GameStateUseCase(CombinationRepository combinationRepository,
                             ElementRepository elementRepository,
                             GameStateRepository gameStateRepository,
@@ -35,19 +49,36 @@ public class GameStateUseCase {
         this.statisticRepository = statisticRepository;
     }
 
+    /**
+     * Returns the loaded or saved game state
+     * @return {@link GameState}
+     */
     public GameState getGameState() {
         return gameState;
     }
 
+    /**
+     * Returns all elements from the repository
+     * @param callback the current list of elements
+     */
     public void getAllElements(Consumer<List<Element>> callback) {
         elementRepository.getAll(callback);
     }
 
+    /**
+     * Returns the loaded or saved statistics
+     * @return {@link Statistic}
+     */
     public Statistic getStatistics() {
         return statistics;
     }
 
-    public GameState load(Consumer<Result<GameState>> callback) {
+    /**
+     * Loads the game state and statistics from the repository.
+     * If there is no target word, a new one will be fetched from the repository.
+     * @param callback the loaded game state or an error
+     */
+    public void load(Consumer<Result<GameState>> callback) {
         statistics = statisticRepository.loadStatistic();
         gameState = gameStateRepository.loadGameState();
         ElementChip.setId(gameState.getHighestElementChipID() + 1);
@@ -63,12 +94,17 @@ public class GameStateUseCase {
                 gameState.setTargetElement(res.getData());
                 callback.accept(Result.success(gameState));
             });
-
         }
-
-        return gameState;
     }
 
+    /**
+     * Saves the game state and statistics to the repository.
+     * Updates the statistics with the playtime of the session,
+     * the last target words, the most combinations for one element,
+     * the number of unlocked elements and whether the chocolate cake was found.
+     * @param gameState the current game state
+     * @param statistics the current statistics
+     */
     public void save(GameState gameState, Statistic statistics) {
         // Add playtime of session to sum of playtime
         statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
