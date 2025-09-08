@@ -16,7 +16,7 @@ public class ArcadeTargetCheckerUnitTest {
     public void matchesTargetElement_correctElement_returnsTrue() {
         // Given
         String[] targetWords = {
-                "Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte"
+                "Schokokuchen", "Schokoladenkuchen", "Schoolteacher", "Interscholastic"
         };
         String word = "Schokokuchen";
 
@@ -31,9 +31,9 @@ public class ArcadeTargetCheckerUnitTest {
     public void matchesTargetElement_wrongElement_returnsFalse() {
         // Given
         String[] targetWords = {
-                "Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte"
+                "Schokokuchen", "Schokoladenkuchen", "Schoolteacher", "Interscholastic"
         };
-        String word = "Erdbeerkuchen";
+        String word = "Lebkuchen";
 
         // When
         boolean isContained = ArcadeTargetChecker.matchesTargetElement(targetWords, word);
