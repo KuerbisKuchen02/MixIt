@@ -13,10 +13,10 @@
     <color name="md_theme_light_onSecondaryContainer">#3E4850</color>
 
     <!-- Light Tertiary -->
-    <color name="md_theme_light_tertiary">#FFA6C8</color>
-    <color name="md_theme_light_onTertiary">#6E535F</color>
-    <color name="md_theme_light_tertiaryContainer">#FFEBF3</color>
-    <color name="md_theme_light_onTertiaryContainer">#820032</color>
+    <color name="md_theme_light_tertiary">#B28DC8</color>
+    <color name="md_theme_light_onTertiary">#DBC9E5</color>
+    <color name="md_theme_light_tertiaryContainer">#EDEFF1</color>
+    <color name="md_theme_light_onTertiaryContainer">#3E4850</color>
 
     <!-- Light Surface -->
     <color name="md_theme_light_surface">#FFFFFF</color>
@@ -41,7 +41,7 @@
     <color name="md_theme_dark_onSecondaryContainer">#61B4FD</color>
 
     <!-- Dark Tertiary -->
-    <color name="md_theme_dark_tertiary">#FF0464</color>
+    <color name="md_theme_dark_tertiary">#FF66A0</color>
     <color name="md_theme_dark_onTertiary">#610025</color>
     <color name="md_theme_dark_tertiaryContainer">#820032</color>
     <color name="md_theme_dark_onTertiaryContainer">#FFC8DD</color>
