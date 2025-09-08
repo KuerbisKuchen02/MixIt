@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import de.thm.mixit.data.model.ElementChip;
 
 /**
- * Represents the data of the GameState of the Arcade and Endless Game mode
+ * Represents the data of the GameState, of the Arcade Game mode and Endless Game mode.
  * <p>
  * {@code time} Passed playtime.
  * <br>
@@ -18,19 +18,19 @@ import de.thm.mixit.data.model.ElementChip;
  * @author Jannik Heimann
  */
 public class GameState {
-    private long time;
-    private int turns;
+    private final long time;
+    private final int turns;
     private String[] targetElement;
-    private ArrayList<ElementChip> elementChips;
+    private final ArrayList<ElementChip> elementChips;
 
     public GameState(long time,
                      int turns,
                      String[] targetElement,
-                     ArrayList<ElementChip> elementchips) {
+                     ArrayList<ElementChip> elementChips) {
         this.time = time;
         this.turns = turns;
         this.targetElement = targetElement;
-        this.elementChips = elementchips;
+        this.elementChips = elementChips;
     }
 
     public long getTime() {
@@ -49,20 +49,8 @@ public class GameState {
         return this.elementChips;
     }
 
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public void setTurns(int turns) {
-        this.turns = turns;
-    }
-
     public void setTargetElement(String[] element) {
         this.targetElement = element;
-    }
-
-    public void setElementChips(ArrayList<ElementChip> elementChips) {
-        this.elementChips = elementChips;
     }
 
     public int getHighestElementChipID() {

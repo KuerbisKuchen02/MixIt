@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 /**
- * Represents one Element inside the database
+ * Represents one Element inside the database.
  * <p>
- * {@code id} The primary key. Is automatically generated
+ * {@code id} The primary key. Which is automatically generated.
  * <br>
  * {@code output} A String representing the element's name.
  * <br>

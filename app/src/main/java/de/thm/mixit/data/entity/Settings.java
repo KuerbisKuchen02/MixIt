@@ -1,11 +1,11 @@
 package de.thm.mixit.data.entity;
 
 /**
- * Represents all savable data from the user Settings
+ * Represents all savable data from the user Settings.
  * <p>
- * {@code language} The language of the Application
+ * {@code language} The language of the Application.
  * <br>
- * {@code theme} The theme of teh Application (Light or Dark)
+ * {@code theme} The theme of the Application (Light or Dark).
  *
  * @author Jannik Heimann
  */

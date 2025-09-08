@@ -7,7 +7,7 @@ import androidx.room.Index;
 
 /**
  * Represents a Combination of two inputs to create a new element. Contains one composite
- * primary-key. Can contain a reference to one {@link Element}
+ * primary-key. Can contain a reference to one {@link Element}.
  * <p>
  * {@code inputA} First part of the primary-key.
  * <br>

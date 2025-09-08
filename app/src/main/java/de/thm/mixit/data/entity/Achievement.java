@@ -7,8 +7,8 @@ package de.thm.mixit.data.entity;
  * @author Justin Wolek
  */
 public abstract class Achievement {
-    private int nameResId;
-    private int descriptionResId;
+    private final int nameResId;
+    private final int descriptionResId;
 
     public Achievement(int nameResId, int descriptionResId) {
         this.nameResId = nameResId;
@@ -25,11 +25,4 @@ public abstract class Achievement {
         return descriptionResId;
     }
 
-    public void setNameResId(int nameResId) {
-        this.nameResId = nameResId;
-    }
-
-    public void setDescriptionResId(int descriptionResId) {
-        this.descriptionResId = descriptionResId;
-    }
 }

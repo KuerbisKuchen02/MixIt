@@ -46,7 +46,6 @@ public class Statistic {
     private long shortestArcadeTimeToBeat;
     private int fewestArcadeTurnsToBeat;
     private boolean foundChocolateCake;
-
     private final List<String> lastTargetWords;
 
     public Statistic(long playtime,
@@ -170,7 +169,7 @@ public class Statistic {
     }
 
     /**
-     * Override for Debug Purposes
+     * Override for Debug Purposes.
      */
     @NonNull
     @Override
@@ -178,7 +177,7 @@ public class Statistic {
         return "Played Time: " + playtime + "\n" +
                 "Number of Combinations: " + numberOfCombinations + "\n" +
                 "Longest Element: " + longestElement + "\n" +
-                "Number of unlocked Elememts: " + numberOfUnlockedElements + "\n" +
+                "Number of unlocked Elements: " + numberOfUnlockedElements + "\n" +
                 "Total Discarded Elements: " +  numberOfDiscardedElements + "\n" +
                 "Most Discarded Elements: " + mostDiscardedElements + "\n" +
                 "Most Combinations for one Element: " + mostCombinationsForOneElement + "\n" +
