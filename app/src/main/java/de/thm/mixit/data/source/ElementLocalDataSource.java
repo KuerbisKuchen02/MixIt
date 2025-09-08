@@ -100,7 +100,7 @@ public class ElementLocalDataSource {
                     new Element("Wasser", "\uD83D\uDCA7"),
                     new Element("Erde", "\uD83C\uDF0D"),
                     new Element("Feuer", "\uD83D\uDD25"),
-                    new Element("Luft", "\uD83C\uDF2C\uFE0F")
+                    new Element("Luft", "\uD83C\uDF2C️")
             );
             elementDAO.insertAll(elements);
         });
