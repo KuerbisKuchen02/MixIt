@@ -6,18 +6,18 @@ import android.content.SharedPreferences;
 import de.thm.mixit.data.entity.Settings;
 
 /**
- * Local data source for accessing the Settings data using ShardedPreferences.
+ * Local data source for accessing the Settings data using SharedPreferences.
  * <p>
  * This class handles the saving and loading of Settings Data.
- * It defines Keys and uses them to safe the corresponding data in a Shared preference.
+ * It defines keys and uses them to safe the corresponding data in a SharedPreference.
  *
  * @author Jannik Heimann
  */
 public class SettingsLocalDataSource {
-    private final SharedPreferences sp;
     private static final String FILEPATH = "de.thm.mixit.SETTINGS_FILE";
     private static final String PREF_LANGUAGE = "LANGUAGE";
     private static final String PREF_THEME = "THEME";
+    private final SharedPreferences sp;
 
 
     public SettingsLocalDataSource(Context context) {
@@ -27,7 +27,7 @@ public class SettingsLocalDataSource {
     }
 
     /**
-     * Loads the saved Settings from the Shared Preference object of the class.
+     * Loads the saved Settings from the SharedPreference object of the class.
      * @return {@link Settings}
      *
      * @author Jannik Heimann
@@ -40,7 +40,7 @@ public class SettingsLocalDataSource {
     }
 
     /**
-     * Saves the given Settings to the corresponding class Shared Preferences object.
+     * Saves the given Settings to the corresponding class SharedPreferences object.
      * @param settings Settings data to save.
      *
      * @author Jannik Heimann
@@ -53,7 +53,7 @@ public class SettingsLocalDataSource {
     }
 
     /**
-     * Deletes all saved data within the corresponding Shared Preferences Object.
+     * Deletes all saved data within the corresponding SharedPreferences object.
      *
      * @author Jannik Heimann
      */
