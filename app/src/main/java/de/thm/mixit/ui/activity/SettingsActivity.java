@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.activities;
+package de.thm.mixit.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.ui.fragments.DialogResetProgress;
-import de.thm.mixit.ui.viewmodel.SettingsViewModel;
 import de.thm.mixit.databinding.ActivitySettingsBinding;
+import de.thm.mixit.ui.fragment.DialogResetProgress;
+import de.thm.mixit.ui.viewmodel.SettingsViewModel;
 
 /**
  * Activity for the settings view.

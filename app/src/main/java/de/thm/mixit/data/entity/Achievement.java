@@ -1,4 +1,4 @@
-package de.thm.mixit.data.entities;
+package de.thm.mixit.data.entity;
 
 /**
  * Represents a generic Achievement. Meant to be extended to implement individual logic.

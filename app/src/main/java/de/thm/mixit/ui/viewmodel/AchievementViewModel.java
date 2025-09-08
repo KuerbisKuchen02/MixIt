@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.Objects;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Achievement;
-import de.thm.mixit.data.entities.BinaryAchievement;
-import de.thm.mixit.data.entities.ProgressAchievement;
-import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.entity.Achievement;
+import de.thm.mixit.data.entity.BinaryAchievement;
+import de.thm.mixit.data.entity.ProgressAchievement;
+import de.thm.mixit.data.entity.Statistic;
 import de.thm.mixit.data.repository.AchievementRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 
 /**
- * UI state for the {@link de.thm.mixit.ui.activities.AchievementActivity}
+ * UI state for the {@link de.thm.mixit.ui.activity.AchievementActivity}
  *
  * Use the {@link AchievementViewModel.Factory} to get a new AchievementViewModel instance
  *

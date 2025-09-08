@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.fragments;
+package de.thm.mixit.ui.fragment;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import java.util.Random;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.exception.CombinationException;
 import de.thm.mixit.data.exception.InvalidGoalWordException;
 import de.thm.mixit.data.model.ElementChip;
@@ -48,8 +47,8 @@ import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
 import de.thm.mixit.domain.logic.GenericListChangeHandler;
 import de.thm.mixit.domain.logic.GenericListUpdateCallback;
-import de.thm.mixit.ui.activities.ArcadeVictoryActivity;
-import de.thm.mixit.ui.activities.GameActivity;
+import de.thm.mixit.ui.activity.ArcadeVictoryActivity;
+import de.thm.mixit.ui.activity.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**

@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Achievement;
-import de.thm.mixit.data.entities.BinaryAchievement;
-import de.thm.mixit.data.entities.ProgressAchievement;
+import de.thm.mixit.data.entity.Achievement;
+import de.thm.mixit.data.entity.BinaryAchievement;
+import de.thm.mixit.data.entity.ProgressAchievement;
 
 /**
  * Local data source for accessing the Achievement data using ShardedPreferences.

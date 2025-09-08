@@ -4,8 +4,8 @@ import android.util.Log;
 
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.entities.Combination;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Combination;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;

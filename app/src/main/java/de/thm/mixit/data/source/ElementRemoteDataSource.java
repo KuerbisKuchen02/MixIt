@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.exception.CombinationException;
 import de.thm.mixit.data.exception.InvalidGoalWordException;
 import de.thm.mixit.data.model.Result;

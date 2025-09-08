@@ -1,4 +1,4 @@
-package de.thm.mixit.data.entities;
+package de.thm.mixit.data.entity;
 
 /**
  * A ProgressAchievement represents an Achievement which has a progress associated which needs

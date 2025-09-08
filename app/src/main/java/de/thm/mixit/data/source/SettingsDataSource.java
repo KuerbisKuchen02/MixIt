@@ -3,7 +3,7 @@ package de.thm.mixit.data.source;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import de.thm.mixit.data.entities.Settings;
+import de.thm.mixit.data.entity.Settings;
 
 /**
  * Local data source for accessing the Settings data using ShardedPreferences.

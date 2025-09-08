@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.entity.Statistic;
 
 /**
  * Local data source for accessing the Statistic data using ShardedPreferences.

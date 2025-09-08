@@ -4,22 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Achievement;
-import de.thm.mixit.data.entities.ProgressAchievement;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.thm.mixit.R;
+import de.thm.mixit.data.entity.Achievement;
+import de.thm.mixit.data.entity.ProgressAchievement;
 
 /**
  * RecyclerViewAdapter used to display Achievement Entities

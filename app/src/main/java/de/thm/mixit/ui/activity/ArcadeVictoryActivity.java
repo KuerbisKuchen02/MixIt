@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.activities;
+package de.thm.mixit.ui.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import nl.dionsegijn.konfetti.core.Angle;

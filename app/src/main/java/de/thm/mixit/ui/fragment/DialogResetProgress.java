@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.fragments;
+package de.thm.mixit.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

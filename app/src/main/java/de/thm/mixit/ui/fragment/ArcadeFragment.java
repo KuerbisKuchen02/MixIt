@@ -1,4 +1,4 @@
-package de.thm.mixit.ui.fragments;
+package de.thm.mixit.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import de.thm.mixit.databinding.FragmentArcadeBinding;
-import de.thm.mixit.ui.activities.GameActivity;
+import de.thm.mixit.ui.activity.GameActivity;
 import de.thm.mixit.ui.viewmodel.GameViewModel;
 
 /**

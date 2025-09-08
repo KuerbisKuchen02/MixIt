@@ -26,17 +26,17 @@
                 android:value="true" />
         </service>
 
-        <activity android:name=".ui.activities.MainActivity" android:exported="true" android:launchMode="singleInstancePerTask">
+        <activity android:name=".ui.activity.MainActivity" android:exported="true" android:launchMode="singleInstancePerTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.GameActivity"/>
-        <activity android:name=".ui.activities.AchievementActivity"/>
-        <activity android:name=".ui.activities.SettingsActivity"/>
-        <activity android:name=".ui.activities.ArcadeVictoryActivity"/>
+        <activity android:name=".ui.activity.GameActivity"/>
+        <activity android:name=".ui.activity.AchievementActivity"/>
+        <activity android:name=".ui.activity.SettingsActivity"/>
+        <activity android:name=".ui.activity.ArcadeVictoryActivity"/>
 
     </application>
 

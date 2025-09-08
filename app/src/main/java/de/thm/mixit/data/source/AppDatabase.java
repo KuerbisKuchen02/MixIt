@@ -8,10 +8,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import de.thm.mixit.data.daos.CombinationDao;
-import de.thm.mixit.data.daos.ElementDao;
-import de.thm.mixit.data.entities.Combination;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.dao.CombinationDao;
+import de.thm.mixit.data.dao.ElementDao;
+import de.thm.mixit.data.entity.Combination;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * Abstract Room database class

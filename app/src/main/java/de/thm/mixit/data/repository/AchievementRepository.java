@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import de.thm.mixit.data.entities.Achievement;
+import de.thm.mixit.data.entity.Achievement;
 import de.thm.mixit.data.source.AchievementDataSource;
 
 /**

@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
-import de.thm.mixit.data.entities.Settings;
+import de.thm.mixit.data.entity.Settings;
 import de.thm.mixit.data.repository.SettingsRepository;
 
 public class SettingsViewModel extends ViewModel {

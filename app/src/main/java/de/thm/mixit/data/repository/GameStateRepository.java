@@ -2,7 +2,7 @@ package de.thm.mixit.data.repository;
 
 import android.content.Context;
 
-import de.thm.mixit.data.entities.GameState;
+import de.thm.mixit.data.entity.GameState;
 import de.thm.mixit.data.source.GameStateDataSource;
 
 /**

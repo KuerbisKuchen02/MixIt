@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import de.thm.mixit.data.entities.Achievement;
+import de.thm.mixit.data.entity.Achievement;
 import de.thm.mixit.ui.adapter.AchievementRecyclerViewAdapter;
 
 /**

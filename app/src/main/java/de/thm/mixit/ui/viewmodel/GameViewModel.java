@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.data.entities.GameState;
-import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.entity.Element;
+import de.thm.mixit.data.entity.GameState;
+import de.thm.mixit.data.entity.Statistic;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
@@ -30,7 +30,7 @@ import de.thm.mixit.domain.usecase.ElementUseCase;
 import de.thm.mixit.domain.usecase.GameStateUseCase;
 
 /**
- * UI state for the {@link de.thm.mixit.ui.activities.GameActivity}
+ * UI state for the {@link de.thm.mixit.ui.activity.GameActivity}
  *
  * Use the {@link Factory} to get a new GameViewModel instance
  *

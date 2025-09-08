@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.ElementDao;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.dao.ElementDao;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;

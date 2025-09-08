@@ -2,7 +2,7 @@ package de.thm.mixit.data.repository;
 
 import android.content.Context;
 
-import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.entity.Statistic;
 import de.thm.mixit.data.source.StatisticDataSource;
 
 /**

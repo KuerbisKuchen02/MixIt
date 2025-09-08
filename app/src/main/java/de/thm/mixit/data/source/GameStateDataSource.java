@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.GameState;
+import de.thm.mixit.data.entity.GameState;
 import de.thm.mixit.data.model.ElementChip;
 
 /**

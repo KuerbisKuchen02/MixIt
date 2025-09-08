@@ -1,4 +1,4 @@
-package de.thm.mixit.data.entities;
+package de.thm.mixit.data.entity;
 
 /**
  * Represents all savable data from the user Settings

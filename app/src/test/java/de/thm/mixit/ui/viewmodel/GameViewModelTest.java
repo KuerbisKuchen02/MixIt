@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.entities.Element;
-import de.thm.mixit.data.entities.GameState;
-import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.entity.Element;
+import de.thm.mixit.data.entity.GameState;
+import de.thm.mixit.data.entity.Statistic;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.model.Result;
 import de.thm.mixit.domain.usecase.ElementUseCase;

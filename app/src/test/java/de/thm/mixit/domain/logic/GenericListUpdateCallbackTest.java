@@ -19,7 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.ElementChip;
 
 /**

@@ -1,4 +1,4 @@
-package de.thm.mixit.data.entities;
+package de.thm.mixit.data.entity;
 
 /**
  * A BinaryAchievement represents an Achievement which can be either unlocked or not unlocked.

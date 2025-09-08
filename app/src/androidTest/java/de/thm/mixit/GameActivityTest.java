@@ -40,7 +40,7 @@ import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.source.ElementRemoteDataSource;
-import de.thm.mixit.ui.activities.MainActivity;
+import de.thm.mixit.ui.activity.MainActivity;
 
 /**
  * Ui tests for GameActivity class
