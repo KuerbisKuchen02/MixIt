@@ -31,9 +31,9 @@ import de.thm.mixit.data.repository.StatisticRepository;
  * Ref: Custom Dialog Layout
  * <a href="https://developer.android.com/develop/ui/views/components/dialogs#CustomLayout">...</a>
  */
-public class DialogResetProgress extends DialogFragment {
+public class ResetProgressDialogFragment extends DialogFragment {
 
-    private static final String TAG = DialogResetProgress.class.getSimpleName();
+    private static final String TAG = ResetProgressDialogFragment.class.getSimpleName();
     GameStateRepository gameStateRepository;
     StatisticRepository statisticRepository;
     AchievementRepository achievementRepository;
@@ -50,7 +50,7 @@ public class DialogResetProgress extends DialogFragment {
 
         // Inflate custom layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_reset_progress, null);
+        View view = inflater.inflate(R.layout.fragment_reset_progress_dialog, null);
 
         TextInputLayout inputContainer = view.findViewById(R.id.textInputLayout_reset_progress);
         TextInputEditText input = view.findViewById(R.id.editText_reset_progress_dialog_confirm);

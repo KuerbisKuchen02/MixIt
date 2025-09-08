@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.databinding.ActivitySettingsBinding;
-import de.thm.mixit.ui.fragment.DialogResetProgress;
+import de.thm.mixit.ui.fragment.ResetProgressDialogFragment;
 import de.thm.mixit.ui.viewmodel.SettingsViewModel;
 
 /**
@@ -136,7 +136,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void onResetProgressClicked(View view) {
         Log.i(TAG, "Reset Progress Button was clicked.");
-        new DialogResetProgress().show(getSupportFragmentManager(), "DialogResetProgress");
+        new ResetProgressDialogFragment().show(getSupportFragmentManager(), "ResetProgressDialogFragment");
     }
 
     public void onBackButtonClicked(View view){
