@@ -34,7 +34,7 @@ public class GameStateLocalDataSource {
 
     /**
      * Creates a Shared Preference to store a GameState object.
-     * The SharedPreference object uses one of two pre defined filenames depending on the isArcade
+     * The SharedPreference object uses one of two pre-defined filenames depending on the isArcade
      * parameter.
      * @param context context of the Android application, needed to access SharedPreferences.
      * @param isArcade whether the GameState data belongs to the arcade or endless game mode.

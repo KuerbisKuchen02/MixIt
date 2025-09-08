@@ -12,16 +12,15 @@ import java.util.List;
 import de.thm.mixit.data.entity.Statistic;
 
 /**
- * Local data source for accessing the Statistic data using ShardedPreferences.
+ * Local data source for accessing the Statistic data using SharedPreferences.
  * <p>
- * This class handles the saving and loading of Statistic Data.
- * It defines Keys and uses them to safe the corresponding data in a Shared preference.
+ * This class handles the saving and loading of statistic data.
+ * It defines keys and uses them to save the corresponding data in a SharedPreference.
  *
  * @author Jannik Heimann
  */
 public class StatisticLocalDataSource {
 
-    private final SharedPreferences sp;
     private static final String FILEPATH = "de.thm.mixit.STATISTIC_FILE";
     private static final String PREF_TOTAL_PLAYTIME = "TOTAL_PLAYTIME";
     private static final String PREF_TOTAL_COMBINATIONS = "TOTAL_COMBINATIONS";
@@ -35,11 +34,12 @@ public class StatisticLocalDataSource {
     private static final String PREF_FEWEST_TURNS_TO_BEAT = "FEWEST_TURNS_TO_BEAT";
     private static final String PREF_FOUND_CHOCOLATE_CAKE = "FOUND_CHOCOLATE_CAKE";
     private static final String PREF_LAST_GOAL_WORDS = "LAST_GOAL_WORDS";
+    private final SharedPreferences sp;
 
     /**
-     * Creates a Shared Preference to store a GameState object.
-     * The Shared Preference Object uses one of two pre defined filenames depending on the isArcade
-     * param.
+     * Creates a SharedPreference object to store a GameState object.
+     * The SharedPreference object uses one of two pre-defined filenames depending on the isArcade
+     * parameter.
      * @param context Context of the Android application, needed to access shared preferences.
      *
      * @author Jannik Heimann
@@ -51,7 +51,7 @@ public class StatisticLocalDataSource {
     }
 
     /**
-     * Loads the saved Statistic from the Shared Preference object of the class.
+     * Loads the saved Statistic from the SharedPreference object of the class.
      * @return {@link Statistic}
      *
      * @author Jannik Heimann
@@ -84,7 +84,7 @@ public class StatisticLocalDataSource {
     }
 
     /**
-     * Saves the given Statistic to the corresponding class Shared Preferences object.
+     * Saves the given Statistic to the corresponding class SharedPreferences object.
      * @param statistic Statistic data to save.
      *
      * @author Jannik Heimann
@@ -109,7 +109,7 @@ public class StatisticLocalDataSource {
     }
 
     /**
-     * Checks whether the corresponding Sharded Preferences Object has any data saved.
+     * Checks whether the corresponding SharedPreferences object has any data saved.
      * @return boolean
      *
      * @author Jannik Heimann
@@ -119,7 +119,7 @@ public class StatisticLocalDataSource {
     }
 
     /**
-     * Deletes all saved data within the corresponding Shared Preferences Object.
+     * Deletes all saved data within the corresponding SharedPreferences object.
      *
      * @author Jannik Heimann
      */

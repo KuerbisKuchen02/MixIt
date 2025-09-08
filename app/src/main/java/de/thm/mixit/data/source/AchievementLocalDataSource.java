@@ -32,7 +32,7 @@ public class AchievementLocalDataSource {
 
     /**
      * Creates a SharedPreference to store a GameState object.
-     * The SharedPreference object uses one of two pre defined filenames depending on the isArcade
+     * The SharedPreference object uses one of two pre-defined filenames depending on the isArcade
      * parameter.
      * @param context context of the Android application, needed to access SharedPreferences.
      *
