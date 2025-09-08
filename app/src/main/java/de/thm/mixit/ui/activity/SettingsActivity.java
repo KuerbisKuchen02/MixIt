@@ -32,14 +32,16 @@ public class SettingsActivity extends AppCompatActivity {
     private SettingsViewModel viewModel;
 
     /**
-     * Binding spinner items to spinners.
-     * ref: <a href="https://developer.android.com/develop/ui/views/components/spinner">Spinners</a>
+     * Initializes the activity, sets up data binding, view model,
+     * and dropdown menus for language and theme selection.
+     * ref:
+     * <a href="https://developer.android.com/develop/ui/views/components/spinner">Spinners</a>
      */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Init ViewModel with Databinding
+        // Init ViewModel with data binding
         ActivitySettingsBinding binding = DataBindingUtil.setContentView(this,
                 R.layout.activity_settings);
 
@@ -55,11 +57,13 @@ public class SettingsActivity extends AppCompatActivity {
         );
         adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.dropdownSettingsLanguage.setAdapter(adapterLanguage);
+
         // Workaround Solution to prevent options to disappear
         binding.dropdownSettingsLanguage.setThreshold(Integer.MAX_VALUE);
 
         // Observer to notify view model when user chooses an language option
-        binding.dropdownSettingsLanguage.setOnItemClickListener((parent, view, position, id) -> {
+        binding.dropdownSettingsLanguage.setOnItemClickListener(
+                (parent, view, position, id) -> {
             String[] values = getResources().getStringArray(R.array.language_values);
             viewModel.setLanguage(values[position]);
         });
@@ -72,9 +76,8 @@ public class SettingsActivity extends AppCompatActivity {
             for (int i = 0; i < values.length; i++) {
                 if (values[i].equals(lang)) {
                     int finalI = i;
-                    binding.dropdownSettingsLanguage.post(() -> {
-                        binding.dropdownSettingsLanguage.setText(labels[finalI], false);
-                    });
+                    binding.dropdownSettingsLanguage.post(() ->
+                            binding.dropdownSettingsLanguage.setText(labels[finalI], false));
                     break;
                 }
             }
@@ -90,11 +93,13 @@ public class SettingsActivity extends AppCompatActivity {
         );
         adapterTheme.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.dropdownSettingsTheme.setAdapter(adapterTheme);
+
         // Workaround Solution to prevent options to disappear
         binding.dropdownSettingsTheme.setThreshold(Integer.MAX_VALUE);
 
         // Observer to notify view model when user chooses an theme option
-        binding.dropdownSettingsTheme.setOnItemClickListener((parent, view, position, id) -> {
+        binding.dropdownSettingsTheme.setOnItemClickListener(
+                (parent, view, position, id) -> {
             String[] values = getResources().getStringArray(R.array.theme_values);
             viewModel.setTheme(values[position]);
         });
@@ -107,9 +112,8 @@ public class SettingsActivity extends AppCompatActivity {
             for (int i = 0; i < values.length; i++) {
                 if (values[i].equals(theme)) {
                     int finalI = i;
-                    binding.dropdownSettingsTheme.post(() -> {
-                        binding.dropdownSettingsTheme.setText(labels[finalI], false);
-                    });
+                    binding.dropdownSettingsTheme.post(() ->
+                            binding.dropdownSettingsTheme.setText(labels[finalI], false));
                     break;
                 }
             }
@@ -122,25 +126,45 @@ public class SettingsActivity extends AppCompatActivity {
         Log.i(TAG, "SettingsActivity was created");
     }
 
+    /**
+     * Load and save settings when activity is resumed or paused
+     */
     @Override
     protected void onResume() {
         super.onResume();
         viewModel.load();
     }
 
+    /**
+     * Save settings when activity is paused
+     */
     @Override
     protected void onPause() {
         super.onPause();
         viewModel.save();
     }
 
+    /**
+     * Opens a dialog to confirm the reset of the free play and achievement progress.
+     * If confirmed, all saved data will be deleted.
+     *
+     * @param view The current view
+     */
     public void onResetProgressClicked(View view) {
-        Log.i(TAG, "Reset Progress Button was clicked.");
-        new ResetProgressDialogFragment().show(getSupportFragmentManager(), "ResetProgressDialogFragment");
+        if(BuildConfig.DEBUG) Log.d(TAG, "Reset Progress Button was clicked.");
+
+        new ResetProgressDialogFragment()
+                .show(getSupportFragmentManager(), "ResetProgressDialogFragment");
     }
 
+    /**
+     * Returns to the main activity when the back button is clicked.
+     *
+     * @param view The current view
+     */
     public void onBackButtonClicked(View view){
         if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
