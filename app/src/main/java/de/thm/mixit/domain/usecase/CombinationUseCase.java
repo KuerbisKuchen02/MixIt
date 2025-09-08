@@ -16,7 +16,6 @@ import de.thm.mixit.data.repository.ElementRepository;
  * This class provides methods to retrieve or create new elements based on combinations
  * of two input elements. It interacts with the repositories to manage element data
  * and combinations.
- * </p>
  *
  * @author Jonathan Hildebrandt
  */
@@ -30,9 +29,9 @@ public class CombinationUseCase {
     /**
      * Constructor for CombinationUseCase.
      * Initializes the repositories needed for element operations.
-     *
-     * @param context The Android context used to create the repositories.
-     * @param isArcade Whether the use case is called in endless or arcade mode.
+     * @param combinationRepository The combination repository
+     *                              that is used for managing combinations.
+     * @param elementRepository The element repository that is used for managing elements
      */
     public CombinationUseCase(CombinationRepository combinationRepository,
                               ElementRepository elementRepository) {
@@ -44,11 +43,9 @@ public class CombinationUseCase {
      * Combines two elements to create a new element.
      * If the combination already exists, it retrieves the existing element.
      * Otherwise, it generates a new element and stores the combination.
-     *
      * @param element1 The first element to combine.
      * @param element2 The second element to combine.
      * @param callback A callback to receive the resulting ElementEntity.
-     *
      * @throws RuntimeException If an error occurs during the operation.
      */
     public void getElement(Element element1, Element element2,
@@ -58,7 +55,7 @@ public class CombinationUseCase {
                 combination -> {
                     // If a combination exists, retrieve the output element
                     if (combination != null) {
-                        Log.d(TAG, "Combination found for element: "
+                        Log.i(TAG, "Combination found for element: "
                                 + combination.inputA + " + " + combination.inputB
                                 + " with outputId: " + combination.outputId);
 
@@ -69,13 +66,13 @@ public class CombinationUseCase {
                     }
 
                     // If no combination exists, generate a new element
-                    Log.d(TAG, "No combination found for combination: "
+                    Log.i(TAG, "No combination found for combination: "
                             + element1 + " + " + element2);
 
                     elementRepository.generateNew(element1.toString(), element2.toString(),
                             result -> {
                         if (result.isError()) {
-                            Log.d(TAG, "Failed to generate element: " + result.getError());
+                            Log.e(TAG, "Failed to generate element: " + result.getError());
                             callback.accept(result);
                             return;
                         }
@@ -89,7 +86,6 @@ public class CombinationUseCase {
      * Handles the generation of a new element based on two input elements.
      * It checks if the new element already exists in the repository.
      * If it does, it retrieves the existing element; otherwise, it inserts the new element.
-     *
      * @param element1 The first input element.
      * @param element2 The second input element.
      * @param newElement The newly generated ElementEntity to be processed.
@@ -97,25 +93,24 @@ public class CombinationUseCase {
      */
     private void handleGenerateNew(Element element1, Element element2, Element newElement,
                                    Consumer<Result<Element>> callback) {
-        Log.d(TAG, "Generated new element: " + newElement.emoji + " " + newElement.name);
+        Log.i(TAG, "Generated new element: " + newElement.emoji + " " + newElement.name);
 
         // Check if the new element already exists in the repository
         elementRepository.findByName(newElement.name, existingElement -> {
             // If the element exists, return it via the callback
             if (existingElement != null) {
-                Log.d(TAG, "Element already exists: "
+                Log.i(TAG, "Element already exists: "
                         + existingElement.emoji + " " + existingElement.name);
 
                 insertCombination(element1, element2, existingElement, callback);
                 return;
             }
-            Log.d(TAG, "Element does not exist, inserting new element: "
+            Log.i(TAG, "Element does not exist, inserting new element: "
                     + newElement.emoji + " " + newElement.name);
 
-            // If the element does not exist, insert
-            // it and create a new combination
+            // If the element does not exist, insert it and create a new combination
             elementRepository.insertElement(newElement, insertedElement -> {
-                Log.d(TAG, "Inserted new element with ID: " + insertedElement.id);
+                Log.i(TAG, "Inserted new element with ID: " + insertedElement.id);
                 insertCombination(element1, element2, insertedElement, callback);
             });
         });
@@ -125,7 +120,6 @@ public class CombinationUseCase {
      * Inserts a new combination into the repository.
      * This method is called when a new element is generated and needs to be associated
      * with the input elements.
-     *
      * @param element1 The first input element.
      * @param element2 The second input element.
      * @param outputElement The resulting output element from the combination.
@@ -138,11 +132,11 @@ public class CombinationUseCase {
                 new Combination(element1.toString(), element2.toString(), outputElement.id),
                 result -> {
                     if(result.isError()) {
-                        Log.d(TAG, "Combination could not be inserted for: "
+                        Log.w(TAG, "Combination could not be inserted for: "
                                 + element1 + " + " + element2);
                         callback.accept(Result.failure(result.getError()));
                     } else {
-                        Log.d(TAG, "Combination inserted for: " + element1 + " + " + element2);
+                        Log.i(TAG, "Combination inserted for: " + element1 + " + " + element2);
                         callback.accept(Result.success(outputElement));
                     }
                 });
