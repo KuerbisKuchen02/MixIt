@@ -15,7 +15,7 @@ import de.thm.mixit.data.entity.BinaryAchievement;
 import de.thm.mixit.data.entity.ProgressAchievement;
 
 /**
- * Local data source for accessing the Achievement data using ShardedPreferences.
+ * Local data source for accessing the Achievement data using SharedPreferences.
  * <p>
  * This class handles the saving and loading of Achievement Data.
  * It uses the name attribute of an Achievement as key and uses them to safe the corresponding data
@@ -24,17 +24,17 @@ import de.thm.mixit.data.entity.ProgressAchievement;
  * @author Jannik Heimann
  */
 public class AchievementLocalDataSource {
+    private static final String FILEPATH = "de.thm.mixit.ACHIEVEMENTS_FILE";
     private final Context context;
     private final SharedPreferences sp;
-    private static final String FILEPATH = "de.thm.mixit.ACHIEVEMENTS_FILE";
     private final Set<String> binaryAchievementNames;
     private final Set<String> progressAchievementNames;
 
     /**
-     * Creates a Shared Preference to store a GameState object.
-     * The Shared Preference Object uses one of two pre defined filenames depending on the isArcade
-     * param.
-     * @param context Context of the Android application, needed to access shared preferences.
+     * Creates a SharedPreference to store a GameState object.
+     * The SharedPreference object uses one of two pre defined filenames depending on the isArcade
+     * parameter.
+     * @param context context of the Android application, needed to access SharedPreferences.
      *
      * @author Jannik Heimann
      */
@@ -50,7 +50,7 @@ public class AchievementLocalDataSource {
     }
 
     /**
-     * Loads the saved Achievements from the Shared Preference object of the class.
+     * Loads the saved Achievements from the SharedPreference object of the class.
      * @return {@code List<Achievement>}
      *
      * @author Jannik Heimann
@@ -106,7 +106,7 @@ public class AchievementLocalDataSource {
     }
 
     /**
-     * Checks whether the corresponding Sharded Preferences Object has any data under the
+     * Checks whether the corresponding ShardedPreferences object has any data under the
      * achievement name saved.
      * @param name Name of the Achievement.
      * @return boolean
