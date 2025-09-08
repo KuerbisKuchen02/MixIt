@@ -41,10 +41,10 @@
     <color name="md_theme_dark_onSecondaryContainer">#61B4FD</color>
 
     <!-- Dark Tertiary -->
-    <color name="md_theme_dark_tertiary">#FF66A0</color>
-    <color name="md_theme_dark_onTertiary">#610025</color>
-    <color name="md_theme_dark_tertiaryContainer">#820032</color>
-    <color name="md_theme_dark_onTertiaryContainer">#FFC8DD</color>
+    <color name="md_theme_dark_tertiary">#7B4998</color>
+    <color name="md_theme_dark_onTertiary">#4E2E60</color>
+    <color name="md_theme_dark_tertiaryContainer">#373737</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFFFFF</color>
 
     <!-- Dark Surface -->
     <color name="md_theme_dark_surface">#1C1B1F</color>
