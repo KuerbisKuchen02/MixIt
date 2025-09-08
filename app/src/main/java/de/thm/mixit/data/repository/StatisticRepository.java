@@ -15,10 +15,10 @@ import de.thm.mixit.data.source.StatisticLocalDataSource;
  */
 public class StatisticRepository {
 
-    private final StatisticLocalDataSource datasource;
+    private final StatisticLocalDataSource localDataSource;
 
-    private StatisticRepository(StatisticLocalDataSource datasource) {
-        this.datasource = datasource;
+    private StatisticRepository(StatisticLocalDataSource localDataSource) {
+        this.localDataSource = localDataSource;
     }
 
     /**
@@ -39,7 +39,7 @@ public class StatisticRepository {
      * @author Jannik Heimann
      */
     public Statistic loadStatistic() {
-        return datasource.loadStatistic();
+        return localDataSource.loadStatistic();
     }
 
     /**
@@ -48,19 +48,11 @@ public class StatisticRepository {
      * @author Jannik Heimann
      */
     public void saveStatistic(Statistic statistic) {
-        datasource.saveStatistic(statistic);
+        localDataSource.saveStatistic(statistic);
     }
-
-    /**
-     * Whether there is an existing saved Statistic.
-     * @return boolean
-     *
-     * @author Jannik Heimann
-     */
-    public boolean hasSavedStatistic() { return datasource.hasSavedStatistic(); }
 
     /**
      * Deletes the saved Statistic.
      */
-    public void deleteSavedStatistic() { datasource.deleteSavedStatistic(); }
+    public void deleteSavedStatistic() { localDataSource.deleteSavedStatistic(); }
 }

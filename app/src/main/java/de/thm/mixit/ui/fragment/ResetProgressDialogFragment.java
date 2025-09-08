@@ -21,6 +21,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 import de.thm.mixit.R;
 import de.thm.mixit.data.repository.AchievementRepository;
 import de.thm.mixit.data.repository.ElementRepository;
@@ -28,8 +30,12 @@ import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 
 /**
- * Ref: Custom Dialog Layout
- * <a href="https://developer.android.com/develop/ui/views/components/dialogs#CustomLayout">...</a>
+ * DialogFragment for resetting the game progress.
+ * <p>
+ * Ref: <a href="https://developer.android.com/develop/ui/views/components/dialogs#CustomLayout">
+ *     Custom Dialog Layout</a>
+ *
+ * @author Jonathan Hildebrandt
  */
 public class ResetProgressDialogFragment extends DialogFragment {
 
@@ -38,12 +44,22 @@ public class ResetProgressDialogFragment extends DialogFragment {
     StatisticRepository statisticRepository;
     AchievementRepository achievementRepository;
 
+    /**
+     * Creates the dialog with a custom layout.
+     * The dialog contains an input field where the user must type "MixIt"
+     * to confirm the reset action. If the input is correct, the game state,
+     * statistics, and achievements are reset. If the input is incorrect,
+     * the input field is highlighted in red.
+     *
+     * @return The created Dialog.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         Context context = requireContext();
+
         gameStateRepository = GameStateRepository.create(context,false);
         statisticRepository = StatisticRepository.create(context);
         achievementRepository = AchievementRepository.create(context);
@@ -59,9 +75,11 @@ public class ResetProgressDialogFragment extends DialogFragment {
 
         final String REQUIRED = getString(R.string.mix_it);
 
+        // Store initial colors to reset them when user types
         ColorStateList initialHintColor = inputContainer.getHintTextColor();
         int initialTextColor = input.getCurrentTextColor();
 
+        // Close dialog when clicking the close button
         close.setOnClickListener(v -> dismiss());
 
         input.addTextChangedListener(new TextWatcher() {
@@ -79,7 +97,7 @@ public class ResetProgressDialogFragment extends DialogFragment {
         });
 
         confirm.setOnClickListener((View _view) -> {
-            if (input.getText().toString().equals(REQUIRED)) {
+            if (Objects.requireNonNull(input.getText()).toString().equals(REQUIRED)) {
                 gameStateRepository.deleteSavedGameState();
                 ElementRepository elementRepository =
                         ElementRepository.create(context, false);
@@ -95,13 +113,18 @@ public class ResetProgressDialogFragment extends DialogFragment {
             } else {
                 // Set the Error highlighting based on the current theme
                 int errorColor;
-                int nightModeFlag = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+                int nightModeFlag = getResources().getConfiguration().uiMode
+                        & Configuration.UI_MODE_NIGHT_MASK;
                 if (nightModeFlag == Configuration.UI_MODE_NIGHT_NO) {
-                    errorColor = ContextCompat.getColor(context, R.color.md_theme_light_errorContainer);
+                    errorColor =
+                            ContextCompat.getColor(context, R.color.md_theme_light_errorContainer);
                 } else if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
-                    errorColor = ContextCompat.getColor(context, R.color.md_theme_dark_errorContainer);
+                    errorColor =
+                            ContextCompat.getColor(context, R.color.md_theme_dark_errorContainer);
                 } else {
-                    Log.w(TAG, "Could not get the current configuration of the App Theme using light error colors.");
+                    Log.w(TAG,
+                            "Could not get the current configuration " +
+                                    "of the App Theme using light error colors.");
                     errorColor = ContextCompat.getColor(context, R.color.md_theme_light_error);
                 }
 

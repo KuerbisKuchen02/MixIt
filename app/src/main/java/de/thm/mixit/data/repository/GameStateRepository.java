@@ -15,10 +15,10 @@ import de.thm.mixit.data.source.GameStateLocalDataSource;
  */
 public class GameStateRepository {
 
-    private final GameStateLocalDataSource datasource;
+    private final GameStateLocalDataSource localDataSource;
 
-    private GameStateRepository(GameStateLocalDataSource datasource) {
-        this.datasource = datasource;
+    private GameStateRepository(GameStateLocalDataSource localDataSource) {
+        this.localDataSource = localDataSource;
     }
 
     /**
@@ -27,8 +27,6 @@ public class GameStateRepository {
      * @param isArcade Whether the to be saved GameState data belongs to the arcade or endless
      *                 game mode.
      * @return {@link GameStateRepository}
-     *
-     * @author Jannik Heimann
      */
     public static GameStateRepository create(Context context, boolean isArcade) {
         return new GameStateRepository(new GameStateLocalDataSource(context, isArcade));
@@ -37,32 +35,26 @@ public class GameStateRepository {
     /**
      * Loads the last saved GameState by calling the load Method in the corresponding datasource.
      * @return {@link GameState}
-     *
-     * @author Jannik Heimann
      */
     public GameState loadGameState() {
-        return datasource.loadGameState();
+        return localDataSource.loadGameState();
     }
 
     /**
      * Saves the given gameState by calling the save Method in the corresponding datasource.
-     *
-     * @author Jannik Heimann
      */
    public void saveGameState(GameState gameState) {
-        datasource.saveGameState(gameState);
+        localDataSource.saveGameState(gameState);
    }
 
     /**
      * Whether there is an existing saved GameState.
      * @return boolean
-     *
-     * @author Jannik Heimann
      */
-   public boolean hasSavedGameState() { return datasource.hasSavedGameState(); }
+   public boolean hasSavedGameState() { return localDataSource.hasSavedGameState(); }
 
     /**
      * Deletes the last saved GameState.
      */
-    public void deleteSavedGameState() { datasource.deleteSavedGameState(); }
+    public void deleteSavedGameState() { localDataSource.deleteSavedGameState(); }
 }
