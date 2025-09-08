@@ -16,13 +16,24 @@ import java.util.Objects;
 import de.thm.mixit.data.entity.Settings;
 import de.thm.mixit.data.repository.SettingsRepository;
 
+/**
+ * UI state for the {@link de.thm.mixit.ui.activity.SettingsActivity}
+ *
+ * Use the {@link SettingsViewModel.Factory} to get a new GameViewModel instance
+ *
+ * @author Jannik Heimann
+ */
 public class SettingsViewModel extends ViewModel {
     private final static String TAG = SettingsViewModel.class.getSimpleName();
     private final SettingsRepository settingsRepository;
-    private Settings settings;
     private final MutableLiveData<String> language = new MutableLiveData<>();
     private final MutableLiveData<String> theme = new MutableLiveData<>();
+    private Settings settings;
 
+    /**
+     * Use the {@link SettingsViewModel.Factory} to get a new GameViewModel instance
+     * @param settingsRepository SettingRepository used for dependency injection
+     */
     SettingsViewModel(SettingsRepository settingsRepository) {
         this.settingsRepository = settingsRepository;
         this.settings = settingsRepository.loadSettings();
@@ -48,6 +59,9 @@ public class SettingsViewModel extends ViewModel {
         this.applyTheme(theme);
     }
 
+    /**
+     * Set the initial language based on the application local
+     */
     public void preSelectLanguage() {
         LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
 
@@ -69,6 +83,9 @@ public class SettingsViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Set the initial theme based on the application theme
+     */
     public void preSelectTheme() {
         int current = AppCompatDelegate.getDefaultNightMode();
         switch (current) {
@@ -84,7 +101,12 @@ public class SettingsViewModel extends ViewModel {
     }
 
     /**
-     * This Method applies the selected dropdown item to the langauge setting
+     * This Method applies the selected dropdown item to the language setting
+     * <p>
+     * ref:
+     *  <a href="https://developer.android.com/guide/topics/resources/app-languages#androidx-impl">
+     *     Android Documentation
+     *  </a>
      */
     public void applyLanguage(String langTag) {
         // if local is system, clear locale list if not set it to selected locale
@@ -92,8 +114,6 @@ public class SettingsViewModel extends ViewModel {
                 ? LocaleListCompat.getEmptyLocaleList()
                 : LocaleListCompat.forLanguageTags(langTag);
 
-        // ref:
-        // https://developer.android.com/guide/topics/resources/app-languages#androidx-impl
         AppCompatDelegate.setApplicationLocales(locales);
     }
 
@@ -130,7 +150,6 @@ public class SettingsViewModel extends ViewModel {
 
     /**
      * Creates a new {@link SettingsViewModel} instance or returns an existing one
-     * @author Jannik Heimann
      */
     public static class Factory implements ViewModelProvider.Factory {
 

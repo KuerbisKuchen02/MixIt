@@ -233,7 +233,7 @@ public class GameViewModelTest {
                 0,0,0, false, new ArrayList<>());
 
         doAnswer(invocation -> dummyGameState)
-                .when(mockGameStateUseCase).load(any());
+                .when(mockGameStateUseCase).getGameState();
         doAnswer(invocation -> dummyStatistics)
                 .when(mockGameStateUseCase).getStatistics();
     }

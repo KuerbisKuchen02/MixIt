@@ -26,6 +26,11 @@ import org.hamcrest.Matcher;
  */
 public class TestUtil {
 
+    /**
+     * Matcher that matches a view that has exactly the given item {@code count}
+     * @param count number of items
+     * @return matcher
+     */
     public static Matcher<View> hasItemCount(final int count) {
         return new BoundedMatcher<>(RecyclerView.class) {
 
@@ -36,11 +41,18 @@ public class TestUtil {
 
             @Override
             protected boolean matchesSafely(RecyclerView recyclerView) {
-                return recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() == count;
+                return recyclerView.getAdapter() != null
+                        && recyclerView.getAdapter().getItemCount() == count;
             }
         };
     }
 
+    /**
+     * Matcher that matches a view with the given number of children that match the childMatcher
+     * @param expectedCount number of children
+     * @param childMatcher matcher for children
+     * @return matcher
+     */
     public static Matcher<View> withMatchingChildCount(final int expectedCount,
                                                        final Matcher<View> childMatcher) {
         return new BoundedMatcher<>(ViewGroup.class) {
@@ -65,6 +77,10 @@ public class TestUtil {
         };
     }
 
+    /**
+     * Matcher to match a view that has any non null tag
+     * @return matcher
+     */
     public static Matcher<View> hasTag() {
         return new BoundedMatcher<>(View.class) {
             @Override
@@ -79,6 +95,11 @@ public class TestUtil {
         };
     }
 
+    /**
+     * Move an view to the center of the target view
+     * @param target view to move to
+     * @return view action
+     */
     public static ViewAction dragFromTo(final View target) {
         return new ViewAction() {
             @Override
@@ -111,6 +132,11 @@ public class TestUtil {
         };
     }
 
+    /**
+     * Get the actual view instance from a ViewInteraction
+     * @param interaction to extract the view from
+     * @return view
+     */
     public static View getView(ViewInteraction interaction) {
         final View[] view = new View[1];
         interaction.perform(new ViewAction() {

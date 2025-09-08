@@ -123,7 +123,8 @@ public class GenericListUpdateCallbackTest {
         assertEquals("Erde", workingList.get(0).getElement().name);
     }
 
-    private GenericListUpdateCallback<ElementChip> dispatchUpdatesToResult(List<ElementChip> expected) {
+    private GenericListUpdateCallback<ElementChip> dispatchUpdatesToResult(
+            List<ElementChip> expected) {
         DiffUtil.DiffResult diffResult =
                 DiffUtil.calculateDiff(new ElementDiffCallback(workingList, expected));
         GenericListUpdateCallback<ElementChip> callback =
