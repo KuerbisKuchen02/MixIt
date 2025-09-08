@@ -132,6 +132,16 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Check if elements were placed out of bounds e.g. after a change of orientation
+        if (getView()!= null) {
+            getView().post(this::checkForOutOfBoundsElements);
+        }
+    }
+
     private void handleError(Throwable error) {
         if (error == null) return;
         Log.d(TAG, "An error occurred " + error);
@@ -380,16 +390,66 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return null;
     }
 
-    public boolean isInPlaygroundBounds(int x, int y) {
-        if(x  > playground.getWidth() || x < 0) return false;
-        else if (y > playground.getHeight() || y < 0) return false;
-        return true;
+    /**
+     * checks whether all TextViews corresponding to the ElementChips on the playground are
+     * within the bounds of the playground and therefore visible for the player.
+     */
+    private void checkForOutOfBoundsElements() {
+        // Check if any ElementChips are out of bounds,
+        // if so give them a new random position within the bounds
+        View root = getView();
+        if (root != null) {
+            int width = root.getWidth();
+            int height = root.getHeight();
+            Log.d(TAG, "Width: " + width + " / Height: " + height);
+
+            for (ElementChip elementChip : currentElements) {
+                TextView elementView = getTextViewFromElementChip(elementChip);
+                if (elementView != null) {
+                    if (elementView.getX() + elementView.getWidth() > root.getWidth()
+                            || elementView.getY() + elementView.getHeight() > root.getHeight())
+                    {
+                        Log.d(TAG, "ElementChip " + elementChip.getElement().name
+                                + " is out of bounds!");
+
+                        float[] newCords = getFreeSpace();
+                        elementChip.setX(newCords[0]);
+                        elementChip.setY(newCords[1]);
+                        elementView.setX(newCords[0]);
+                        elementView.setY(newCords[1]);
+
+                    }
+                }
+            }
+        }
     }
 
-    public boolean isInPlaygroundBounds(View v) {
-        if(v.getX() + v.getWidth() > playground.getWidth() || v.getX() < 0) return false;
-        else if (v.getY() + v.getHeight() > playground.getHeight() || v.getY() < 0) return false;
-        return true;
+    /**
+     * This Method will return the corresponding TextView for the given ElementChip.
+     * It does so by comparing their saved coordinates, meaning that consistence updating of the
+     * ElementChip data is mandatory in order for this method to work.
+     * @param elementChip The {@link ElementChip} from which the TextView shall be returned.
+     */
+    private TextView getTextViewFromElementChip(ElementChip elementChip) {
+        View root = getView();
+        if (root instanceof ViewGroup) {
+            ViewGroup rootViewGroup = (ViewGroup) root;
+            for (int i = 0; i < rootViewGroup.getChildCount(); i++) {
+                View child = rootViewGroup.getChildAt(i);
+                if (child instanceof TextView
+                        && elementChip.getX() == child.getX()
+                        && elementChip.getY() == child.getY()) {
+                    Log.d(TAG, "Found Textview for ElementChip: " + elementChip);
+                    return (TextView) child;
+                }
+            }
+            Log.w(TAG, "Could not find matching TextView for ElementChip: " + elementChip);
+            return null;
+        } else {
+            Log.w(TAG, "Could not search for matching TextView for ElementChip." +
+                    "Reason: rootView is not a ViewGroup!");
+            return null;
+        }
     }
 
     private void combine(View view1, View view2) {
