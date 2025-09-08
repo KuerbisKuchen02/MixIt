@@ -13,7 +13,7 @@
     <color name="md_theme_light_onSecondaryContainer">#3E4850</color>
 
     <!-- Light Tertiary -->
-    <color name="md_theme_light_tertiary">#FFC8DD</color>
+    <color name="md_theme_light_tertiary">#FFA6C8</color>
     <color name="md_theme_light_onTertiary">#6E535F</color>
     <color name="md_theme_light_tertiaryContainer">#FFEBF3</color>
     <color name="md_theme_light_onTertiaryContainer">#820032</color>
@@ -25,8 +25,8 @@
     <!-- Light Error -->
     <color name="md_theme_light_error">#F5005A</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
-    <color name="md_theme_light_errorContainer">#F9DEDC</color>
-    <color name="md_theme_light_onErrorContainer">#410E0B</color>
+    <color name="md_theme_light_errorContainer">#F5005A</color>
+    <color name="md_theme_light_onErrorContainer">#FFFFFF</color>
 
     <!-- Dark Primary -->
     <color name="md_theme_dark_primary">#7C4A99</color>
