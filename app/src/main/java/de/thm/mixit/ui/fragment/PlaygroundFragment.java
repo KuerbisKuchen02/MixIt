@@ -310,7 +310,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
      * style buttons differently when an item is picked up
      */
     private void whenItemIsPickedUp(){
-        clearElementsButton.setImageResource(R.drawable.ic_remove_24px);
+        clearElementsButton.setImageResource(R.drawable.ic_minus);
         int color = ContextCompat.getColor(requireContext(), R.color.fab_on_drop_delete);
         clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
         clearElementsButton.setAlpha(0.8f);
@@ -321,7 +321,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
      * style buttons differently when an item is dropped
      */
     private void whenItemIsDropped(){
-        clearElementsButton.setImageResource(R.drawable.ic_broom_24px);
+        clearElementsButton.setImageResource(R.drawable.ic_broom);
         clearElementsButton.requestLayout();
         clearElementsButton.setAlpha(1f);
         showElementListButton.setClickable(true);

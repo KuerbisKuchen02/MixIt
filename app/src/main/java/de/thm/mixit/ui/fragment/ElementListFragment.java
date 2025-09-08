@@ -108,7 +108,7 @@ public class ElementListFragment extends Fragment {
                 } else {
                     view.setCompoundDrawablesRelativeWithIntrinsicBounds(
                             R.drawable.ic_search,
-                            0, R.drawable.ic_outline_cancel, 0);
+                            0, R.drawable.ic_cancel, 0);
                 }
             }
 
