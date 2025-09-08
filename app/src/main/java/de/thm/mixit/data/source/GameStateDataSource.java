@@ -61,19 +61,19 @@ public class GameStateDataSource {
         long time;
         int turns;
         String rawJson;
-        String[] goalElement = null;
+        String[] targetElement = null;
         ArrayList<ElementChip> elementChips = new ArrayList<>();
 
         time = sp.getLong(PREF_TIME, 0L);
         turns = sp.getInt(PREF_TURNS, 0);
 
         rawJson = sp.getString(PREF_GOAL_ELEMENT, null);
-        if (rawJson != null) goalElement = gson.fromJson(rawJson, String[].class);
+        if (rawJson != null) targetElement = gson.fromJson(rawJson, String[].class);
 
         rawJson = sp.getString(PREF_ELEMENTCHIPS, null);
         if (rawJson != null) elementChips = gson.fromJson(rawJson, elementListType);
 
-        return new GameState(time, turns, goalElement, elementChips);
+        return new GameState(time, turns, targetElement, elementChips);
     }
 
     /**
@@ -87,7 +87,7 @@ public class GameStateDataSource {
         SharedPreferences.Editor spEditor = sp.edit();
         spEditor.putLong(PREF_TIME, gameState.getTime());
         spEditor.putInt(PREF_TURNS, gameState.getTurns());
-        spEditor.putString(PREF_GOAL_ELEMENT, gson.toJson(gameState.getGoalElement()));
+        spEditor.putString(PREF_GOAL_ELEMENT, gson.toJson(gameState.getTargetElement()));
         spEditor.putString(PREF_ELEMENTCHIPS, gson.toJson(gameState.getElementChips()));
         spEditor.apply();
     }

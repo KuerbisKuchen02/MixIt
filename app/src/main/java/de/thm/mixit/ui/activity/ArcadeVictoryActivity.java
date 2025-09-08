@@ -40,10 +40,10 @@ import nl.dionsegijn.konfetti.xml.image.ImageUtil;
 public class ArcadeVictoryActivity extends AppCompatActivity {
 
     private static final String TAG = ArcadeVictoryActivity.class.getSimpleName();
-    public static final String EXTRA_GOAL_WORD = "goalWord";
+    public static final String EXTRA_GOAL_WORD = "targetWord";
     public static final String EXTRA_NUM_TURNS = "numTurns";
     public static final String EXTRA_PASSED_TIME = "playedTime";
-    private Element goalWord;
+    private Element targetWord;
     private int numTurns = -1;
     private long passedTime = -1;
 
@@ -65,7 +65,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
 
         if (intent.hasExtra(EXTRA_GOAL_WORD)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                goalWord = Objects.requireNonNull(intent.getExtras()).getSerializable(EXTRA_GOAL_WORD, Element.class);
+                targetWord = Objects.requireNonNull(intent.getExtras()).getSerializable(EXTRA_GOAL_WORD, Element.class);
             }
         } else {
             Log.e(TAG, "ArcadeVictoryActivity received Intent without the " + EXTRA_PASSED_TIME);
@@ -88,8 +88,8 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_arcade_victory);
 
-        TextView goalWordView = findViewById(R.id.text_arc_vic_goal_word);
-        goalWordView.setText(goalWord.toString());
+        TextView targetWordView = findViewById(R.id.text_arc_vic_goal_word);
+        targetWordView.setText(targetWord.toString());
 
         TextView numTurnsView = findViewById(R.id.text_arc_vic_turns);
         numTurnsView.setText(numTurns + "");

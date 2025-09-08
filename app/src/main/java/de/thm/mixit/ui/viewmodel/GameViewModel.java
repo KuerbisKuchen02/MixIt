@@ -26,7 +26,7 @@ import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 import de.thm.mixit.domain.logic.ArcadeGoalChecker;
-import de.thm.mixit.domain.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.CombinationUseCase;
 import de.thm.mixit.domain.usecase.GameStateUseCase;
 
 /**
@@ -38,7 +38,7 @@ import de.thm.mixit.domain.usecase.GameStateUseCase;
  */
 public class GameViewModel extends ViewModel {
     private final static String TAG = GameViewModel.class.getSimpleName();
-    private final ElementUseCase elementUseCase;
+    private final CombinationUseCase combinationUseCase;
     private final GameStateUseCase gameStateUseCase;
     private Statistic statistics;
     private final MutableLiveData<List<Element>> elements = new MutableLiveData<>();
@@ -54,13 +54,13 @@ public class GameViewModel extends ViewModel {
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
-     * @param elementUseCase ElementUseCase used for dependency injection
-     * @param gameStateUseCase ElementUseCase used for dependency injection
+     * @param combinationUseCase CombinationUseCase used for dependency injection
+     * @param gameStateUseCase CombinationUseCase used for dependency injection
      */
     @VisibleForTesting
-    GameViewModel(ElementUseCase elementUseCase,
+    GameViewModel(CombinationUseCase combinationUseCase,
                   GameStateUseCase gameStateUseCase) {
-        this.elementUseCase = elementUseCase;
+        this.combinationUseCase = combinationUseCase;
         this.gameStateUseCase = gameStateUseCase;
         this.filteredElements.addSource(elements, list -> filter());
         this.filteredElements.addSource(searchQuery, query -> filter());
@@ -159,7 +159,7 @@ public class GameViewModel extends ViewModel {
      * @param chip2 reactant 2
      */
     public void combineElements(ElementChip chip1, ElementChip chip2) {
-        elementUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
+        combinationUseCase.getElement(chip1.getElement(), chip2.getElement(), (result) -> {
             // combineError contains null or the last error while trying to combine two elements.
             if (result.isError()) {
                 Log.e(TAG, "An error occurred while combining: " + result.getError());
@@ -215,12 +215,12 @@ public class GameViewModel extends ViewModel {
             if (res.isError()){
                 this.error.postValue(res.getError());
             }
-            this.targetElement.postValue(res.getData().getGoalElement());
+            this.targetElement.postValue(res.getData().getTargetElement());
         });
         this.elementsOnPlayground.postValue(gameState.getElementChips());
         this.turns.postValue(gameState.getTurns());
         this.passedTime.postValue(gameState.getTime());
-        this.targetElement.postValue(gameState.getGoalElement());
+        this.targetElement.postValue(gameState.getTargetElement());
 
         this.statistics = gameStateUseCase.getStatistics();
         Log.d(TAG, statistics.toString());
@@ -311,7 +311,7 @@ public class GameViewModel extends ViewModel {
      */
     public static class Factory implements ViewModelProvider.Factory {
 
-        private final ElementUseCase elementUseCase;
+        private final CombinationUseCase combinationUseCase;
         private final GameStateUseCase gameStateUseCase;
 
         public Factory(Context context, boolean isArcade) {
@@ -321,7 +321,7 @@ public class GameViewModel extends ViewModel {
             GameStateRepository gameStateRepository = GameStateRepository.create(context, isArcade);
             StatisticRepository statisticRepository = StatisticRepository.create(context);
 
-            this.elementUseCase = new ElementUseCase(combinationRepository, elementRepository);
+            this.combinationUseCase = new CombinationUseCase(combinationRepository, elementRepository);
             this.gameStateUseCase = new GameStateUseCase(combinationRepository, elementRepository,
                     gameStateRepository, statisticRepository);
         }
@@ -331,7 +331,7 @@ public class GameViewModel extends ViewModel {
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass == GameViewModel.class) {
-                return (T) new GameViewModel(elementUseCase, gameStateUseCase);
+                return (T) new GameViewModel(combinationUseCase, gameStateUseCase);
             }
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

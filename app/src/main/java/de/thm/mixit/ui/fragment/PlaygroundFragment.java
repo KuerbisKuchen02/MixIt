@@ -41,7 +41,7 @@ import de.thm.mixit.BuildConfig;
 import de.thm.mixit.R;
 import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.exception.CombinationException;
-import de.thm.mixit.data.exception.InvalidGoalWordException;
+import de.thm.mixit.data.exception.InvalidTargetWordException;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.databinding.FragmentPlaygroundBinding;
 import de.thm.mixit.domain.logic.ElementDiffCallback;
@@ -117,10 +117,10 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 Log.d(TAG, "The player found the goal word!");
 
                 List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
-                Element goalElement = list.get(list.size()-1).getElement();
+                Element targetElement = list.get(list.size()-1).getElement();
 
                 Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
-                intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, goalElement);
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, targetElement);
                 intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS, viewModel.getTurns().getValue());
                 intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.getPassedTime().getValue());
                 startActivity(intent);
@@ -149,7 +149,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         if (error instanceof CombinationException) {
             text = "Cannot combine elements! Please check your internet connection.";
             cancelCombination();
-        } else if (error instanceof InvalidGoalWordException) {
+        } else if (error instanceof InvalidTargetWordException) {
             text = "Cannot generate goal word! Please check your internet connection.";
         } else {
             text = "An error occurred!";

@@ -52,15 +52,15 @@ public class GameStateUseCase {
         gameState = gameStateRepository.loadGameState();
         ElementChip.setId(gameState.getHighestElementChipID() + 1);
 
-        if (gameState.getGoalElement() == null) {
-            elementRepository.generateNewGoalWord(statistics.getLastGoalWords(), res -> {
+        if (gameState.getTargetElement() == null) {
+            elementRepository.generateNewTargetWord(statistics.getLastTargetWords(), res -> {
                 if (res.isError()) {
                     Log.e(TAG, "Couldn't fetch new goal word: " + res.getError());
                     callback.accept(Result.failure(res.getError()));
                     return;
                 }
                 Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
-                gameState.setGoalElement(res.getData());
+                gameState.setTargetElement(res.getData());
                 callback.accept(Result.success(gameState));
             });
 
@@ -73,12 +73,12 @@ public class GameStateUseCase {
         // Add playtime of session to sum of playtime
         statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
         // If the goal word wasn't recorded, add it to the list of the last goal words
-        List<String> lastGoalWords = statistics.getLastGoalWords();
-        if (lastGoalWords.isEmpty()
-                || gameState.getGoalElement() != null
-                &&!gameState.getGoalElement()[0]
-                .equals(lastGoalWords.get(lastGoalWords.size() - 1))) {
-            statistics.addGoalWord(gameState.getGoalElement()[0]);
+        List<String> lastTargetWords = statistics.getLastTargetWords();
+        if (lastTargetWords.isEmpty()
+                || gameState.getTargetElement() != null
+                &&!gameState.getTargetElement()[0]
+                .equals(lastTargetWords.get(lastTargetWords.size() - 1))) {
+            statistics.addTargetWord(gameState.getTargetElement()[0]);
         }
         this.gameState = gameState;
         this.statistics = statistics;

@@ -66,9 +66,9 @@ public class ElementRepository {
      *
      * @throws RuntimeException if the remote data source fails to generate new goal words.
      */
-    public void generateNewGoalWord(List<String> lastGoalWords,
+    public void generateNewTargetWord(List<String> lastTargetWords,
                                     Consumer<Result<String[]>> callback) throws RuntimeException {
-        ElementRemoteDataSource.generateNewGoalWord(lastGoalWords, callback);
+        ElementRemoteDataSource.generateNewTargetWord(lastTargetWords, callback);
     }
 
     /**

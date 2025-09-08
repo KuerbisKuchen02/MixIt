@@ -40,7 +40,7 @@ public class ElementRemoteDataSource {
         }).start();
     }
 
-    public static void generateNewGoalWord(Consumer<Result<String[]>> callback) {
+    public static void generateNewTargetWord(Consumer<Result<String[]>> callback) {
         idling.increment();
         new Thread(() -> {
             try {

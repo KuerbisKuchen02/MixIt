@@ -47,7 +47,7 @@ public class Statistic {
     private int fewestArcadeTurnsToBeat;
     private boolean foundChocolateCake;
 
-    private final List<String> lastGoalWords;
+    private final List<String> lastTargetWords;
 
     public Statistic(long playtime,
                      long numberOfCombinations,
@@ -60,7 +60,7 @@ public class Statistic {
                      long shortestArcadeTimeToBeat,
                      int fewestArcadeTurnsToBeat,
                      boolean foundChocolateCake,
-                     List<String> lastGoalWords) {
+                     List<String> lastTargetWords) {
         this.playtime = playtime;
         this.numberOfCombinations = numberOfCombinations;
         this.longestElement = longestElement;
@@ -72,7 +72,7 @@ public class Statistic {
         this.shortestArcadeTimeToBeat = shortestArcadeTimeToBeat;
         this.fewestArcadeTurnsToBeat = fewestArcadeTurnsToBeat;
         this.foundChocolateCake = foundChocolateCake;
-        this.lastGoalWords = lastGoalWords;
+        this.lastTargetWords = lastTargetWords;
     }
 
     public long getPlaytime() {
@@ -109,8 +109,8 @@ public class Statistic {
 
     public boolean getFoundChocolateCake() { return this.foundChocolateCake; }
 
-    public List<String> getLastGoalWords() {
-        return lastGoalWords;
+    public List<String> getLastTargetWords() {
+        return lastTargetWords;
     }
 
     public void addPlaytime(long playTime) {
@@ -164,9 +164,9 @@ public class Statistic {
         this.foundChocolateCake = foundChocolateCake;
     }
 
-    public void addGoalWord(String goalWords) {
-        lastGoalWords.add(goalWords);
-        if (lastGoalWords.size() > NUMBER_OF_GOAL_WORDS_SAVED) lastGoalWords.remove(0);
+    public void addTargetWord(String targetWords) {
+        lastTargetWords.add(targetWords);
+        if (lastTargetWords.size() > NUMBER_OF_GOAL_WORDS_SAVED) lastTargetWords.remove(0);
     }
 
     /**
@@ -186,6 +186,6 @@ public class Statistic {
                 "Shortest Arcade Playtime: " + shortestArcadeTimeToBeat + "\n" +
                 "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat + "\n" +
                 "Discovered Chocolate Cake: " + foundChocolateCake + "\n" +
-                "Last " + NUMBER_OF_GOAL_WORDS_SAVED + " goal words: " + lastGoalWords.toString();
+                "Last " + NUMBER_OF_GOAL_WORDS_SAVED + " goal words: " + lastTargetWords.toString();
     }
 }

@@ -71,17 +71,17 @@ public class StatisticDataSource {
         int fewestTurnsToBeat = sp.getInt(PREF_FEWEST_TURNS_TO_BEAT, Integer.MAX_VALUE);
         boolean foundChocolateCake = sp.getBoolean(PREF_FOUND_CHOCOLATE_CAKE, false);
         String rawJson = sp.getString(PREF_LAST_GOAL_WORDS, null);
-        List<String> lastGoalWords;
+        List<String> lastTargetWords;
         if (rawJson != null) {
-            lastGoalWords = gson.fromJson(rawJson, new TypeToken<ArrayList<String>>(){}.getType());
+            lastTargetWords = gson.fromJson(rawJson, new TypeToken<ArrayList<String>>(){}.getType());
         } else {
-            lastGoalWords = new ArrayList<>();
+            lastTargetWords = new ArrayList<>();
         }
 
         return new Statistic(playtime, combinations, longestElement, numUnlockedElements,
                 numDiscardedElements, mostDiscardedElements, mostElementCombinations,
                 arcadeGamesWon, shortestTimeToBeat, fewestTurnsToBeat, foundChocolateCake,
-                lastGoalWords);
+                lastTargetWords);
     }
 
     /**
@@ -105,7 +105,7 @@ public class StatisticDataSource {
         spEditor.putLong(PREF_SHORTEST_TIME_TO_BEAT, statistic.getShortestArcadeTimeToBeat());
         spEditor.putInt(PREF_FEWEST_TURNS_TO_BEAT, statistic.getFewestArcadeTurnsToBeat());
         spEditor.putBoolean(PREF_FOUND_CHOCOLATE_CAKE, statistic.getFoundChocolateCake());
-        spEditor.putString(PREF_LAST_GOAL_WORDS, gson.toJson(statistic.getLastGoalWords()));
+        spEditor.putString(PREF_LAST_GOAL_WORDS, gson.toJson(statistic.getLastTargetWords()));
         spEditor.apply();
     }
 

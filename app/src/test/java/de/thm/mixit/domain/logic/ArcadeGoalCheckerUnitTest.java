@@ -15,13 +15,13 @@ public class ArcadeGoalCheckerUnitTest {
     @Test
     public void matchesTargetElement_correctElement_returnsTrue() {
         // Given
-        String[] goalWords = {
+        String[] targetWords = {
                 "Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte"
         };
         String word = "Schokokuchen";
 
         // When
-        boolean isContained = ArcadeGoalChecker.matchesTargetElement(goalWords, word);
+        boolean isContained = ArcadeGoalChecker.matchesTargetElement(targetWords, word);
 
         // Then
         assertTrue(isContained);
@@ -30,13 +30,13 @@ public class ArcadeGoalCheckerUnitTest {
     @Test
     public void matchesTargetElement_wrongElement_returnsFalse() {
         // Given
-        String[] goalWords = {
+        String[] targetWords = {
                 "Schokokuchen", "Schokoladenkuchen", "Schokotorte", "Schokoladentorte"
         };
         String word = "Erdbeerkuchen";
 
         // When
-        boolean isContained = ArcadeGoalChecker.matchesTargetElement(goalWords, word);
+        boolean isContained = ArcadeGoalChecker.matchesTargetElement(targetWords, word);
 
         // Then
         assertFalse(isContained);

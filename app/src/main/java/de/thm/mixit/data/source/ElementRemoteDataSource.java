@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.exception.CombinationException;
-import de.thm.mixit.data.exception.InvalidGoalWordException;
+import de.thm.mixit.data.exception.InvalidTargetWordException;
 import de.thm.mixit.data.model.Result;
 
 /**
@@ -147,10 +147,10 @@ public class ElementRemoteDataSource {
      * - no choices
      * - an empty content
      */
-    public static void generateNewGoalWord(List<String> lastGoalWords,
+    public static void generateNewTargetWord(List<String> lastTargetWords,
                                            Consumer<Result<String[]>> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
-                .addDeveloperMessage(String.format(GOAL_WORD_PROMPT, lastGoalWords.toString()))
+                .addDeveloperMessage(String.format(GOAL_WORD_PROMPT, lastTargetWords.toString()))
                 .model(ChatModel.CHATGPT_4O_LATEST)
                 .build();
 
@@ -158,13 +158,13 @@ public class ElementRemoteDataSource {
                 (chatCompletion, throwable) -> {
                     if (throwable != null) {
                         callback.accept(Result.failure(
-                                new InvalidGoalWordException("Internal error", throwable)));
+                                new InvalidTargetWordException("Internal error", throwable)));
                         return null;
                     }
 
                     if (chatCompletion.choices().isEmpty()) {
                         callback.accept(Result.failure(
-                                new InvalidGoalWordException("No choices returned from OpenAI API")
+                                new InvalidTargetWordException("No choices returned from OpenAI API")
                         ));
                         return null;
                     }
@@ -177,14 +177,14 @@ public class ElementRemoteDataSource {
                             callback.accept(Result.success(words));
                         } else {
                             callback.accept(Result.failure(
-                                    new InvalidGoalWordException(
+                                    new InvalidTargetWordException(
                                             "Invalid goal word response format: " + content.get())
                             ));
                         }
 
                     } else {
                         callback.accept(Result.failure(
-                                new InvalidGoalWordException(
+                                new InvalidTargetWordException(
                                         "Empty content returned from OpenAI API")
                         ));
                     }

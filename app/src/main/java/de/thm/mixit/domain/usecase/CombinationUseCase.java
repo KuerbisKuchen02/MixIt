@@ -20,22 +20,22 @@ import de.thm.mixit.data.repository.ElementRepository;
  *
  * @author Jonathan Hildebrandt
  */
-public class ElementUseCase {
+public class CombinationUseCase {
 
-    private static final String TAG = ElementUseCase.class.getSimpleName();
+    private static final String TAG = CombinationUseCase.class.getSimpleName();
 
     private final CombinationRepository combinationRepository;
     private final ElementRepository elementRepository;
 
     /**
-     * Constructor for ElementUseCase.
+     * Constructor for CombinationUseCase.
      * Initializes the repositories needed for element operations.
      *
      * @param context The Android context used to create the repositories.
      * @param isArcade Whether the use case is called in endless or arcade mode.
      */
-    public ElementUseCase(CombinationRepository combinationRepository,
-                          ElementRepository elementRepository) {
+    public CombinationUseCase(CombinationRepository combinationRepository,
+                              ElementRepository elementRepository) {
         this.combinationRepository = combinationRepository;
         this.elementRepository = elementRepository;
     }

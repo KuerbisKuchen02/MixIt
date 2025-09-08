@@ -13,14 +13,14 @@ public class ArcadeGoalChecker {
      * Checks if a word is the one which is searched for inside an Arcade Session. The word
      * is compared to multiple synonyms of the given goal word. Comparison is case-insensitive.
      *
-     * @param goalWords An {@code ArrayList}, containing the actual goal word, as well as synonyms
+     * @param targetWords An {@code ArrayList}, containing the actual goal word, as well as synonyms
      *                  of it.
      * @param word      The word to be checked against all goal-word variations.
      * @return          A {@code boolean} representing if the given word is the word
      *                  which should be found.
      */
-    public static boolean matchesTargetElement(String[] goalWords, String word) {
-        for (String w : goalWords) {
+    public static boolean matchesTargetElement(String[] targetWords, String word) {
+        for (String w : targetWords) {
             if (w.equalsIgnoreCase(word)) return true;
         }
         return false;

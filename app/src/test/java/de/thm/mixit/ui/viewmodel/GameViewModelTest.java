@@ -30,7 +30,7 @@ import de.thm.mixit.data.entity.GameState;
 import de.thm.mixit.data.entity.Statistic;
 import de.thm.mixit.data.model.ElementChip;
 import de.thm.mixit.data.model.Result;
-import de.thm.mixit.domain.usecase.ElementUseCase;
+import de.thm.mixit.domain.usecase.CombinationUseCase;
 import de.thm.mixit.domain.usecase.GameStateUseCase;
 import de.thm.mixit.util.LiveDataTestUtil;
 
@@ -49,7 +49,7 @@ public class GameViewModelTest {
     public TestRule rule = new InstantTaskExecutorRule();
 
     @Mock
-    private ElementUseCase mockElementUseCase;
+    private CombinationUseCase mockCombinationUseCase;
     @Mock
     private GameStateUseCase mockGameStateUseCase;
 
@@ -62,7 +62,7 @@ public class GameViewModelTest {
                 new Element("Erde", "\uD83C\uDF0D"),
                 new Element("Feuer", "\uD83D\uDD25"),
                 new Element("Luft", "\uD83C\uDF2C️")));
-        viewModel = new GameViewModel(mockElementUseCase, mockGameStateUseCase);
+        viewModel = new GameViewModel(mockCombinationUseCase, mockGameStateUseCase);
         mockGameStateRepositoryLoad();
         viewModel.load();
     }
@@ -224,7 +224,7 @@ public class GameViewModelTest {
             Consumer<Result<Element>> callback = invocation.getArgument(2);
             callback.accept(result);
             return null;
-        }).when(mockElementUseCase).getElement(any(), any(), any());
+        }).when(mockCombinationUseCase).getElement(any(), any(), any());
     }
 
     private void mockGameStateRepositoryLoad() {

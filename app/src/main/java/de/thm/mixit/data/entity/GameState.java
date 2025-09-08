@@ -11,7 +11,7 @@ import de.thm.mixit.data.model.ElementChip;
  * <br>
  * {@code turns} Taken turns.
  * <br>
- * {@code goalElement} The goal element and its synonyms in arcade mode.
+ * {@code targetElement} The goal element and its synonyms in arcade mode.
  * <br>
  * {@code elementchips} The positioning of all placed {@link ElementChip}.
  *
@@ -20,16 +20,16 @@ import de.thm.mixit.data.model.ElementChip;
 public class GameState {
     private long time;
     private int turns;
-    private String[] goalElement;
+    private String[] targetElement;
     private ArrayList<ElementChip> elementChips;
 
     public GameState(long time,
                      int turns,
-                     String[] goalElement,
+                     String[] targetElement,
                      ArrayList<ElementChip> elementchips) {
         this.time = time;
         this.turns = turns;
-        this.goalElement = goalElement;
+        this.targetElement = targetElement;
         this.elementChips = elementchips;
     }
 
@@ -41,8 +41,8 @@ public class GameState {
         return this.turns;
     }
 
-    public String[] getGoalElement() {
-        return this.goalElement;
+    public String[] getTargetElement() {
+        return this.targetElement;
     }
 
     public ArrayList<ElementChip> getElementChips() {
@@ -57,8 +57,8 @@ public class GameState {
         this.turns = turns;
     }
 
-    public void setGoalElement(String[] element) {
-        this.goalElement = element;
+    public void setTargetElement(String[] element) {
+        this.targetElement = element;
     }
 
     public void setElementChips(ArrayList<ElementChip> elementChips) {
