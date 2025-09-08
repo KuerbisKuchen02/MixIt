@@ -157,7 +157,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         Context context = requireContext();
         Snackbar.make(playground, text, 6000)
-                .setBackgroundTint(MaterialColors.getColor(context, com.google.android.material.R.attr.colorError, Color.RED))
+                .setBackgroundTint(MaterialColors.getColor(context, androidx.appcompat.R.attr.colorError, Color.RED))
                 .setTextColor(MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnError, Color.BLACK))
                 .show();
     }
