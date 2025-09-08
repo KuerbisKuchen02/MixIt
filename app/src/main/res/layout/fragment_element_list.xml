@@ -32,8 +32,7 @@
             android:textColor="?attr/colorOnPrimaryContainer"
             android:drawableStart="@drawable/ic_search"
             app:drawableTint="?attr/colorOnPrimaryContainer"
-            android:hint="@string/game_element_list_search_hint"
-            app:elements="@{viewModel.elements}"/>
+            android:hint="@string/game_element_list_search_hint" />
 
         <ScrollView
             android:layout_width="match_parent"
