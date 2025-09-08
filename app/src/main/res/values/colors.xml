@@ -23,9 +23,9 @@
     <color name="md_theme_light_onSurface">#1C1B1F</color>
 
     <!-- Light Error -->
-    <color name="md_theme_light_error">#F5005A</color>
+    <color name="md_theme_light_error">#FF458C</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
-    <color name="md_theme_light_errorContainer">#F5005A</color>
+    <color name="md_theme_light_errorContainer">#EB6F7C</color>
     <color name="md_theme_light_onErrorContainer">#FFFFFF</color>
 
     <!-- Dark Primary -->
@@ -57,5 +57,7 @@
     <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
 
     <!-- FAB delete mode -->
-    <color name="fab_on_drop_delete">#FF146A</color>
+    <color name="fab_on_drop_delete">#FF458C</color>
+
+    <color name="button_reset_progress">#E2283A</color>
 </resources>
