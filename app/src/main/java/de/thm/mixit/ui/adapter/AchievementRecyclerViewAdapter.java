@@ -111,11 +111,21 @@ public class AchievementRecyclerViewAdapter extends
             boolean isDarkTheme =
                     (context.getResources().getConfiguration().uiMode
                             & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+            // Setting the correct color explicitly whenever a view is recycled, so a view
+            // which showed an unlocked achievement previously does not apply to the new view.
             if (achievement.isUnlocked()) {
                 if (isDarkTheme) {
                     card.setBackgroundColor(context.getColor(R.color.md_theme_dark_tertiary));
                 } else {
                     card.setBackgroundColor(context.getColor(R.color.md_theme_light_tertiary));
+                }
+            } else {
+                // Set the correct color for locked achievements
+                if (isDarkTheme) {
+                    card.setBackgroundColor(context.getColor(R.color.md_theme_dark_surface));
+                } else {
+                    card.setBackgroundColor(context.getColor(R.color.md_theme_light_surface));
                 }
             }
         }
