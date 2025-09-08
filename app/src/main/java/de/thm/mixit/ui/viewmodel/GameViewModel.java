@@ -40,7 +40,6 @@ public class GameViewModel extends ViewModel {
     private final static String TAG = GameViewModel.class.getSimpleName();
     private final CombinationUseCase combinationUseCase;
     private final GameStateUseCase gameStateUseCase;
-    private Statistic statistics;
     private final MutableLiveData<List<Element>> elements = new MutableLiveData<>();
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
     private final MediatorLiveData<List<Element>> filteredElements = new MediatorLiveData<>();
@@ -51,6 +50,7 @@ public class GameViewModel extends ViewModel {
     private final MutableLiveData<Integer> turns = new MutableLiveData<>();
     private final MutableLiveData<String[]> targetElement = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isWon = new MutableLiveData<>();
+    private Statistic statistics;
 
     /**
      * Use the {@link Factory} to get a new GameViewModel instance
@@ -66,8 +66,8 @@ public class GameViewModel extends ViewModel {
         this.filteredElements.addSource(searchQuery, query -> filter());
         this.elementsOnPlayground.setValue(new ArrayList<>());
         this.error.setValue(null);
-        this.turns.setValue(0);
         this.passedTime.setValue(0L);
+        this.turns.setValue(0);
         this.isWon.setValue(false);
     }
 
@@ -101,6 +101,68 @@ public class GameViewModel extends ViewModel {
      */
     public void onSearchQueryChanged(String query) {
         searchQuery.setValue(query);
+    }
+
+    public LiveData<Throwable> getError() {
+        return error;
+    }
+
+    public void setPassedTime(Long time) {
+        // Don't increase the counter if no target is generated
+        if (targetElement.getValue() == null) return;
+        passedTime.postValue(time);
+    }
+
+    public LiveData<Long> getPassedTime() {
+        return passedTime;
+    }
+
+    public LiveData<Integer> getTurns() {
+        return turns;
+    }
+
+    public MutableLiveData<String[]> getTargetElement() {
+        return targetElement;
+    }
+
+    public MutableLiveData<Boolean> getIsWon() {
+        return isWon;
+    }
+
+    public void load() {
+        loadElements();
+
+        gameStateUseCase.load(res -> {
+            if (res.isError()){
+                this.error.postValue(res.getError());
+            }
+            this.targetElement.postValue(res.getData().getTargetElement());
+        });
+        GameState gameState = this.gameStateUseCase.getGameState();
+        this.elementsOnPlayground.postValue(gameState.getElementChips());
+        this.turns.postValue(gameState.getTurns());
+        this.passedTime.postValue(gameState.getTime());
+        this.targetElement.postValue(gameState.getTargetElement());
+
+        this.statistics = gameStateUseCase.getStatistics();
+        Log.d(TAG, statistics.toString());
+    }
+
+    public void save() {
+        assert turns.getValue() != null;
+        assert passedTime.getValue() != null;
+        assert elementsOnPlayground.getValue() != null;
+
+        // We need to reset this flag before persisting the elements to ensure
+        // that elements that are in an ongoing combination do not get stuck in an invalid state
+        // and can be recombined if the game is restarted
+        elementsOnPlayground.getValue().forEach(e -> e.setAnimated(false));
+        gameStateUseCase.save(new GameState(
+                        passedTime.getValue(),
+                        turns.getValue(),
+                        targetElement.getValue(),
+                        elementsOnPlayground.getValue()),
+                statistics);
     }
 
     /**
@@ -176,74 +238,18 @@ public class GameViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Throwable> getError() {
-        return error;
-    }
-
-    public void setPassedTime(Long time) {
-        // Don't increase the counter if no target is generated
-        if (targetElement.getValue() == null) return;
-        passedTime.postValue(time);
-    }
-
-    public LiveData<Long> getPassedTime() {
-        return passedTime;
-    }
-
-    public LiveData<Integer> getTurns() {
-        return turns;
-    }
-
-    public MutableLiveData<String[]> getTargetElement() {
-        return targetElement;
-    }
-
-    public MutableLiveData<Boolean> getIsWon() {
-        return isWon;
-    }
-
     public void increaseTurnCounter() {
         assert turns.getValue() != null;
         turns.setValue(turns.getValue() + 1);
         statistics.setNumberOfCombinations(statistics.getNumberOfCombinations() + 1);
     }
 
-    public void load() {
-        loadElements();
-
-        gameStateUseCase.load(res -> {
-            if (res.isError()){
-                this.error.postValue(res.getError());
-            }
-            this.targetElement.postValue(res.getData().getTargetElement());
-        });
-
-        GameState gameState = this.gameStateUseCase.getGameState();
-
-        this.elementsOnPlayground.postValue(gameState.getElementChips());
-        this.turns.postValue(gameState.getTurns());
-        this.passedTime.postValue(gameState.getTime());
-        this.targetElement.postValue(gameState.getTargetElement());
-
-        this.statistics = gameStateUseCase.getStatistics();
-        Log.d(TAG, statistics.toString());
-    }
-
-    public void save() {
-        assert turns.getValue() != null;
-        assert passedTime.getValue() != null;
-        assert elementsOnPlayground.getValue() != null;
-
-        // We need to reset this flag before persisting the elements to ensure
-        // that elements that are in an ongoing combination do not get stuck in an invalid state
-        // and can be recombined if the game is restarted
-        elementsOnPlayground.getValue().forEach(e -> e.setAnimated(false));
-        gameStateUseCase.save(new GameState(
-                passedTime.getValue(),
-                turns.getValue(),
-                targetElement.getValue(),
-                elementsOnPlayground.getValue()),
-                statistics);
+    /**
+     * Get all elements from the element repository
+     */
+    @VisibleForTesting
+    void loadElements() {
+        this.gameStateUseCase.getAllElements(elements::postValue);
     }
 
     /**
@@ -260,14 +266,6 @@ public class GameViewModel extends ViewModel {
                     .collect(Collectors.toList());
             filteredElements.setValue(filtered);
         }
-    }
-
-    /**
-     * Get all elements from the element repository
-     */
-    @VisibleForTesting
-    void loadElements() {
-        this.gameStateUseCase.getAllElements(elements::postValue);
     }
 
     /**
@@ -324,7 +322,8 @@ public class GameViewModel extends ViewModel {
             GameStateRepository gameStateRepository = GameStateRepository.create(context, isArcade);
             StatisticRepository statisticRepository = StatisticRepository.create(context);
 
-            this.combinationUseCase = new CombinationUseCase(combinationRepository, elementRepository);
+            this.combinationUseCase =
+                    new CombinationUseCase(combinationRepository, elementRepository);
             this.gameStateUseCase = new GameStateUseCase(combinationRepository, elementRepository,
                     gameStateRepository, statisticRepository);
         }
