@@ -97,9 +97,9 @@ public class DialogResetProgress extends DialogFragment {
                 int errorColor;
                 int nightModeFlag = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
                 if (nightModeFlag == Configuration.UI_MODE_NIGHT_NO) {
-                    errorColor = ContextCompat.getColor(context, R.color.md_theme_light_error);
+                    errorColor = ContextCompat.getColor(context, R.color.md_theme_light_errorContainer);
                 } else if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
-                    errorColor = ContextCompat.getColor(context, R.color.md_theme_dark_error);
+                    errorColor = ContextCompat.getColor(context, R.color.md_theme_dark_errorContainer);
                 } else {
                     Log.w(TAG, "Could not get the current configuration of the App Theme using light error colors.");
                     errorColor = ContextCompat.getColor(context, R.color.md_theme_light_error);
