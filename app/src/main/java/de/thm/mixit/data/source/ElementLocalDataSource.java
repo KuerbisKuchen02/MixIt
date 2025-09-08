@@ -23,11 +23,11 @@ public class ElementLocalDataSource {
 
     /**
      * Constructs a new {@code ElementLocalDataSource} with the given {@link ElementDao}.
-     * @param elementDAO The Data Access Object used to perform database operation
+     * @param elementDao The Data Access Object used to perform database operation
      *                   on {@link Element} objects.
      */
-    public ElementLocalDataSource(ElementDao elementDAO) {
-        this.elementDAO = elementDAO;
+    public ElementLocalDataSource(ElementDao elementDao) {
+        this.elementDAO = elementDao;
     }
 
     /**
@@ -91,7 +91,7 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously deletes all Elements and recreates the four starter-elements.
+     * Asynchronously deletes all Elements and inserts the four starter elements.
      */
     public void reset() {
         executor.execute(() -> {
@@ -104,12 +104,5 @@ public class ElementLocalDataSource {
             );
             elementDAO.insertAll(elements);
         });
-    }
-
-    /**
-     * Asynchronously deletes all Element records from the database.
-     */
-    public void deleteAll() {
-        executor.execute(elementDAO::deleteAll);
     }
 }
