@@ -84,7 +84,8 @@ public class GameStateUseCase {
         ElementChip.setId(gameState.getHighestElementChipID() + 1);
 
         if (gameState.getTargetElement() == null) {
-            elementRepository.generateNewTargetWord(statistics.getLastTargetWords(), res -> {
+            elementRepository.generateNewTargetWord(statistics.getLastTargetWords(),
+                    res -> {
                 if (res.isError()) {
                     Log.e(TAG, "Couldn't fetch new target word: " + res.getError());
                     callback.accept(Result.failure(res.getError()));
