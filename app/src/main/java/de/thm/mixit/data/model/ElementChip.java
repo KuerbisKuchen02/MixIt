@@ -7,7 +7,7 @@ import de.thm.mixit.data.entity.Element;
 
 /**
  * Represents a single element chip on the playground
- * Wraps a single {@link Element} objects
+ * Wraps a single {@link Element} object
  *
  * @author Josia Menger
  */
@@ -96,6 +96,12 @@ public class ElementChip {
         isAnimated = animated;
     }
 
+    /**
+     * Returns same ElementChip with updated position
+     * @param x new x coordinate
+     * @param y new y coordinate
+     * @return self
+     */
     public ElementChip withPosition(float x, float y) {
         this.x = x;
         this.y = y;
