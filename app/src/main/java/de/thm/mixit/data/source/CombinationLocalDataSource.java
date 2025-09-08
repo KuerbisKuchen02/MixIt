@@ -8,6 +8,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+import de.thm.mixit.BuildConfig;
 import de.thm.mixit.data.dao.CombinationDao;
 import de.thm.mixit.data.entity.Combination;
 import de.thm.mixit.data.exception.CombinationException;
@@ -83,7 +84,9 @@ public class CombinationLocalDataSource {
             Integer i = combinationDao.getAmountOfMostOccurringOutputId();
             if (i == null) {
                 i = 0;
-                Log.d(TAG, "getAmountOfMostOccurringOutputId returned null");
+                if(BuildConfig.DEBUG) {
+                    Log.d(TAG, "getAmountOfMostOccurringOutputId returned null");
+                }
             }
             callback.accept(i);
         });
