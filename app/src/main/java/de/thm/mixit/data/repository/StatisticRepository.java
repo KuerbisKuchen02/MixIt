@@ -3,21 +3,21 @@ package de.thm.mixit.data.repository;
 import android.content.Context;
 
 import de.thm.mixit.data.entity.Statistic;
-import de.thm.mixit.data.source.StatisticDataSource;
+import de.thm.mixit.data.source.StatisticLocalDataSource;
 
 /**
  * Repository class that provides access to Statistics data.
  * <p>
  * Acts as a single source of truth for Statistics data by delegating
- * data operations to a {@link StatisticDataSource}.
+ * data operations to a {@link StatisticLocalDataSource}.
  *
  * @author Jannik Heimann
  */
 public class StatisticRepository {
 
-    private final StatisticDataSource datasource;
+    private final StatisticLocalDataSource datasource;
 
-    private StatisticRepository(StatisticDataSource datasource) {
+    private StatisticRepository(StatisticLocalDataSource datasource) {
         this.datasource = datasource;
     }
 
@@ -29,7 +29,7 @@ public class StatisticRepository {
      * @author Jannik Heimann
      */
     public static StatisticRepository create(Context context) {
-        return new StatisticRepository(new StatisticDataSource(context));
+        return new StatisticRepository(new StatisticLocalDataSource(context));
     }
 
     /**

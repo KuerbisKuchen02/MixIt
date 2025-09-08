@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.thm.mixit.R;
 import de.thm.mixit.data.entity.GameState;
 import de.thm.mixit.data.model.ElementChip;
 
@@ -23,9 +22,11 @@ import de.thm.mixit.data.model.ElementChip;
  *
  * @author Jannik Heimann
  */
-public class GameStateDataSource {
+public class GameStateLocalDataSource {
 
     private final SharedPreferences sp;
+    private static final String FILEPATH_ENDLESS = "de.thm.mixit.GAMESTATE_ENDLESS_FILE";
+    private static final String FILEPATH_ARCADE = "de.thm.mixit.GAMESTATE_ARCADE_FILE";
     private static final String PREF_TIME = "TIME";
     private static final String PREF_TURNS = "TURNS";
     private static final String PREF_GOAL_ELEMENT = "GOAL_ELEMENT";
@@ -40,10 +41,8 @@ public class GameStateDataSource {
      *
      * @author Jannik Heimann
      */
-    public GameStateDataSource(Context context, boolean isArcade) {
-        String filepath = context.getString(
-                isArcade ? R.string.gamestate_shared_preferences_arcade :
-                R.string.gamestate_shared_preferences_endless);
+    public GameStateLocalDataSource(Context context, boolean isArcade) {
+        String filepath = isArcade ? FILEPATH_ARCADE : FILEPATH_ENDLESS;
         this.sp = context.getSharedPreferences(
                 filepath,
                 Context.MODE_PRIVATE);

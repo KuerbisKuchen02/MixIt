@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.thm.mixit.R;
 import de.thm.mixit.data.entity.Achievement;
 import de.thm.mixit.data.entity.BinaryAchievement;
 import de.thm.mixit.data.entity.ProgressAchievement;
@@ -24,9 +23,10 @@ import de.thm.mixit.data.entity.ProgressAchievement;
  *
  * @author Jannik Heimann
  */
-public class AchievementDataSource {
+public class AchievementLocalDataSource {
     private final Context context;
     private final SharedPreferences sp;
+    private static final String FILEPATH = "de.thm.mixit.ACHIEVEMENTS_FILE";
     private final Set<String> binaryAchievementNames;
     private final Set<String> progressAchievementNames;
 
@@ -38,11 +38,10 @@ public class AchievementDataSource {
      *
      * @author Jannik Heimann
      */
-    public AchievementDataSource(Context context) {
-        String filepath = context.getString(R.string.achievements_shared_preferences);
+    public AchievementLocalDataSource(Context context) {
         this.context = context;
         this.sp = context.getSharedPreferences(
-                filepath,
+                FILEPATH,
                 Context.MODE_PRIVATE);
         this.binaryAchievementNames = sp.getStringSet("binaryAchievementNames",
                 new HashSet<>());

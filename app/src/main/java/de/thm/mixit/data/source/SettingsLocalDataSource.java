@@ -13,16 +13,16 @@ import de.thm.mixit.data.entity.Settings;
  *
  * @author Jannik Heimann
  */
-public class SettingsDataSource {
+public class SettingsLocalDataSource {
     private final SharedPreferences sp;
-    private static final String filepath = "de.thm.mixit.SETTINGS_FILE";
+    private static final String FILEPATH = "de.thm.mixit.SETTINGS_FILE";
     private static final String PREF_LANGUAGE = "LANGUAGE";
     private static final String PREF_THEME = "THEME";
 
 
-    public SettingsDataSource(Context context) {
+    public SettingsLocalDataSource(Context context) {
         this.sp = context.getSharedPreferences(
-                filepath,
+                FILEPATH,
                 Context.MODE_PRIVATE);
     }
 

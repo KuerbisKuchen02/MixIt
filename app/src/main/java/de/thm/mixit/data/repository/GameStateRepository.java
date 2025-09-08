@@ -3,21 +3,21 @@ package de.thm.mixit.data.repository;
 import android.content.Context;
 
 import de.thm.mixit.data.entity.GameState;
-import de.thm.mixit.data.source.GameStateDataSource;
+import de.thm.mixit.data.source.GameStateLocalDataSource;
 
 /**
  * Repository class that provides access to GameState data.
  * <p>
  * Acts as a single source of truth for GameState data by delegating
- * data operations to a {@link GameStateDataSource}.
+ * data operations to a {@link GameStateLocalDataSource}.
  *
  * @author Jannik Heimann
  */
 public class GameStateRepository {
 
-    private final GameStateDataSource datasource;
+    private final GameStateLocalDataSource datasource;
 
-    private GameStateRepository(GameStateDataSource datasource) {
+    private GameStateRepository(GameStateLocalDataSource datasource) {
         this.datasource = datasource;
     }
 
@@ -31,7 +31,7 @@ public class GameStateRepository {
      * @author Jannik Heimann
      */
     public static GameStateRepository create(Context context, boolean isArcade) {
-        return new GameStateRepository(new GameStateDataSource(context, isArcade));
+        return new GameStateRepository(new GameStateLocalDataSource(context, isArcade));
     }
 
     /**

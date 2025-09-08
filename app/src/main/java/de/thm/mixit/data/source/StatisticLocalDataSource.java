@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.thm.mixit.R;
 import de.thm.mixit.data.entity.Statistic;
 
 /**
@@ -20,9 +19,10 @@ import de.thm.mixit.data.entity.Statistic;
  *
  * @author Jannik Heimann
  */
-public class StatisticDataSource {
+public class StatisticLocalDataSource {
 
     private final SharedPreferences sp;
+    private static final String FILEPATH = "de.thm.mixit.STATISTIC_FILE";
     private static final String PREF_TOTAL_PLAYTIME = "TOTAL_PLAYTIME";
     private static final String PREF_TOTAL_COMBINATIONS = "TOTAL_COMBINATIONS";
     private static final String PREF_LONGEST_ELEMENT = "LONGEST_ELEMENT";
@@ -44,10 +44,9 @@ public class StatisticDataSource {
      *
      * @author Jannik Heimann
      */
-    public StatisticDataSource(Context context) {
-        String filepath = context.getString(R.string.statistic_shared_preferences);
+    public StatisticLocalDataSource(Context context) {
         this.sp = context.getSharedPreferences(
-                filepath,
+                FILEPATH,
                 Context.MODE_PRIVATE);
     }
 

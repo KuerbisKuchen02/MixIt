@@ -3,21 +3,21 @@ package de.thm.mixit.data.repository;
 import android.content.Context;
 
 import de.thm.mixit.data.entity.Settings;
-import de.thm.mixit.data.source.SettingsDataSource;
+import de.thm.mixit.data.source.SettingsLocalDataSource;
 
 /**
  * Repository class that provides access to saved Settings data.
  * <p>
  * Acts as a single source of truth for Settings data by delegating
- * data operations to a {@link SettingsDataSource}.
+ * data operations to a {@link SettingsLocalDataSource}.
  *
  * @author Jannik Heimann
  */
 public class SettingsRepository {
 
-    private final SettingsDataSource datasource;
+    private final SettingsLocalDataSource datasource;
 
-    private SettingsRepository(SettingsDataSource datasource) {
+    private SettingsRepository(SettingsLocalDataSource datasource) {
         this.datasource = datasource;
     }
 
@@ -29,7 +29,7 @@ public class SettingsRepository {
      * @author Jannik Heimann
      */
     public static SettingsRepository create(Context context) {
-        return new SettingsRepository(new SettingsDataSource(context));
+        return new SettingsRepository(new SettingsLocalDataSource(context));
     }
 
     /**

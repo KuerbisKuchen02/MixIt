@@ -5,20 +5,20 @@ import android.content.Context;
 import java.util.List;
 
 import de.thm.mixit.data.entity.Achievement;
-import de.thm.mixit.data.source.AchievementDataSource;
+import de.thm.mixit.data.source.AchievementLocalDataSource;
 
 /**
  * Repository class that provides access to Achievement data.
  * <p>
  * Acts as a single source of truth for Achievement data by delegating
- * data operations to a {@link AchievementDataSource}.
+ * data operations to a {@link AchievementLocalDataSource}.
  *
  * @author Jannik Heimann
  */
 public class AchievementRepository {
-    private final AchievementDataSource datasource;
+    private final AchievementLocalDataSource datasource;
 
-    private AchievementRepository(AchievementDataSource datasource) {
+    private AchievementRepository(AchievementLocalDataSource datasource) {
         this.datasource = datasource;
     }
 
@@ -30,7 +30,7 @@ public class AchievementRepository {
      * @author Jannik Heimann
      */
     public static AchievementRepository create(Context context) {
-        return new AchievementRepository(new AchievementDataSource(context));
+        return new AchievementRepository(new AchievementLocalDataSource(context));
     }
 
     /**
