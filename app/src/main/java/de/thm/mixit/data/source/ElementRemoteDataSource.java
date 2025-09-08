@@ -75,11 +75,6 @@ public class ElementRemoteDataSource {
             "Beispielausgabe:\n" +
             "Kerze, Kerzen, Wachskerze\n";
 
-    // TODO insert a regex to validate the element format <Emoji> <Description>
-    private static boolean isValidElement(String element) {
-        return true;
-    }
-
     private static boolean isValidGoalResponse(String response) {
         return response.matches("^([a-zA-Z 0-9ÜüÄäÖöß-]+, )+([a-zA-Z 0-9ÜüÄäÖöß-]+)$");
     }
@@ -121,14 +116,6 @@ public class ElementRemoteDataSource {
                     }
 
                     String content = chatCompletion.choices().get(0).message().content().get();
-
-                    if (!isValidElement(content)) {
-                        callback.accept(Result.failure(
-                                new CombinationException("Invalid element format: " + content)
-                        ));
-
-                        return null;
-                    }
 
                     String emoji = content.substring(0, content.indexOf(' '));
                     String name = content.substring(content.indexOf(' ') + 1);

@@ -1,5 +1,6 @@
 package de.thm.mixit.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import de.thm.mixit.data.entity.Element;
 
 /**
  * Filterable recycler view adapter for element entities
+ * FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
  * @author Josia Menger
  */
 public class ElementRecyclerViewAdapter extends
@@ -69,6 +71,7 @@ public class ElementRecyclerViewAdapter extends
      * Set the elements to the new list and reset the filter
      * @param elements new elements
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void setElements(List<Element> elements) {
         this.elements = elements;
         this.filteredElements.clear();
@@ -82,9 +85,9 @@ public class ElementRecyclerViewAdapter extends
      * <p>
      * if the query is empty or only contains whitespaces the complete list is shown
      * <p>
-     * FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
      * @param query String to filter by
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void filter(String query) {
         filteredElements.clear();
         String q = query.toLowerCase().trim();
