@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -94,7 +95,11 @@ public class AchievementViewModel extends ViewModel {
      * When no achievements could be loaded, initialise them.
      */
     private void loadAchievements() {
-        achievements.setValue(achievementRepository.loadAchievements());
+        // Sort the list so unlocked achievements are always last.
+        List<Achievement> achievementsList = achievementRepository.loadAchievements();
+        Collections.sort(achievementsList);
+        achievements.setValue(achievementsList);
+
         Log.d(TAG, "Loaded achievements: " +
                 Objects.requireNonNull(achievements.getValue()));
 
