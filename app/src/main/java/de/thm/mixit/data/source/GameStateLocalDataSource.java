@@ -17,27 +17,27 @@ import de.thm.mixit.data.model.ElementChip;
  * Local data source for accessing the GameState data using ShardedPreferences.
  * <p>
  * This class handles the saving and loading of GameState Data.
- * It defines Keys and uses them to safe the corresponding data in a Shared preference.
- * It also uses the GSON library to transform Classes into JSON Format.
+ * It defines Keys and uses them to safe the corresponding data in a SharedPreference.
+ * It also uses the GSON library to transform classes into JSON Format.
  *
  * @author Jannik Heimann
  */
 public class GameStateLocalDataSource {
 
-    private final SharedPreferences sp;
     private static final String FILEPATH_ENDLESS = "de.thm.mixit.GAMESTATE_ENDLESS_FILE";
     private static final String FILEPATH_ARCADE = "de.thm.mixit.GAMESTATE_ARCADE_FILE";
     private static final String PREF_TIME = "TIME";
     private static final String PREF_TURNS = "TURNS";
     private static final String PREF_GOAL_ELEMENT = "GOAL_ELEMENT";
     private static final String PREF_ELEMENTCHIPS = "ELEMENTCHIPS";
+    private final SharedPreferences sp;
 
     /**
      * Creates a Shared Preference to store a GameState object.
-     * The Shared Preference Object uses one of two pre defined filenames depending on the isArcade
-     * param.
-     * @param context Context of the Android application, needed to access shared preferences.
-     * @param isArcade Whether the GameState data belongs to the arcade or endless game mode.
+     * The SharedPreference object uses one of two pre defined filenames depending on the isArcade
+     * parameter.
+     * @param context context of the Android application, needed to access SharedPreferences.
+     * @param isArcade whether the GameState data belongs to the arcade or endless game mode.
      *
      * @author Jannik Heimann
      */
@@ -49,7 +49,7 @@ public class GameStateLocalDataSource {
     }
 
     /**
-     * Loads the last saved GameState from the Shared Preference object of the class.
+     * Loads the last saved GameState from the SharedPreference object of the class.
      * @return {@link GameState}
      *
      * @author Jannik Heimann
@@ -76,7 +76,7 @@ public class GameStateLocalDataSource {
     }
 
     /**
-     * Saves the given GameState to the corresponding class Shared Preferences object.
+     * Saves the given GameState to the corresponding class SharedPreferences object.
      * @param gameState GameState data to save.
      *
      * @author Jannik Heimann
@@ -92,7 +92,7 @@ public class GameStateLocalDataSource {
     }
 
     /**
-     * Checks whether the corresponding Sharded Preferences Object has any data saved.
+     * Checks whether the corresponding ShardedPreferences object has any data saved.
      * @return boolean
      *
      * @author Jannik Heimann
