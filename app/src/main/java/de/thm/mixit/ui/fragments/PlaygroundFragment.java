@@ -3,6 +3,7 @@ package de.thm.mixit.ui.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -25,7 +26,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -153,8 +156,10 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             text = "An error occurred!";
         }
 
+        Context context = requireContext();
         Snackbar.make(playground, text, 6000)
-                .setBackgroundTint(Color.RED)
+                .setBackgroundTint(MaterialColors.getColor(context, com.google.android.material.R.attr.colorError, Color.RED))
+                .setTextColor(MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnError, Color.BLACK))
                 .show();
     }
 

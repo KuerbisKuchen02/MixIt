@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    app:layout_maxWidth="100dp">
 
     <ImageView
         android:id="@+id/imageView_main_menu_icon"
@@ -33,6 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView_main_menu_icon"
         app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintWidth_max="350dp"
         app:layout_constraintWidth_percent="0.8" />
 
     <LinearLayout
@@ -43,6 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button_main_menu_endless"
+        app:layout_constraintWidth_max="350dp"
         app:layout_constraintWidth_percent="0.8">
 
         <com.google.android.material.button.MaterialButton
@@ -77,6 +80,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearlayout_arcade_buttons"
+        app:layout_constraintWidth_max="350dp"
         app:layout_constraintWidth_percent="0.8">
 
         <com.google.android.material.button.MaterialButton
@@ -87,19 +91,19 @@
             android:layout_weight="4"
             android:onClick="onAchievementsButtonClicked"
             android:text="@string/main_menu_button_achievemnets"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textSize="@dimen/text_size_medium" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_main_menu_settings"
             style="@style/Widget.Material3.Button.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:onClick="onSettingsButtonClicked"
             app:icon="@drawable/ic_outline_settings_24"
             app:iconGravity="start|end"
-            app:iconTint="?attr/colorOnPrimary"/>
+            app:iconTint="?attr/colorOnPrimary" />
 
     </LinearLayout>
 

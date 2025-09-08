@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Light Primary -->
-    <color name="md_theme_light_primary">#9C50B8</color>
-    <color name="md_theme_light_onPrimary">#FFFFFF</color>
-    <color name="md_theme_light_primaryContainer">#F1DAF8</color>
-    <color name="md_theme_light_onPrimaryContainer">#360047</color>
+    <color name="md_theme_light_primary">#CDB4DB</color>
+    <color name="md_theme_light_onPrimary">#232323</color>
+    <color name="md_theme_light_primaryContainer">#DBC9E5</color>
+    <color name="md_theme_light_onPrimaryContainer">#4E2E60</color>
 
     <!-- Light Secondary -->
-    <color name="md_theme_light_secondary">#FE733C</color>
-    <color name="md_theme_light_onSecondary">#FFFFFF</color>
-    <color name="md_theme_light_secondaryContainer">#FFDAD0</color>
-    <color name="md_theme_light_onSecondaryContainer">#400100</color>
+    <color name="md_theme_light_secondary">#BDDFFF</color>
+    <color name="md_theme_light_onSecondary">#232323</color>
+    <color name="md_theme_light_secondaryContainer">#EDEFF1</color>
+    <color name="md_theme_light_onSecondaryContainer">#3E4850</color>
 
     <!-- Light Tertiary -->
-    <color name="md_theme_light_tertiary">#5DE2E7</color>
-    <color name="md_theme_light_onTertiary">#00363B</color>
-    <color name="md_theme_light_tertiaryContainer">#AFFFFF</color>
-    <color name="md_theme_light_onTertiaryContainer">#002023</color>
+    <color name="md_theme_light_tertiary">#B28DC8</color>
+    <color name="md_theme_light_onTertiary">#DBC9E5</color>
+    <color name="md_theme_light_tertiaryContainer">#EDEFF1</color>
+    <color name="md_theme_light_onTertiaryContainer">#3E4850</color>
 
     <!-- Light Surface -->
     <color name="md_theme_light_surface">#FFFFFF</color>
     <color name="md_theme_light_onSurface">#1C1B1F</color>
 
     <!-- Light Error -->
-    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_error">#EB6F7C</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
-    <color name="md_theme_light_errorContainer">#F9DEDC</color>
-    <color name="md_theme_light_onErrorContainer">#410E0B</color>
+    <color name="md_theme_light_errorContainer">#EB6F7C</color>
+    <color name="md_theme_light_onErrorContainer">#FFFFFF</color>
 
     <!-- Dark Primary -->
-    <color name="md_theme_dark_primary">#E3B4F4</color>
-    <color name="md_theme_dark_onPrimary">#500F69</color>
-    <color name="md_theme_dark_primaryContainer">#733490</color>
-    <color name="md_theme_dark_onPrimaryContainer">#F1DAF8</color>
+    <color name="md_theme_dark_primary">#7C4A99</color>
+    <color name="md_theme_dark_onPrimary">#E2D4EA</color>
+    <color name="md_theme_dark_primaryContainer">#4E2E60</color>
+    <color name="md_theme_dark_onPrimaryContainer">#DBC9E5</color>
 
     <!-- Dark Secondary -->
-    <color name="md_theme_dark_secondary">#FFB59C</color>
-    <color name="md_theme_dark_onSecondary">#5F1500</color>
-    <color name="md_theme_dark_secondaryContainer">#882E12</color>
-    <color name="md_theme_dark_onSecondaryContainer">#FFDAD0</color>
+    <color name="md_theme_dark_secondary">#02437D</color>
+    <color name="md_theme_dark_onSecondary">#ECF6FF</color>
+    <color name="md_theme_dark_secondaryContainer">#00111F</color>
+    <color name="md_theme_dark_onSecondaryContainer">#61B4FD</color>
 
     <!-- Dark Tertiary -->
-    <color name="md_theme_dark_tertiary">#2AC6CD</color>
-    <color name="md_theme_dark_onTertiary">#00363B</color>
-    <color name="md_theme_dark_tertiaryContainer">#004F54</color>
-    <color name="md_theme_dark_onTertiaryContainer">#AFFFFF</color>
+    <color name="md_theme_dark_tertiary">#7B4998</color>
+    <color name="md_theme_dark_onTertiary">#4E2E60</color>
+    <color name="md_theme_dark_tertiaryContainer">#373737</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFFFFF</color>
 
     <!-- Dark Surface -->
     <color name="md_theme_dark_surface">#1C1B1F</color>
@@ -57,5 +57,7 @@
     <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
 
     <!-- FAB delete mode -->
-    <color name="fab_on_drop_delete">#FF0000</color>
+    <color name="fab_on_drop_delete">#EB6F7C</color>
+
+    <color name="button_reset_progress">#E2283A</color>
 </resources>
