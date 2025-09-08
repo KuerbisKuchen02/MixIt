@@ -34,8 +34,8 @@ import nl.dionsegijn.konfetti.xml.image.ImageUtil;
 /**
  * Activity for the victory screen of an arcade game.
  * <p>
- * This Activity shows the achieved goal word, the number of turns and the time passed
- * it took to reach said goal word
+ * This Activity shows the achieved target word, the number of turns and the time passed
+ * it took to reach said target word
  */
 public class ArcadeVictoryActivity extends AppCompatActivity {
 
@@ -69,7 +69,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
             }
         } else {
             Log.e(TAG, "ArcadeVictoryActivity received Intent without the " + EXTRA_PASSED_TIME);
-            throw new IllegalArgumentException("Goal word was not received");
+            throw new IllegalArgumentException("Target word was not received");
         }
 
         if (intent.hasExtra(EXTRA_NUM_TURNS)) {
@@ -88,7 +88,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_arcade_victory);
 
-        TextView targetWordView = findViewById(R.id.text_arc_vic_goal_word);
+        TextView targetWordView = findViewById(R.id.text_arc_vic_target_word);
         targetWordView.setText(targetWord.toString());
 
         TextView numTurnsView = findViewById(R.id.text_arc_vic_turns);

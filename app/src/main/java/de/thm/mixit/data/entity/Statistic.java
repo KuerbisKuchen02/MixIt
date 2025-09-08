@@ -186,6 +186,6 @@ public class Statistic {
                 "Shortest Arcade Playtime: " + shortestArcadeTimeToBeat + "\n" +
                 "Fewest Arcade Turns: " + fewestArcadeTurnsToBeat + "\n" +
                 "Discovered Chocolate Cake: " + foundChocolateCake + "\n" +
-                "Last " + NUMBER_OF_GOAL_WORDS_SAVED + " goal words: " + lastTargetWords.toString();
+                "Last " + NUMBER_OF_GOAL_WORDS_SAVED + " target words: " + lastTargetWords.toString();
     }
 }

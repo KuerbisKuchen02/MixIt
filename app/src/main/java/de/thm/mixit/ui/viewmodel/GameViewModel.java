@@ -25,7 +25,7 @@ import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
-import de.thm.mixit.domain.logic.ArcadeGoalChecker;
+import de.thm.mixit.domain.logic.ArcadeTargetChecker;
 import de.thm.mixit.domain.usecase.CombinationUseCase;
 import de.thm.mixit.domain.usecase.GameStateUseCase;
 
@@ -181,7 +181,7 @@ public class GameViewModel extends ViewModel {
     }
 
     public void setPassedTime(Long time) {
-        // Don't increase the counter if no goal is generated
+        // Don't increase the counter if no target is generated
         if (targetElement.getValue() == null) return;
         passedTime.postValue(time);
     }
@@ -277,7 +277,7 @@ public class GameViewModel extends ViewModel {
         assert turns.getValue() != null;
 
         if (targetWords == null) return;
-        if (ArcadeGoalChecker.matchesTargetElement(targetWords, newWord)) {
+        if (ArcadeTargetChecker.matchesTargetElement(targetWords, newWord)) {
             Log.d(TAG, newWord + " matches " + Arrays.toString(targetElement.getValue()));
             isWon.postValue(true);
 

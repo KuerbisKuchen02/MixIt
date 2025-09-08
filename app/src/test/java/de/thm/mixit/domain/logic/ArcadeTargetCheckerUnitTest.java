@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Contains unit tests for the ArcadeGoalChecker class.
+ * Contains unit tests for the ArcadeTargetChecker class.
  *
  * @author Justin Wolek
  */
-public class ArcadeGoalCheckerUnitTest {
+public class ArcadeTargetCheckerUnitTest {
 
     @Test
     public void matchesTargetElement_correctElement_returnsTrue() {
@@ -21,7 +21,7 @@ public class ArcadeGoalCheckerUnitTest {
         String word = "Schokokuchen";
 
         // When
-        boolean isContained = ArcadeGoalChecker.matchesTargetElement(targetWords, word);
+        boolean isContained = ArcadeTargetChecker.matchesTargetElement(targetWords, word);
 
         // Then
         assertTrue(isContained);
@@ -36,7 +36,7 @@ public class ArcadeGoalCheckerUnitTest {
         String word = "Erdbeerkuchen";
 
         // When
-        boolean isContained = ArcadeGoalChecker.matchesTargetElement(targetWords, word);
+        boolean isContained = ArcadeTargetChecker.matchesTargetElement(targetWords, word);
 
         // Then
         assertFalse(isContained);

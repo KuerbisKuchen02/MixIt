@@ -52,7 +52,7 @@
     <string name="settings_button_reset_progress">Reset Progress</string>
     <string name="arcade_victory_time">Time</string>
     <string name="arcade_victory_turns">Turns</string>
-    <string name="arcade_victory_goal_word">goal word</string>
+    <string name="arcade_victory_target_word">target word</string>
     <string-array name="language_array">
         <item>System</item>
         <item>English</item>

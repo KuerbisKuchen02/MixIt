@@ -114,7 +114,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
             if (gameActivity.isArcade() && isWon) {
-                Log.d(TAG, "The player found the goal word!");
+                Log.d(TAG, "The player found the target word!");
 
                 List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
                 Element targetElement = list.get(list.size()-1).getElement();
@@ -150,7 +150,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             text = "Cannot combine elements! Please check your internet connection.";
             cancelCombination();
         } else if (error instanceof InvalidTargetWordException) {
-            text = "Cannot generate goal word! Please check your internet connection.";
+            text = "Cannot generate target word! Please check your internet connection.";
         } else {
             text = "An error occurred!";
         }

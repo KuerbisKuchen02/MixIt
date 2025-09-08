@@ -75,7 +75,7 @@ public class ElementRemoteDataSource {
             "Beispielausgabe:\n" +
             "Kerze, Kerzen, Wachskerze\n";
 
-    private static boolean isValidGoalResponse(String response) {
+    private static boolean isValidTargetResponse(String response) {
         return response.matches("^([a-zA-Z 0-9ÜüÄäÖöß-]+, )+([a-zA-Z 0-9ÜüÄäÖöß-]+)$");
     }
 
@@ -126,10 +126,10 @@ public class ElementRemoteDataSource {
     }
 
     /**
-     * Generates a new goal word and its synonyms using the OpenAI API.
+     * Generates a new target word and its synonyms using the OpenAI API.
      * The result is returned via a callback.
      *
-     * @param callback - a callback that will be called with the result of the goal word generation
+     * @param callback - a callback that will be called with the result of the target word generation
      * @throws RuntimeException if the OpenAI API returns:
      * - no choices
      * - an empty content
@@ -159,13 +159,13 @@ public class ElementRemoteDataSource {
                     var content = chatCompletion.choices().get(0).message().content();
 
                     if (content.isPresent()) {
-                        if (isValidGoalResponse(content.get())) {
+                        if (isValidTargetResponse(content.get())) {
                             String[] words = content.get().split(", ");
                             callback.accept(Result.success(words));
                         } else {
                             callback.accept(Result.failure(
                                     new InvalidTargetWordException(
-                                            "Invalid goal word response format: " + content.get())
+                                            "Invalid target word response format: " + content.get())
                             ));
                         }
 

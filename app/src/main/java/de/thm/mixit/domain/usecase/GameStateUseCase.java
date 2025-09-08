@@ -55,11 +55,11 @@ public class GameStateUseCase {
         if (gameState.getTargetElement() == null) {
             elementRepository.generateNewTargetWord(statistics.getLastTargetWords(), res -> {
                 if (res.isError()) {
-                    Log.e(TAG, "Couldn't fetch new goal word: " + res.getError());
+                    Log.e(TAG, "Couldn't fetch new target word: " + res.getError());
                     callback.accept(Result.failure(res.getError()));
                     return;
                 }
-                Log.i(TAG, "Fetched new Goal Word\n" + Arrays.toString(res.getData()));
+                Log.i(TAG, "Fetched new Target Word\n" + Arrays.toString(res.getData()));
                 gameState.setTargetElement(res.getData());
                 callback.accept(Result.success(gameState));
             });
@@ -72,7 +72,7 @@ public class GameStateUseCase {
     public void save(GameState gameState, Statistic statistics) {
         // Add playtime of session to sum of playtime
         statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
-        // If the goal word wasn't recorded, add it to the list of the last goal words
+        // If the target word wasn't recorded, add it to the list of the last target words
         List<String> lastTargetWords = statistics.getLastTargetWords();
         if (lastTargetWords.isEmpty()
                 || gameState.getTargetElement() != null

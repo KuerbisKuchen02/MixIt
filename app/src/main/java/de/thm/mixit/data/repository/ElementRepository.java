@@ -60,11 +60,11 @@ public class ElementRepository {
     }
 
     /**
-     * Generates a new goal word asynchronously.
+     * Generates a new target word asynchronously.
      *
-     * @param callback The callback to receive the generated goal words.
+     * @param callback The callback to receive the generated target words.
      *
-     * @throws RuntimeException if the remote data source fails to generate new goal words.
+     * @throws RuntimeException if the remote data source fails to generate new target words.
      */
     public void generateNewTargetWord(List<String> lastTargetWords,
                                     Consumer<Result<String[]>> callback) throws RuntimeException {

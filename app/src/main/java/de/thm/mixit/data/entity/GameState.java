@@ -11,7 +11,7 @@ import de.thm.mixit.data.model.ElementChip;
  * <br>
  * {@code turns} Taken turns.
  * <br>
- * {@code targetElement} The goal element and its synonyms in arcade mode.
+ * {@code targetElement} The target element and its synonyms in arcade mode.
  * <br>
  * {@code elementchips} The positioning of all placed {@link ElementChip}.
  *

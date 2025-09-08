@@ -79,11 +79,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_arc_vic_goal_word"
+        android:id="@+id/text_arc_vic_target_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/arcade_victory_goal_word"
+        android:text="@string/arcade_victory_target_word"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_size_large"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,5 +100,5 @@
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_arc_vic_goal_word" />
+        app:layout_constraintTop_toBottomOf="@+id/text_arc_vic_target_word" />
 </androidx.constraintlayout.widget.ConstraintLayout>
