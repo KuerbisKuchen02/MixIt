@@ -6,6 +6,13 @@
             name="viewModel"
             type="de.thm.mixit.ui.viewmodel.SettingsViewModel" />
     </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="?attr/colorSurface">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
@@ -65,8 +72,8 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout_settings_language" />
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:id="@+id/textInputLayout_settings_theme"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
@@ -80,10 +87,10 @@
                 android:id="@+id/dropdown_settings_theme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:text="@{viewModel.theme}"
                 android:background="?attr/colorPrimaryContainer"
-                android:popupBackground="?attr/colorPrimaryContainer"/>
+                android:inputType="none"
+                android:popupBackground="?attr/colorPrimaryContainer"
+                android:text="@{viewModel.theme}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -95,6 +102,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_settings_theme"
+            app:layout_constraintVertical_bias="1.0"
             app:strokeColor="?attr/colorErrorContainer"
             app:strokeWidth="3dp">
 
@@ -145,4 +154,5 @@
             app:srcCompat="@drawable/ic_arrow_back" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>
