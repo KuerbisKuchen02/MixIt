@@ -8,8 +8,8 @@ package de.thm.mixit.data.entity;
 public class BinaryAchievement extends Achievement {
     private boolean isUnlocked;
 
-    public BinaryAchievement(int nameResId, int descriptionResId, boolean isUnlocked) {
-        super(nameResId, descriptionResId);
+    public BinaryAchievement(int id, int nameResId, int descriptionResId, boolean isUnlocked) {
+        super(id, nameResId, descriptionResId);
         this.isUnlocked = isUnlocked;
     }
 

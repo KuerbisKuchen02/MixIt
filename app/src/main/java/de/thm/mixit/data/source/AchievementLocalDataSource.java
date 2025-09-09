@@ -18,17 +18,16 @@ import de.thm.mixit.data.entity.ProgressAchievement;
  * Local data source for accessing the Achievement data using SharedPreferences.
  * <p>
  * This class handles the saving and loading of Achievement Data.
- * It uses the name attribute of an Achievement as key and uses them to safe the corresponding data
+ * It uses the ID attribute of an Achievement as key and uses them to safe the corresponding data
  * in a Shared preference.
  *
  * @author Jannik Heimann
  */
 public class AchievementLocalDataSource {
     private static final String FILEPATH = "de.thm.mixit.ACHIEVEMENTS_FILE";
-    private final Context context;
     private final SharedPreferences sp;
-    private final Set<String> binaryAchievementNames;
-    private final Set<String> progressAchievementNames;
+    private final Set<String> binaryAchievementIds;
+    private final Set<String> progressAchievementIds;
 
     /**
      * Creates a SharedPreference to store a GameState object.
@@ -39,13 +38,12 @@ public class AchievementLocalDataSource {
      * @author Jannik Heimann
      */
     public AchievementLocalDataSource(Context context) {
-        this.context = context;
         this.sp = context.getSharedPreferences(
                 FILEPATH,
                 Context.MODE_PRIVATE);
-        this.binaryAchievementNames = sp.getStringSet("binaryAchievementNames",
+        this.binaryAchievementIds = sp.getStringSet("binaryAchievementIds",
                 new HashSet<>());
-        this.progressAchievementNames = sp.getStringSet("progressAchievementNames",
+        this.progressAchievementIds = sp.getStringSet("progressAchievementIds",
                 new HashSet<>());
     }
 
@@ -61,12 +59,12 @@ public class AchievementLocalDataSource {
         String rawJson;
 
         // Load from shared preferences based on the subtype
-        for (String name: binaryAchievementNames) {
+        for (String name: binaryAchievementIds) {
             rawJson = sp.getString(name, null);
             if (rawJson != null) achievements.add(gson.fromJson(rawJson,
                     BinaryAchievement.class));
         }
-        for (String name: progressAchievementNames) {
+        for (String name: progressAchievementIds) {
             rawJson = sp.getString(name, null);
             if (rawJson != null) achievements.add(gson.fromJson(rawJson,
                     ProgressAchievement.class));
@@ -88,31 +86,19 @@ public class AchievementLocalDataSource {
         // Save Achievements in shared preferences and also in name lists
         for (Achievement achievement: achievements) {
             if (achievement instanceof BinaryAchievement) {
-                spEditor.putString(context.getString(achievement.getNameResId()), gson.toJson(achievement,
+                spEditor.putString(Integer.toString(achievement.getId()), gson.toJson(achievement,
                         BinaryAchievement.class));
-                binaryAchievementNames.add(context.getString(achievement.getNameResId()));
+                binaryAchievementIds.add(Integer.toString(achievement.getId()));
             } else if (achievement instanceof ProgressAchievement) {
-                spEditor.putString(context.getString(achievement.getNameResId()), gson.toJson(achievement,
+                spEditor.putString(Integer.toString(achievement.getId()), gson.toJson(achievement,
                         ProgressAchievement.class));
-                progressAchievementNames.add(context.getString(achievement.getNameResId()));
+                progressAchievementIds.add(Integer.toString(achievement.getId()));
             }
         }
-        spEditor.putStringSet("binaryAchievementNames", binaryAchievementNames);
-        spEditor.putStringSet("progressAchievementNames", progressAchievementNames);
+        spEditor.putStringSet("binaryAchievementIds", binaryAchievementIds);
+        spEditor.putStringSet("progressAchievementIds", progressAchievementIds);
 
         spEditor.apply();
-    }
-
-    /**
-     * Checks whether the corresponding ShardedPreferences object has any data under the
-     * achievement name saved.
-     * @param name Name of the Achievement.
-     * @return boolean
-     *
-     * @author Jannik Heimann
-     */
-    public boolean hasSavedAchievement(String name) {
-        return sp.contains(name);
     }
 
     /**

@@ -8,10 +8,12 @@ package de.thm.mixit.data.entity;
  * @author Justin Wolek
  */
 public abstract class Achievement implements Comparable<Achievement> {
+    private final int id;
     private final int nameResId;
     private final int descriptionResId;
 
-    public Achievement(int nameResId, int descriptionResId) {
+    public Achievement(int id, int nameResId, int descriptionResId) {
+        this.id = id;
         this.nameResId = nameResId;
         this.descriptionResId = descriptionResId;
     }
@@ -34,6 +36,7 @@ public abstract class Achievement implements Comparable<Achievement> {
 
     public abstract boolean isUnlocked();
 
+    public int getId() { return this.id; }
     public int getNameResId() {
         return nameResId;
     }
