@@ -108,7 +108,8 @@ public class GameStateUseCase {
      */
     public void save(GameState gameState, Statistic statistics) {
         // Add playtime of session to sum of playtime
-        statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
+        double playtimeInHours = ((gameState.getTime() - this.gameState.getTime()) / 3600.0);
+        statistics.addPlaytime(playtimeInHours);
         // If the target word wasn't recorded, add it to the list of the last target words
         List<String> lastTargetWords = statistics.getLastTargetWords();
         if (gameState.getTargetElement() != null

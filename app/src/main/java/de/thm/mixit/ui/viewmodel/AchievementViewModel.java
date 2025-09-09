@@ -180,11 +180,11 @@ public class AchievementViewModel extends ViewModel {
         Log.d(TAG, "Initialising achievements");
         achievements.setValue(Arrays.asList(
                 new ProgressAchievement(0, R.string.achievement_name_hooked,
-                        R.string.achievement_desc_hooked, 0, 3600),
+                        R.string.achievement_desc_hooked, 0, 1),
                 new ProgressAchievement(1, R.string.achievement_name_addicted,
-                        R.string.achievement_desc_addicted, 0, 3 * 3600),
+                        R.string.achievement_desc_addicted, 0, 3),
                 new ProgressAchievement(2, R.string.achievement_name_get_a_life,
-                        R.string.achievement_desc_get_a_life, 0, 5 * 3600),
+                        R.string.achievement_desc_get_a_life, 0, 5),
                 new ProgressAchievement(3, R.string.achievement_name_know_the_drill,
                         R.string.achievement_desc_know_the_drill, 0, 200),
                 new ProgressAchievement(4, R.string.achievement_name_the_journey_begins,
@@ -196,7 +196,7 @@ public class AchievementViewModel extends ViewModel {
                 new ProgressAchievement(7, R.string.achievement_name_challenge_accepted,
                         R.string.achievement_desc_challenge_accepted, 0, 10),
                 new ProgressAchievement(8, R.string.achievement_name_again_really,
-                        R.string.achievement_desc_again_really, 0, 15),
+                        R.string.achievement_desc_again_really, 0, 5),
                 new BinaryAchievement(9, R.string.achievement_name_winner,
                         R.string.achievement_desc_winner, false),
                 new BinaryAchievement(10, R.string.achievement_name_fast_as_fuck_boy,

@@ -103,6 +103,7 @@ public class AchievementRecyclerViewAdapter extends
                 ProgressAchievement a = (ProgressAchievement) achievement;
 
                 progress_bar.setVisibility(View.VISIBLE);
+                progress_text.setVisibility(View.VISIBLE);
                 progress_bar.setMax(a.getTargetProgress());
                 progress_bar.setProgress(a.getCurrentProgress());
 
