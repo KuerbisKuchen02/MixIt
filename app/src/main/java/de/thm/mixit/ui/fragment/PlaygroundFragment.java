@@ -80,6 +80,8 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         GameActivity gameActivity = ((GameActivity) requireActivity());
+
+        // Gets the viewmodel and applies it to the activity
         viewModel = new ViewModelProvider(gameActivity,
                 new GameViewModel.Factory(gameActivity,
                         gameActivity.isArcade())).get(GameViewModel.class);
@@ -90,6 +92,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         clearElementsButton.setOnClickListener(view -> viewModel.clearPlayground());
 
+        // Register a callback to open the element list when the button has been clicked
         showElementListButton.setOnClickListener(
                 view -> {
                     if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
@@ -112,6 +115,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         viewModel.getElementsOnPlayground().observe(getViewLifecycleOwner(), this::updateElements);
         viewModel.getError().observe(getViewLifecycleOwner(), this::handleError);
 
+        // Observe the isWon state inside the viewmodel to handle the player winning the game
         viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
             if (gameActivity.isArcade() && isWon) {
                 Log.d(TAG, "The player found the target word!");
@@ -190,6 +194,10 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 .show();
     }
 
+    /**
+     * Cancels element animations, restores affected chips to their default state and removes
+     * them from the active animations.
+     */
     private void cancelCombination() {
         ArrayList<Integer> deletedIds = new ArrayList<>();
 
@@ -239,6 +247,12 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return view;
     }
 
+    /**
+     * Gets an ElementChip by a specified id
+     *
+     * @param id    The id of the ElementChip to get
+     * @return      An ElementChip when one has been found or null
+     */
     private ElementChip getChipById(int id) {
         for (ElementChip elementChip : currentElements) {
             if (elementChip.getId() == id) return elementChip;
@@ -246,6 +260,12 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return null;
     }
 
+    /**
+     * Updates the displayed element chips by calculating differences between
+     * the current and new lists.
+     *
+     * @param newElements the updated list of element chips
+     */
     private void updateElements(List<ElementChip> newElements) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "New elements size: " + newElements.size()
@@ -262,9 +282,11 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         diffResult.dispatchUpdatesTo(callback);
         callback.finishInserts();
     }
+
     /**
-     * Find free space on playground
-     * @return x and y coordinates to free space
+     * Find free space on the playground
+     *
+     * @return x and y coordinates of found free space
      */
     private float[] getFreeSpace(){
         TextView exampleElement = getAnyElement();
@@ -298,6 +320,13 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return coordinates;
     }
 
+    /**
+     * Checks if the given rectangle overlaps with any {@link TextView} currently
+     * in the playground.
+     *
+     * @param test  the rectangle to test for overlaps
+     * @return      {@code true} if it intersects with another element, {@code false} if not
+     */
     private boolean isOverlapping(Rect test) {
         for(int i = 0; i < playground.getChildCount(); i++){
             View other = playground.getChildAt(i);
@@ -310,6 +339,12 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return false;
     }
 
+    /**
+     * Returns the first {@link TextView} found in the playground, or {@code null}
+     * if no element exists.
+     *
+     * @return a {@link TextView} from the playground, or {@code null} if none
+     */
     private TextView getAnyElement(){
         for(int i = 0; i < playground.getChildCount(); i++){
             if(playground.getChildAt(i) instanceof TextView){
@@ -320,7 +355,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
     }
 
     /**
-     * style buttons differently when an item is picked up
+     * Apply different styles when an item has been picked up
      */
     private void whenItemIsPickedUp(){
         clearElementsButton.setImageResource(R.drawable.ic_minus);
@@ -331,7 +366,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
     }
 
     /**
-     * style buttons differently when an item is dropped
+     * Apply styles to the clear and add buttons when an item is dropped
      */
     private void whenItemIsDropped(){
         clearElementsButton.setImageResource(R.drawable.ic_broom);
@@ -355,8 +390,9 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
     /**
      * Check if View overlaps with delete button and therefore should be deleted
+     *
      * @param v View to check
-     * @return boolean whether view has been deleted or not
+     * @return  boolean whether view has been deleted or not
      */
     private boolean overlapsWithDeleteButton(View v){
         Rect draggedRect = new Rect();
@@ -374,8 +410,9 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
     /**
      * Checks if two elements overlap and returns the other overlapping View
-     * @param draggedView View to compare with
-     * @return Other View if overlap was found
+     *
+     * @param draggedView   View to compare with
+     * @return              Other View if overlap was found
      */
     private View checkOverlap(TextView draggedView) {
         Rect draggedRect = new Rect();
@@ -403,7 +440,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
     }
 
     /**
-     * checks whether all TextViews corresponding to the ElementChips on the playground are
+     * Checks whether all TextViews corresponding to the ElementChips on the playground are
      * within the bounds of the playground and therefore visible for the player.
      */
     private void checkForOutOfBoundsElements() {
@@ -440,6 +477,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
      * This Method will return the corresponding TextView for the given ElementChip.
      * It does so by comparing their saved coordinates, meaning that consistence updating of the
      * ElementChip data is mandatory in order for this method to work.
+     *
      * @param elementChip The {@link ElementChip} from which the TextView shall be returned.
      */
     private TextView getTextViewFromElementChip(ElementChip elementChip) {
@@ -464,6 +502,13 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         }
     }
 
+    /**
+     * Animates and combines two element views if neither is currently animated,
+     * then notifies the ViewModel to process the combination.
+     *
+     * @param view1 the first element view to combine
+     * @param view2 the second element view to combine
+     */
     private void combine(View view1, View view2) {
         ElementChip chip1 = Objects.requireNonNull(getChipById((int) view1.getTag()));
         ElementChip chip2 = Objects.requireNonNull(getChipById((int) view2.getTag()));
@@ -480,6 +525,15 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         viewModel.increaseTurnCounter();
     }
 
+    /**
+     * Creates and starts a fade animation for the given element view,
+     * marks the chip as animated, disables its touch input, and stores
+     * the animation for tracking.
+     *
+     * @param view  the view to animate
+     * @param chip  the {@link ElementChip} being animated
+     * @return      the created {@link ObjectAnimator} for the view
+     */
     @SuppressLint("ClickableViewAccessibility")
     private ObjectAnimator animateView(View view, ElementChip chip)
     {
@@ -494,6 +548,11 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         return fade;
     }
 
+    /**
+     * Handles touch interactions for an {@link ElementChip} view, including
+     * dragging within the playground bounds, detecting double-taps to duplicate
+     * elements, and triggering element combinations on overlap.
+     */
     private class TouchListener implements View.OnTouchListener {
         float dX, dY;
         boolean isDragging;
@@ -518,6 +577,18 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             this.chip = chip;
         }
 
+        /**
+         * Handles touch events for the element view, including:
+         * <ul>
+         *     <li>Drag and drop within the playground bounds</li>
+         *     <li>Double-tap to duplicate the element</li>
+         *     <li>Triggering combination with overlapping elements on release</li>
+         * </ul>
+         *
+         * @param v     the view being touched
+         * @param event the motion event
+         * @return      {@code true} if the event was handled, {@code false} otherwise
+         */
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View v, MotionEvent event) {

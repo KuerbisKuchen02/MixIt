@@ -99,13 +99,12 @@ public class GameActivity extends AppCompatActivity {
         viewModel.save();
     }
 
-
     /**
      * Shows or hides the ElementList Card containing the Fragment within the Activity.
      * @param visible whether to show or hide the ElementList Card and Fragment.
      */
     public void setElementListCardVisible(boolean visible) {
-        // Needed to successfully execute animation even when user clicked on search view
+        // Needed to successfully execute animations even when the user clicked on the search view
         View root = findViewById(R.id.game_activity_root_layout);
         if (root != null) {
             root.requestFocus();
@@ -131,18 +130,22 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Is called when the back button in the activity has been clicked on
+     * @param view  The view which received the click
+     */
     public void onBackButtonClicked(View view){
         if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-
     public boolean isArcade() {
         return isArcade;
     }
+
     /**
-     * Worker thread to measure current playtime
+     * Worker thread used to measure the playtime
      */
     private final Runnable updateTimerRunnable = new Runnable() {
         @Override

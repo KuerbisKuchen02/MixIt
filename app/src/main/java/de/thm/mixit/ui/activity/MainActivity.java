@@ -65,13 +65,21 @@ public class MainActivity extends AppCompatActivity {
         setVisibilityOfDeleteArcadeSaveStateButton(gameStateRepository.hasSavedGameState());
     }
 
-    public void onEndlessGameButtonClicked(View v) {
+    /**
+     * Is called when the button to continue the endless game has been clicked on
+     * @param view   The view which received the click
+     */
+    public void onEndlessGameButtonClicked(View view) {
         Log.i(TAG, "Endless Game Button was clicked.");
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GameActivity.EXTRA_IS_ARCADE, false);
         startActivity(intent);
     }
 
+    /**
+     * Is called when the button to start a new arcade game has been clicked on
+     * @param view  The view which received the click
+     */
     public void onArcadeButtonClicked(View view) {
         Log.i(TAG, "Arcade Button was clicked.");
         Intent intent = new Intent(this, GameActivity.class);
@@ -80,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Handles clicks on the button to delete a saved arcade game
+     * @param view  The view which received the click
+     */
     public void onArcadeDeleteSaveStateButtonClicked(View view) {
         Log.i(TAG, "Arcade delete Savestate Button was clicked.");
         gameStateRepository.deleteSavedGameState();
@@ -88,12 +100,20 @@ public class MainActivity extends AppCompatActivity {
         setVisibilityOfDeleteArcadeSaveStateButton(false);
     }
 
+    /**
+     * Handles clicks on the achievement button
+     * @param view  The view which received the click
+     */
     public void onAchievementsButtonClicked(View view) {
         Log.i(TAG, "Achievements Button was clicked.");
         Intent intent = new Intent(this, AchievementActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Handles clicks on the settings button
+     * @param view  The view which received the click
+     */
     public void onSettingsButtonClicked(View view) {
         Log.i(TAG, "Settings Button was clicked.");
 
@@ -101,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Sets the visibility of the button to delete a saved arcade game
+     * @param visible   if true, the button is visible, else not
+     */
     public void setVisibilityOfDeleteArcadeSaveStateButton(boolean visible) {
         Button button = findViewById(R.id.button_main_menu_delete_arcade_savestate);
         if (visible) {

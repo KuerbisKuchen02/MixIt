@@ -21,7 +21,7 @@ import de.thm.mixit.data.entity.Achievement;
 import de.thm.mixit.data.entity.ProgressAchievement;
 
 /**
- * RecyclerViewAdapter used to display Achievement Entities
+ * RecyclerViewAdapter used to display Achievement entities
  *
  * @author Justin Wolek
  */
@@ -67,6 +67,11 @@ public class AchievementRecyclerViewAdapter extends
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder which holds a reference to one AchievementCard view and binds data to it
+     *
+     * @author Justin Wolek
+     */
     public static class AchievementCardViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView description;
@@ -124,7 +129,6 @@ public class AchievementRecyclerViewAdapter extends
                     card.setBackgroundColor(context.getColor(R.color.md_theme_light_tertiary));
                 }
             } else {
-                // Set the correct color for locked achievements
                 if (isDarkTheme) {
                     card.setBackgroundColor(context.getColor(R.color.md_theme_dark_surface));
                 } else {

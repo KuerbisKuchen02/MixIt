@@ -36,6 +36,8 @@ import nl.dionsegijn.konfetti.xml.image.ImageUtil;
  * <p>
  * This Activity shows the achieved target word, the number of turns and the time passed
  * it took to reach said target word
+ *
+ * @author Oliver Schlalos
  */
 public class ArcadeVictoryActivity extends AppCompatActivity {
 
@@ -55,9 +57,11 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Delete the GameStateRepository for the saved arcade game state after winning.
         GameStateRepository gameStateRepository = GameStateRepository.create(this,true);
         gameStateRepository.deleteSavedGameState();
 
+        // Resets the ElementRepository for the saved arcade game state after winning.
         ElementRepository elementRepository = ElementRepository.create(this, true);
         elementRepository.reset();
 
@@ -153,6 +157,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
                         .setSpeedBetween(10f, 30f)
                         .position(new Position.Relative(0.0, 0.5))
                         .build(),
+                // Start confetti from the right border
                 new PartyFactory(emitterConfig)
                         .angle(Angle.LEFT + 45)
                         .spread(Spread.SMALL)

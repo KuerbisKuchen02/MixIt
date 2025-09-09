@@ -11,7 +11,7 @@ import de.thm.mixit.data.entity.Achievement;
 import de.thm.mixit.ui.adapter.AchievementRecyclerViewAdapter;
 
 /**
- * Data binding adapters for the AchievementsActivity
+ * Data binding adapters to be used for data binding inside the AchievementsActivity
  *
  * @author Justin Wolek
  */

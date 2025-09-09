@@ -31,6 +31,8 @@ public class ArcadeFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         GameActivity gameActivity = ((GameActivity) requireActivity());
+
+        // Gets the viewmodel and applies it to the activity
         GameViewModel viewModel = new ViewModelProvider(gameActivity,
                 new GameViewModel.Factory(gameActivity,
                         gameActivity.isArcade())).get(GameViewModel.class);
