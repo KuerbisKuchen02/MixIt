@@ -135,7 +135,7 @@ public class GameActivity extends AppCompatActivity {
      * @param view  The view which received the click
      */
     public void onBackButtonClicked(View view){
-        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+        if (BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

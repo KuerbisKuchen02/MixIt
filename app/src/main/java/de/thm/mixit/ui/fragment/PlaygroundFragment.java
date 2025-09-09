@@ -95,7 +95,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         // Register a callback to open the element list when the button has been clicked
         showElementListButton.setOnClickListener(
                 view -> {
-                    if (BuildConfig.DEBUG) Log.d(TAG, "open element list fragment");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Open element list fragment");
                     assert getActivity() != null;
                     ((GameActivity) getActivity()).setElementListCardVisible(true);
                     showElementListButton.hide();
@@ -118,7 +118,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         // Observe the isWon state inside the viewmodel to handle the player winning the game
         viewModel.getIsWon().observe(getViewLifecycleOwner(), isWon -> {
             if (gameActivity.isArcade() && isWon) {
-                Log.d(TAG, "The player found the target word!");
+                if (BuildConfig.DEBUG) Log.d(TAG, "The player found the target word!");
 
                 List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
                 assert list != null;
@@ -178,7 +178,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
      */
     private void handleError(Throwable error) {
         if (error == null) return;
-        Log.d(TAG, "An error occurred " + error);
+        if (BuildConfig.DEBUG) Log.d(TAG, "An error occurred " + error);
 
         String text;
         if (error instanceof CombinationException) {
@@ -458,7 +458,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         if (root != null) {
             int width = root.getWidth();
             int height = root.getHeight();
-            Log.d(TAG, "Width: " + width + " / Height: " + height);
+            if (BuildConfig.DEBUG) Log.d(TAG, "Width: " + width + " / Height: " + height);
 
             for (ElementChip elementChip : currentElements) {
                 TextView elementView = getTextViewFromElementChip(elementChip);
@@ -466,8 +466,8 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                     if (elementView.getX() + elementView.getWidth() > root.getWidth()
                             || elementView.getY() + elementView.getHeight() > root.getHeight())
                     {
-                        Log.d(TAG, "ElementChip " + elementChip.getElement().name
-                                + " is out of bounds!");
+                        if (BuildConfig.DEBUG) Log.d(TAG, "ElementChip "
+                                + elementChip.getElement().name + " is out of bounds!");
 
                         float[] newCords = getFreeSpace();
                         elementChip.setX(newCords[0]);
@@ -497,7 +497,9 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 if (child instanceof TextView
                         && elementChip.getX() == child.getX()
                         && elementChip.getY() == child.getY()) {
-                    Log.d(TAG, "Found Textview for ElementChip: " + elementChip);
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Found Textview for ElementChip: "
+                            + elementChip);
+
                     return (TextView) child;
                 }
             }
