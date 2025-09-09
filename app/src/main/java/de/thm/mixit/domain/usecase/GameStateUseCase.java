@@ -111,10 +111,9 @@ public class GameStateUseCase {
         statistics.addPlaytime(gameState.getTime() - this.gameState.getTime());
         // If the target word wasn't recorded, add it to the list of the last target words
         List<String> lastTargetWords = statistics.getLastTargetWords();
-        if (lastTargetWords.isEmpty()
-                || gameState.getTargetElement() != null
-                &&!gameState.getTargetElement()[0]
-                .equals(lastTargetWords.get(lastTargetWords.size() - 1))) {
+        if (gameState.getTargetElement() != null
+                && (lastTargetWords.isEmpty() || !gameState.getTargetElement()[0]
+                .equals(lastTargetWords.get(lastTargetWords.size() - 1)))) {
             statistics.addTargetWord(gameState.getTargetElement()[0]);
         }
         this.gameState = gameState;
