@@ -96,9 +96,7 @@ public class AchievementLocalDataSource {
                         ProgressAchievement.class));
                 progressAchievementNames.add(context.getString(achievement.getNameResId()));
             }
-
         }
-
         spEditor.putStringSet("binaryAchievementNames", binaryAchievementNames);
         spEditor.putStringSet("progressAchievementNames", progressAchievementNames);
 

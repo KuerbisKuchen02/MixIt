@@ -107,8 +107,6 @@ public class CombinationLocalDataSource {
                 callback.accept(Result.failure(
                         new CombinationException("Combination already exists in database!", e)));
             }
-
-
         });
     }
 
