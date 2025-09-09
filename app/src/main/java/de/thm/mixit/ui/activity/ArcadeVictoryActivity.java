@@ -96,7 +96,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
         targetWordView.setText(targetWord.toString());
 
         TextView numTurnsView = findViewById(R.id.text_arc_vic_turns);
-        numTurnsView.setText(numTurns + "");
+        numTurnsView.setText(String.valueOf(numTurns));
 
         // Calculate the time which was needed to reach the goal word. passedTime is in seconds.
         long hours = (passedTime / 3600) % 24;
@@ -109,6 +109,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
         // Create the confetti view and start the confetti
         final Drawable drawable =
                 ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_plus);
+        assert drawable != null;
         this.drawableShape = ImageUtil.loadDrawable(drawable, true, true);
         this.confettiView = findViewById(R.id.konfetti_arc_vic);
 

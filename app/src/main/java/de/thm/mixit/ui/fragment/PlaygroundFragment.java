@@ -121,6 +121,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
                 Log.d(TAG, "The player found the target word!");
 
                 List<ElementChip> list = viewModel.getElementsOnPlayground().getValue();
+                assert list != null;
                 Element targetElement = list.get(list.size()-1).getElement();
 
                 Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
@@ -572,7 +573,7 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
             this.gestureDetector = new GestureDetector(getContext(),
                     new GestureDetector.SimpleOnGestureListener() {
                 @Override
-                public boolean onDoubleTap(MotionEvent e) {
+                public boolean onDoubleTap(@NonNull MotionEvent e) {
                     // Duplicate the view here
                     if(BuildConfig.DEBUG) Log.d(TAG, "Double Tap on " +
                             chip.getElement() + " recognized");
