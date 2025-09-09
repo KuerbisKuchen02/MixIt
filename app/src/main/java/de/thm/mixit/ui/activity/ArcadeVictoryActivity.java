@@ -66,24 +66,27 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
 
         if (intent.hasExtra(EXTRA_GOAL_WORD)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                targetWord = Objects.requireNonNull(intent.getExtras()).getSerializable(EXTRA_GOAL_WORD, Element.class);
+                targetWord = Objects.requireNonNull(intent.getExtras())
+                        .getSerializable(EXTRA_GOAL_WORD, Element.class);
             }
         } else {
-            Log.e(TAG, "ArcadeVictoryActivity received Intent without the " + EXTRA_PASSED_TIME);
+            Log.e(TAG, "ArcadeVictoryActivity received Intent without " + EXTRA_GOAL_WORD);
             throw new IllegalArgumentException("Target word was not received");
         }
 
+        int numTurns = -1;
         if (intent.hasExtra(EXTRA_NUM_TURNS)) {
             numTurns = Objects.requireNonNull(intent.getExtras()).getInt(EXTRA_NUM_TURNS);
         } else {
-            Log.e(TAG, "ArcadeVictoryActivity received Intent without the " + EXTRA_PASSED_TIME);
+            Log.e(TAG, "ArcadeVictoryActivity received Intent without " + EXTRA_NUM_TURNS);
             throw new IllegalArgumentException("Number of turns was not received");
         }
 
+        long passedTime = -1;
         if (intent.hasExtra(EXTRA_PASSED_TIME)) {
             passedTime = Objects.requireNonNull(intent.getExtras()).getLong(EXTRA_PASSED_TIME);
         } else {
-            Log.e(TAG, "ArcadeVictoryActivity received Intent without the " + EXTRA_PASSED_TIME);
+            Log.e(TAG, "ArcadeVictoryActivity received Intent without " + EXTRA_PASSED_TIME);
             throw new IllegalArgumentException("Passed time was not received");
         }
 
@@ -148,7 +151,8 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
                 new PartyFactory(emitterConfig)
                         .angle(Angle.RIGHT - 45)
                         .spread(Spread.SMALL)
-                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE,
+                                Shape.Circle.INSTANCE, drawableShape))
                         .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
                         .setSpeedBetween(10f, 30f)
                         .position(new Position.Relative(0.0, 0.5))
@@ -157,7 +161,8 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
                 new PartyFactory(emitterConfig)
                         .angle(Angle.LEFT + 45)
                         .spread(Spread.SMALL)
-                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE,
+                                Shape.Circle.INSTANCE, drawableShape))
                         .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
                         .setSpeedBetween(10f, 30f)
                         .position(new Position.Relative(1.0, 0.5))

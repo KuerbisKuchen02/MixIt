@@ -33,12 +33,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private GameStateRepository gameStateRepository;
-    private SettingsRepository settingsRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         gameStateRepository = GameStateRepository.create(this,true);
-        settingsRepository = SettingsRepository.create(this);
+        SettingsRepository settingsRepository = SettingsRepository.create(this);
 
         String currentTheme = settingsRepository.loadSettings().getTheme();
 
@@ -127,10 +126,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setVisibilityOfDeleteArcadeSaveStateButton(boolean visible) {
         Button button = findViewById(R.id.button_main_menu_delete_arcade_savestate);
-        if (visible) {
-            button.setVisibility(View.VISIBLE);
-        } else {
-            button.setVisibility(View.GONE);
-        }
+        button.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

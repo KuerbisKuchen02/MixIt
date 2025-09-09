@@ -125,8 +125,10 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
                 Intent intent = new Intent(getActivity(), ArcadeVictoryActivity.class);
                 intent.putExtra(ArcadeVictoryActivity.EXTRA_GOAL_WORD, targetElement);
-                intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS, viewModel.getTurns().getValue());
-                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME, viewModel.getPassedTime().getValue());
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_NUM_TURNS,
+                        viewModel.getTurns().getValue());
+                intent.putExtra(ArcadeVictoryActivity.EXTRA_PASSED_TIME,
+                        viewModel.getPassedTime().getValue());
                 startActivity(intent);
             }
         });
@@ -189,8 +191,10 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         Context context = requireContext();
         Snackbar.make(playground, text, 6000)
-                .setBackgroundTint(MaterialColors.getColor(context, androidx.appcompat.R.attr.colorError, Color.RED))
-                .setTextColor(MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnError, Color.BLACK))
+                .setBackgroundTint(MaterialColors.getColor(context,
+                        androidx.appcompat.R.attr.colorError, Color.RED))
+                .setTextColor(MaterialColors.getColor(context,
+                        com.google.android.material.R.attr.colorOnError, Color.BLACK))
                 .show();
     }
 
@@ -376,15 +380,18 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
 
         // Set the FAB color based on the current theme
         int color;
-        int nightModeFlag = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        int nightModeFlag = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+
         if (nightModeFlag == Configuration.UI_MODE_NIGHT_NO) {
             color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
         } else if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
             color = ContextCompat.getColor(requireContext(), R.color.md_theme_dark_secondary);
         } else {
-            Log.w(TAG, "Could not get the current configuration of the App Theme using light colors.");
+            Log.w(TAG, "Could not get the current configuration of the app theme");
             color = ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary);
         }
+
         clearElementsButton.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
@@ -562,7 +569,8 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         ElementChip chip;
 
         public TouchListener(ElementChip chip) {
-            this.gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            this.gestureDetector = new GestureDetector(getContext(),
+                    new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     // Duplicate the view here

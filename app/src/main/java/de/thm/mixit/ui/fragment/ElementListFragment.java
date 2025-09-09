@@ -62,10 +62,11 @@ public class ElementListFragment extends Fragment {
 
         binding.setLayoutManager(getLayoutManager());
         binding.setRecyclerViewAdapter(new ElementRecyclerViewAdapter(this::onClickElement));
-        
-        AutoCompleteTextView search = binding.autoTextGameItemListSearch;
+
         // Filter list based on search
+        AutoCompleteTextView search = binding.autoTextGameItemListSearch;
         search.addTextChangedListener(getTextWatcher());
+
         // Clear search on click cancel
         search.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -130,6 +131,7 @@ public class ElementListFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {}
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         };

@@ -37,6 +37,7 @@ public class ArcadeFragment extends Fragment {
                 new GameViewModel.Factory(gameActivity,
                         gameActivity.isArcade())).get(GameViewModel.class);
         binding.setViewModel(viewModel);
+
         return binding.getRoot();
     }
 }
