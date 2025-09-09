@@ -35,7 +35,7 @@ import java.util.List;
 public class Statistic {
 
     private static final int NUMBER_OF_GOAL_WORDS_SAVED = 20;
-    private long playtime;
+    private float playtime;
     private long numberOfCombinations;
     private String longestElement;
     private int numberOfUnlockedElements;
@@ -48,7 +48,7 @@ public class Statistic {
     private boolean foundChocolateCake;
     private final List<String> lastTargetWords;
 
-    public Statistic(long playtime,
+    public Statistic(float playtime,
                      long numberOfCombinations,
                      String longestElement,
                      int numberOfUnlockedElements,
@@ -74,7 +74,7 @@ public class Statistic {
         this.lastTargetWords = lastTargetWords;
     }
 
-    public long getPlaytime() {
+    public float getPlaytime() {
         return this.playtime;
     }
 
@@ -112,8 +112,8 @@ public class Statistic {
         return lastTargetWords;
     }
 
-    public void addPlaytime(long playTime) {
-        this.playtime += playTime;
+    public void addPlaytime(double playTime) {
+        this.playtime += (float) playTime;
     }
 
     public void setNumberOfCombinations(long numberOfCombinations) {

@@ -180,11 +180,11 @@ public class AchievementViewModel extends ViewModel {
         Log.d(TAG, "Initialising achievements");
         achievements.setValue(Arrays.asList(
                 new ProgressAchievement(0, R.string.achievement_name_hooked,
-                        R.string.achievement_desc_hooked, 0, 3600),
+                        R.string.achievement_desc_hooked, 0, 1),
                 new ProgressAchievement(1, R.string.achievement_name_addicted,
-                        R.string.achievement_desc_addicted, 0, 3 * 3600),
+                        R.string.achievement_desc_addicted, 0, 3),
                 new ProgressAchievement(2, R.string.achievement_name_get_a_life,
-                        R.string.achievement_desc_get_a_life, 0, 5 * 3600),
+                        R.string.achievement_desc_get_a_life, 0, 5),
                 new ProgressAchievement(3, R.string.achievement_name_know_the_drill,
                         R.string.achievement_desc_know_the_drill, 0, 200),
                 new ProgressAchievement(4, R.string.achievement_name_the_journey_begins,

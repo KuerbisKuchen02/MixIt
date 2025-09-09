@@ -58,7 +58,7 @@ public class StatisticLocalDataSource {
      */
     public Statistic loadStatistic() {
         Gson gson = new Gson();
-        long playtime = sp.getLong(PREF_TOTAL_PLAYTIME, 0L);
+        float playtime = sp.getFloat(PREF_TOTAL_PLAYTIME, 0L);
         long combinations = sp.getLong(PREF_TOTAL_COMBINATIONS, 0);
         String longestElement = sp.getString(PREF_LONGEST_ELEMENT, "");
         int numUnlockedElements = sp.getInt(PREF_NUM_UNLOCKED_ELEMENTS, 0);
@@ -92,7 +92,7 @@ public class StatisticLocalDataSource {
     public void saveStatistic(Statistic statistic) {
         Gson gson = new Gson();
         SharedPreferences.Editor spEditor = sp.edit();
-        spEditor.putLong(PREF_TOTAL_PLAYTIME, statistic.getPlaytime());
+        spEditor.putFloat(PREF_TOTAL_PLAYTIME, statistic.getPlaytime());
         spEditor.putLong(PREF_TOTAL_COMBINATIONS, statistic.getNumberOfCombinations());
         spEditor.putString(PREF_LONGEST_ELEMENT, statistic.getLongestElement());
         spEditor.putInt(PREF_NUM_UNLOCKED_ELEMENTS, statistic.getNumberOfUnlockedElements());
