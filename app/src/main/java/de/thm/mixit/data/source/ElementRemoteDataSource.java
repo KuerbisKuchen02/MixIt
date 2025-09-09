@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.thm.mixit.BuildConfig;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.exception.CombinationException;
-import de.thm.mixit.data.exception.InvalidGoalWordException;
+import de.thm.mixit.data.exception.InvalidTargetWordException;
 import de.thm.mixit.data.model.Result;
 
 /**
@@ -75,12 +75,7 @@ public class ElementRemoteDataSource {
             "Beispielausgabe:\n" +
             "Kerze, Kerzen, Wachskerze\n";
 
-    // TODO insert a regex to validate the element format <Emoji> <Description>
-    private static boolean isValidElement(String element) {
-        return true;
-    }
-
-    private static boolean isValidGoalResponse(String response) {
+    private static boolean isValidTargetResponse(String response) {
         return response.matches("^([a-zA-Z 0-9ÜüÄäÖöß-]+, )+([a-zA-Z 0-9ÜüÄäÖöß-]+)$");
     }
 
@@ -122,14 +117,6 @@ public class ElementRemoteDataSource {
 
                     String content = chatCompletion.choices().get(0).message().content().get();
 
-                    if (!isValidElement(content)) {
-                        callback.accept(Result.failure(
-                                new CombinationException("Invalid element format: " + content)
-                        ));
-
-                        return null;
-                    }
-
                     String emoji = content.substring(0, content.indexOf(' '));
                     String name = content.substring(content.indexOf(' ') + 1);
                     callback.accept(Result.success(new Element(name, emoji)));
@@ -139,18 +126,18 @@ public class ElementRemoteDataSource {
     }
 
     /**
-     * Generates a new goal word and its synonyms using the OpenAI API.
+     * Generates a new target word and its synonyms using the OpenAI API.
      * The result is returned via a callback.
      *
-     * @param callback - a callback that will be called with the result of the goal word generation
+     * @param callback - a callback that will be called with the result of the target word generation
      * @throws RuntimeException if the OpenAI API returns:
      * - no choices
      * - an empty content
      */
-    public static void generateNewGoalWord(List<String> lastGoalWords,
+    public static void generateNewTargetWord(List<String> lastTargetWords,
                                            Consumer<Result<String[]>> callback) {
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
-                .addDeveloperMessage(String.format(GOAL_WORD_PROMPT, lastGoalWords.toString()))
+                .addDeveloperMessage(String.format(GOAL_WORD_PROMPT, lastTargetWords.toString()))
                 .model(ChatModel.CHATGPT_4O_LATEST)
                 .build();
 
@@ -158,13 +145,13 @@ public class ElementRemoteDataSource {
                 (chatCompletion, throwable) -> {
                     if (throwable != null) {
                         callback.accept(Result.failure(
-                                new InvalidGoalWordException("Internal error", throwable)));
+                                new InvalidTargetWordException("Internal error", throwable)));
                         return null;
                     }
 
                     if (chatCompletion.choices().isEmpty()) {
                         callback.accept(Result.failure(
-                                new InvalidGoalWordException("No choices returned from OpenAI API")
+                                new InvalidTargetWordException("No choices returned from OpenAI API")
                         ));
                         return null;
                     }
@@ -172,19 +159,19 @@ public class ElementRemoteDataSource {
                     var content = chatCompletion.choices().get(0).message().content();
 
                     if (content.isPresent()) {
-                        if (isValidGoalResponse(content.get())) {
+                        if (isValidTargetResponse(content.get())) {
                             String[] words = content.get().split(", ");
                             callback.accept(Result.success(words));
                         } else {
                             callback.accept(Result.failure(
-                                    new InvalidGoalWordException(
-                                            "Invalid goal word response format: " + content.get())
+                                    new InvalidTargetWordException(
+                                            "Invalid target word response format: " + content.get())
                             ));
                         }
 
                     } else {
                         callback.accept(Result.failure(
-                                new InvalidGoalWordException(
+                                new InvalidTargetWordException(
                                         "Empty content returned from OpenAI API")
                         ));
                     }
@@ -193,4 +180,3 @@ public class ElementRemoteDataSource {
                 });
     }
 }
-

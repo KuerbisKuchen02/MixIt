@@ -2,9 +2,10 @@ package de.thm.mixit.data.source;
 
 import androidx.test.espresso.idling.CountingIdlingResource;
 
+import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.Result;
 
 /**
@@ -40,7 +41,7 @@ public class ElementRemoteDataSource {
         }).start();
     }
 
-    public static void generateNewGoalWord(Consumer<Result<String[]>> callback) {
+    public static void generateNewTargetWord(List<String> lastTargetWords, Consumer<Result<String[]>> callback) {
         idling.increment();
         new Thread(() -> {
             try {

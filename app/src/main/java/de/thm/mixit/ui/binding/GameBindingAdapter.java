@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.Locale;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.ui.adapter.ElementRecyclerViewAdapter;
 
 /**
- * Data binding adapters for various elements inside the GameActivity or related fragments
+ * Data binding adapters to be used for various elements inside
+ * the GameActivity or related fragments
  *
  * @author Josia Menger
  */

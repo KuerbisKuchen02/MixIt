@@ -9,19 +9,20 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Achievement;
-import de.thm.mixit.data.entities.BinaryAchievement;
-import de.thm.mixit.data.entities.ProgressAchievement;
-import de.thm.mixit.data.entities.Statistic;
+import de.thm.mixit.data.entity.Achievement;
+import de.thm.mixit.data.entity.BinaryAchievement;
+import de.thm.mixit.data.entity.ProgressAchievement;
+import de.thm.mixit.data.entity.Statistic;
 import de.thm.mixit.data.repository.AchievementRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
 
 /**
- * UI state for the {@link de.thm.mixit.ui.activities.AchievementActivity}
+ * UI state for the {@link de.thm.mixit.ui.activity.AchievementActivity}
  *
  * Use the {@link AchievementViewModel.Factory} to get a new AchievementViewModel instance
  *
@@ -94,12 +95,15 @@ public class AchievementViewModel extends ViewModel {
      * When no achievements could be loaded, initialise them.
      */
     private void loadAchievements() {
-        achievements.setValue(achievementRepository.loadAchievements());
+        // Sort the list so unlocked achievements are always last.
+        List<Achievement> achievementsList = achievementRepository.loadAchievements();
+        achievements.setValue(achievementsList);
+
         Log.d(TAG, "Loaded achievements: " +
                 Objects.requireNonNull(achievements.getValue()));
 
         // No achievements saved yet. Initialise them the first time
-        if (achievements.getValue().isEmpty()) {
+        if (achievementsList.isEmpty()) {
             initAchievements();
         }
     }
@@ -162,6 +166,10 @@ public class AchievementViewModel extends ViewModel {
                 ((BinaryAchievement) achievement).setUnlocked(
                         statistic.getFoundChocolateCake());
         }
+
+        List<Achievement> achievementsList = achievements.getValue();
+        Collections.sort(achievementsList);
+        achievements.setValue(achievementsList);
     }
 
     /**
@@ -171,35 +179,35 @@ public class AchievementViewModel extends ViewModel {
     private void initAchievements() {
         Log.d(TAG, "Initialising achievements");
         achievements.setValue(Arrays.asList(
-                new ProgressAchievement(R.string.achievement_name_hooked,
+                new ProgressAchievement(0, R.string.achievement_name_hooked,
                         R.string.achievement_desc_hooked, 0, 3600),
-                new ProgressAchievement(R.string.achievement_name_addicted,
+                new ProgressAchievement(1, R.string.achievement_name_addicted,
                         R.string.achievement_desc_addicted, 0, 3 * 3600),
-                new ProgressAchievement(R.string.achievement_name_get_a_life,
+                new ProgressAchievement(2, R.string.achievement_name_get_a_life,
                         R.string.achievement_desc_get_a_life, 0, 5 * 3600),
-                new ProgressAchievement(R.string.achievement_name_know_the_drill,
+                new ProgressAchievement(3, R.string.achievement_name_know_the_drill,
                         R.string.achievement_desc_know_the_drill, 0, 200),
-                new ProgressAchievement(R.string.achievement_name_the_journey_begins,
+                new ProgressAchievement(4, R.string.achievement_name_the_journey_begins,
                         R.string.achievement_desc_the_journey_begins, 0, 10),
-                new ProgressAchievement(R.string.achievement_name_word_collector,
+                new ProgressAchievement(5, R.string.achievement_name_word_collector,
                         R.string.achievement_desc_word_collector, 0, 100),
-                new ProgressAchievement(R.string.achievement_name_I_like_it_clean,
+                new ProgressAchievement(6, R.string.achievement_name_I_like_it_clean,
                         R.string.achievement_desc_I_like_it_clean, 0, 50),
-                new ProgressAchievement(R.string.achievement_name_challenge_accepted,
+                new ProgressAchievement(7, R.string.achievement_name_challenge_accepted,
                         R.string.achievement_desc_challenge_accepted, 0, 10),
-                new ProgressAchievement(R.string.achievement_name_again_really,
+                new ProgressAchievement(8, R.string.achievement_name_again_really,
                         R.string.achievement_desc_again_really, 0, 15),
-                new BinaryAchievement(R.string.achievement_name_winner,
+                new BinaryAchievement(9, R.string.achievement_name_winner,
                         R.string.achievement_desc_winner, false),
-                new BinaryAchievement(R.string.achievement_name_fast_as_fuck_boy,
+                new BinaryAchievement(10, R.string.achievement_name_fast_as_fuck_boy,
                         R.string.achievement_desc_fast_as_fuck_boy, false),
-                new BinaryAchievement(R.string.achievement_name_mastermind,
+                new BinaryAchievement(11, R.string.achievement_name_mastermind,
                         R.string.achievement_desc_mastermind, false),
-                new BinaryAchievement(R.string.achievement_name_kaercher,
+                new BinaryAchievement(12, R.string.achievement_name_kaercher,
                         R.string.achievement_desc_kaercher, false),
-                new BinaryAchievement(R.string.achievement_name_how_did_we_get_here,
+                new BinaryAchievement(13, R.string.achievement_name_how_did_we_get_here,
                         R.string.achievement_desc_how_did_we_get_here, false),
-                new BinaryAchievement(R.string.achievement_name_the_cake_is_a_lie,
+                new BinaryAchievement(14, R.string.achievement_name_the_cake_is_a_lie,
                         R.string.achievement_desc_the_cake_is_a_lie, false)
         ));
     }

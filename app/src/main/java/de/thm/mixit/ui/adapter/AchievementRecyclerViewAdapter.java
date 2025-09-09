@@ -4,16 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Achievement;
-import de.thm.mixit.data.entities.ProgressAchievement;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,24 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thm.mixit.R;
+import de.thm.mixit.data.entity.Achievement;
+import de.thm.mixit.data.entity.ProgressAchievement;
+
 /**
- * RecyclerViewAdapter used to display Achievement Entities
+ * RecyclerViewAdapter used to display Achievement entities
  *
  * @author Justin Wolek
  */
 public class AchievementRecyclerViewAdapter extends
         RecyclerView.Adapter<AchievementRecyclerViewAdapter.AchievementCardViewHolder> {
 
-    private List<Achievement> achievements = new ArrayList<>();
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void setElements(List<Achievement> newAchievements) {
-        achievements.clear();
-        if (newAchievements != null) {
-            achievements.addAll(newAchievements);
-        }
-        notifyDataSetChanged();
-    }
+    private final List<Achievement> achievements = new ArrayList<>();
 
     @NonNull
     @Override
@@ -64,7 +54,24 @@ public class AchievementRecyclerViewAdapter extends
         return achievements.size();
     }
 
+    /**
+     * Set the achievements to the new list
+     * @param achievements new achievements
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    public void setElements(List<Achievement> achievements) {
+        this.achievements.clear();
+        if (achievements != null) {
+            this.achievements.addAll(achievements);
+        }
+        notifyDataSetChanged();
+    }
 
+    /**
+     * ViewHolder which holds a reference to one AchievementCard view and binds data to it
+     *
+     * @author Justin Wolek
+     */
     public static class AchievementCardViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView description;
@@ -96,7 +103,6 @@ public class AchievementRecyclerViewAdapter extends
                 ProgressAchievement a = (ProgressAchievement) achievement;
 
                 progress_bar.setVisibility(View.VISIBLE);
-                progress_bar.setVisibility(View.VISIBLE);
                 progress_bar.setMax(a.getTargetProgress());
                 progress_bar.setProgress(a.getCurrentProgress());
 
@@ -112,11 +118,20 @@ public class AchievementRecyclerViewAdapter extends
             boolean isDarkTheme =
                     (context.getResources().getConfiguration().uiMode
                             & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+            // Setting the correct color explicitly whenever a view is recycled, so a view
+            // which showed an unlocked achievement previously does not apply to the new view.
             if (achievement.isUnlocked()) {
                 if (isDarkTheme) {
                     card.setBackgroundColor(context.getColor(R.color.md_theme_dark_tertiary));
                 } else {
                     card.setBackgroundColor(context.getColor(R.color.md_theme_light_tertiary));
+                }
+            } else {
+                if (isDarkTheme) {
+                    card.setBackgroundColor(context.getColor(R.color.md_theme_dark_surface));
+                } else {
+                    card.setBackgroundColor(context.getColor(R.color.md_theme_light_surface));
                 }
             }
         }

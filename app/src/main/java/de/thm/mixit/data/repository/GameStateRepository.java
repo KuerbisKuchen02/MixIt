@@ -2,23 +2,23 @@ package de.thm.mixit.data.repository;
 
 import android.content.Context;
 
-import de.thm.mixit.data.entities.GameState;
-import de.thm.mixit.data.source.GameStateDataSource;
+import de.thm.mixit.data.entity.GameState;
+import de.thm.mixit.data.source.GameStateLocalDataSource;
 
 /**
  * Repository class that provides access to GameState data.
  * <p>
  * Acts as a single source of truth for GameState data by delegating
- * data operations to a {@link GameStateDataSource}.
+ * data operations to a {@link GameStateLocalDataSource}.
  *
  * @author Jannik Heimann
  */
 public class GameStateRepository {
 
-    private final GameStateDataSource datasource;
+    private final GameStateLocalDataSource localDataSource;
 
-    private GameStateRepository(GameStateDataSource datasource) {
-        this.datasource = datasource;
+    private GameStateRepository(GameStateLocalDataSource localDataSource) {
+        this.localDataSource = localDataSource;
     }
 
     /**
@@ -27,42 +27,34 @@ public class GameStateRepository {
      * @param isArcade Whether the to be saved GameState data belongs to the arcade or endless
      *                 game mode.
      * @return {@link GameStateRepository}
-     *
-     * @author Jannik Heimann
      */
     public static GameStateRepository create(Context context, boolean isArcade) {
-        return new GameStateRepository(new GameStateDataSource(context, isArcade));
+        return new GameStateRepository(new GameStateLocalDataSource(context, isArcade));
     }
 
     /**
      * Loads the last saved GameState by calling the load Method in the corresponding datasource.
      * @return {@link GameState}
-     *
-     * @author Jannik Heimann
      */
     public GameState loadGameState() {
-        return datasource.loadGameState();
+        return localDataSource.loadGameState();
     }
 
     /**
      * Saves the given gameState by calling the save Method in the corresponding datasource.
-     *
-     * @author Jannik Heimann
      */
    public void saveGameState(GameState gameState) {
-        datasource.saveGameState(gameState);
+        localDataSource.saveGameState(gameState);
    }
 
     /**
      * Whether there is an existing saved GameState.
      * @return boolean
-     *
-     * @author Jannik Heimann
      */
-   public boolean hasSavedGameState() { return datasource.hasSavedGameState(); }
+   public boolean hasSavedGameState() { return localDataSource.hasSavedGameState(); }
 
     /**
      * Deletes the last saved GameState.
      */
-    public void deleteSavedGameState() { datasource.deleteSavedGameState(); }
+    public void deleteSavedGameState() { localDataSource.deleteSavedGameState(); }
 }

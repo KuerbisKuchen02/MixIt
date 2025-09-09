@@ -23,7 +23,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container_arcade"
-            android:name="de.thm.mixit.ui.fragments.ArcadeFragment"
+            android:name="de.thm.mixit.ui.fragment.ArcadeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_arcade" />
@@ -32,7 +32,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_playground"
-        android:name="de.thm.mixit.ui.fragments.PlaygroundFragment"
+        android:name="de.thm.mixit.ui.fragment.PlaygroundFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/card_container_elementlist"
@@ -56,7 +56,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container_element_list"
-            android:name="de.thm.mixit.ui.fragments.ElementListFragment"
+            android:name="de.thm.mixit.ui.fragment.ElementListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_element_list" />
@@ -69,6 +69,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
         android:clickable="true"
+        android:contentDescription="@string/ui_desc_back_button"
         android:onClick="onBackButtonClicked"
         android:padding="20dp"
         app:backgroundTint="?attr/colorPrimaryContainer"
@@ -78,6 +79,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@android:color/transparent"
-        app:srcCompat="@drawable/ic_arrow_back_24" />
+        app:srcCompat="@drawable/ic_arrow_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

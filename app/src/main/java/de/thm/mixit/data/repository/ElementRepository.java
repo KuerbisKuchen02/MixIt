@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.ElementDao;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.dao.ElementDao;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.ElementLocalDataSource;
@@ -28,7 +28,6 @@ public class ElementRepository {
      * Constructs an ElementRepository with the specified local data source.
      * Can be used for Unit-Testing. Use {@code ElementRepository.create()} when trying to do
      * regular database operations.
-     *
      * @param localDataSource The local data source managing Element persistence.
      */
     public ElementRepository(ElementLocalDataSource localDataSource) {
@@ -49,7 +48,6 @@ public class ElementRepository {
 
     /**
      * Generates a new Element by combining two existing elements.
-     *
      * @param element1 The first Element to combine.
      * @param element2 The second Element to combine.
      * @param callback A callback to receive the newly generated Element.
@@ -60,20 +58,18 @@ public class ElementRepository {
     }
 
     /**
-     * Generates a new goal word asynchronously.
-     *
-     * @param callback The callback to receive the generated goal words.
-     *
-     * @throws RuntimeException if the remote data source fails to generate new goal words.
+     * Generates a new target word asynchronously.
+     * @param lastTargetWords A list of the most recent target words.
+     * @param callback The callback to receive the generated target words.
+     * @throws RuntimeException if the remote data source fails to generate new target words.
      */
-    public void generateNewGoalWord(List<String> lastGoalWords,
+    public void generateNewTargetWord(List<String> lastTargetWords,
                                     Consumer<Result<String[]>> callback) throws RuntimeException {
-        ElementRemoteDataSource.generateNewGoalWord(lastGoalWords, callback);
+        ElementRemoteDataSource.generateNewTargetWord(lastTargetWords, callback);
     }
 
     /**
      * Finds an Element by its name asynchronously.
-     *
      * @param name The name of the Element to find.
      * @param callback The callback to receive the found Element.
      */
@@ -83,7 +79,6 @@ public class ElementRepository {
 
     /**
      * Retrieves all Element objects asynchronously.
-     *
      * @param callback The callback to receive the list of all elements.
      */
     public void getAll(Consumer<List<Element>> callback) {
@@ -92,7 +87,6 @@ public class ElementRepository {
 
     /**
      * Finds a {@link Element} by its id.
-     *
      * @param id The id of the {@link Element}.
      * @param callback The callback to receive the found {@link Element}.
      */
@@ -102,8 +96,8 @@ public class ElementRepository {
 
     /**
      * Inserts a new Element asynchronously.
-     *
      * @param element The Element to insert.
+     * @param callback The callback to receive the inserted element {@link Element}.
      */
     public void insertElement(Element element, Consumer<Element> callback) {
         findByName(element.name, e -> {
@@ -119,12 +113,5 @@ public class ElementRepository {
      */
     public void reset() {
         localDataSource.reset();
-    }
-
-    /**
-     * Deletes all Element records.
-     */
-    public void deleteAll() {
-        localDataSource.deleteAll();
     }
 }

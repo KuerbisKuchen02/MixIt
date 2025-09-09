@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.List;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.CombinationDao;
-import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.data.dao.CombinationDao;
+import de.thm.mixit.data.entity.Combination;
 import de.thm.mixit.data.model.Result;
 import de.thm.mixit.data.source.AppDatabase;
 import de.thm.mixit.data.source.CombinationLocalDataSource;
@@ -26,7 +26,6 @@ public class CombinationRepository {
      * Constructs a CombinationRepository with the specified local data source.
      * Can be used for Unit-Testing. Use {@code CombinationRepository.create()} when trying to do
      * regular database operations.
-     *
      * @param localDataSource The local data source managing Combination persistence.
      */
     public CombinationRepository(CombinationLocalDataSource localDataSource) {
@@ -47,7 +46,6 @@ public class CombinationRepository {
 
     /**
      * Retrieves all Combination objects asynchronously.
-     *
      * @param callback The callback to receive the list of all combinations.
      */
     public void getAll(Consumer<List<Combination>> callback) {
@@ -60,11 +58,9 @@ public class CombinationRepository {
      * The input strings are alphabetically ordered
      * to ensure consistent lookups since combinations
      * are always stored in alphabetical order.
-     *
      * @param inputA   The first input string of the combination.
      * @param inputB   The second input string of the combination.
-     * @param callback The callback to receive the found combination.
-     * {@link Combination}.
+     * @param callback The callback to receive the found combination. {@link Combination}.
      */
     public void findByCombination(String inputA, String inputB,
                                   Consumer<Combination> callback) {
@@ -79,7 +75,6 @@ public class CombinationRepository {
 
     /**
      * Finds the Amount of the OutputId which occurs most often in the dataset.
-     *
      * @param callback The callback to receive the found OutputId
      */
     public void getAmountOfMostOccurringOutputId(Consumer<Integer> callback) {
@@ -91,8 +86,8 @@ public class CombinationRepository {
      * <p>
      * Ensures that the inputs are alphabetically ordered before insertion
      * to prevent duplicate entries with switched input combinations.
-     *
      * @param combination The Combination to insert.
+     * @param callback The callback to receive the combination
      */
     public void insertCombination(Combination combination,
                                   Consumer<Result<Combination>> callback) {
@@ -106,7 +101,7 @@ public class CombinationRepository {
     }
 
     /**
-     * Deletes all Combination records.
+     * Deletes all Combination entries from the data source.
      */
     public void deleteAll() {
         localDataSource.deleteAll();

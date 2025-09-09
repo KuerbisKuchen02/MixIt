@@ -1,0 +1,172 @@
+package de.thm.mixit.ui.activity;
+
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import de.thm.mixit.BuildConfig;
+import de.thm.mixit.R;
+import de.thm.mixit.data.entity.Element;
+import de.thm.mixit.data.repository.ElementRepository;
+import de.thm.mixit.data.repository.GameStateRepository;
+import nl.dionsegijn.konfetti.core.Angle;
+import nl.dionsegijn.konfetti.core.PartyFactory;
+import nl.dionsegijn.konfetti.core.Position;
+import nl.dionsegijn.konfetti.core.Spread;
+import nl.dionsegijn.konfetti.core.emitter.Emitter;
+import nl.dionsegijn.konfetti.core.emitter.EmitterConfig;
+import nl.dionsegijn.konfetti.core.models.Shape;
+import nl.dionsegijn.konfetti.xml.KonfettiView;
+import nl.dionsegijn.konfetti.xml.image.ImageUtil;
+
+/**
+ * Activity for the victory screen of an arcade game.
+ * <p>
+ * This Activity shows the achieved target word, the number of turns and the time passed
+ * it took to reach said target word
+ *
+ * @author Oliver Schlalos
+ */
+public class ArcadeVictoryActivity extends AppCompatActivity {
+
+    private static final String TAG = ArcadeVictoryActivity.class.getSimpleName();
+    public static final String EXTRA_GOAL_WORD = "targetWord";
+    public static final String EXTRA_NUM_TURNS = "numTurns";
+    public static final String EXTRA_PASSED_TIME = "playedTime";
+    private Element targetWord;
+    private KonfettiView confettiView;
+    private Shape.DrawableShape drawableShape;
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Delete the GameStateRepository for the saved arcade game state after winning.
+        GameStateRepository gameStateRepository = GameStateRepository.create(this,true);
+        gameStateRepository.deleteSavedGameState();
+
+        // Resets the ElementRepository for the saved arcade game state after winning.
+        ElementRepository elementRepository = ElementRepository.create(this, true);
+        elementRepository.reset();
+
+        Intent intent = getIntent();
+
+        if (intent.hasExtra(EXTRA_GOAL_WORD)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                targetWord = Objects.requireNonNull(intent.getExtras())
+                        .getSerializable(EXTRA_GOAL_WORD, Element.class);
+            }
+        } else {
+            Log.e(TAG, "ArcadeVictoryActivity received Intent without " + EXTRA_GOAL_WORD);
+            throw new IllegalArgumentException("Target word was not received");
+        }
+
+        int numTurns;
+        if (intent.hasExtra(EXTRA_NUM_TURNS)) {
+            numTurns = Objects.requireNonNull(intent.getExtras()).getInt(EXTRA_NUM_TURNS);
+        } else {
+            Log.e(TAG, "ArcadeVictoryActivity received Intent without " + EXTRA_NUM_TURNS);
+            throw new IllegalArgumentException("Number of turns was not received");
+        }
+
+        long passedTime;
+        if (intent.hasExtra(EXTRA_PASSED_TIME)) {
+            passedTime = Objects.requireNonNull(intent.getExtras()).getLong(EXTRA_PASSED_TIME);
+        } else {
+            Log.e(TAG, "ArcadeVictoryActivity received Intent without " + EXTRA_PASSED_TIME);
+            throw new IllegalArgumentException("Passed time was not received");
+        }
+
+        setContentView(R.layout.activity_arcade_victory);
+
+        TextView targetWordView = findViewById(R.id.text_arc_vic_target_word);
+        targetWordView.setText(targetWord.toString());
+
+        TextView numTurnsView = findViewById(R.id.text_arc_vic_turns);
+        numTurnsView.setText(String.valueOf(numTurns));
+
+        // Calculate the time which was needed to reach the goal word. passedTime is in seconds.
+        long hours = (passedTime / 3600) % 24;
+        long minutes = (passedTime / 60) % 60;
+        long seconds = passedTime % 60;
+
+        TextView passedTimeView = findViewById(R.id.text_arc_vic_time);
+        passedTimeView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+
+        // Create the confetti view and start the confetti
+        final Drawable drawable =
+                ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_plus);
+        assert drawable != null;
+        this.drawableShape = ImageUtil.loadDrawable(drawable, true, true);
+        this.confettiView = findViewById(R.id.konfetti_arc_vic);
+
+        startConfetti();
+
+        Log.i(TAG, "ArcadeVictoryActivity was created");
+    }
+
+    /**
+     * Handle clicking on the new game button to go to the game and create a new game
+     * @param view  The view which received the click
+     */
+    public void onNewGameButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "New game button clicked");
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
+        startActivity(intent);
+    }
+
+    /**
+     * Handle clicking on the return button to return to the main menu
+     * @param view  The view which received the click
+     */
+    public void onReturnButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Configures and starts confetti to be shown inside the activity.
+     * Reference <a href="https://github.com/DanielMartinus/Konfetti" />this public repository</a>
+     * for further details.
+     */
+    private void startConfetti() {
+        EmitterConfig emitterConfig = new Emitter(5, TimeUnit.SECONDS).perSecond(30);
+        confettiView.start(
+                // Start confetti from the left border
+                new PartyFactory(emitterConfig)
+                        .angle(Angle.RIGHT - 45)
+                        .spread(Spread.SMALL)
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE,
+                                Shape.Circle.INSTANCE, drawableShape))
+                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
+                        .setSpeedBetween(10f, 30f)
+                        .position(new Position.Relative(0.0, 0.5))
+                        .build(),
+                // Start confetti from the right border
+                new PartyFactory(emitterConfig)
+                        .angle(Angle.LEFT + 45)
+                        .spread(Spread.SMALL)
+                        .shapes(Arrays.asList(Shape.Square.INSTANCE,
+                                Shape.Circle.INSTANCE, drawableShape))
+                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
+                        .setSpeedBetween(10f, 30f)
+                        .position(new Position.Relative(1.0, 0.5))
+                        .build()
+        );
+    }
+}

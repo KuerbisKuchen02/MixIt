@@ -18,9 +18,9 @@
             app:backgroundTint="?attr/colorSecondary"
             app:borderWidth="0dp"
             app:fabSize="auto"
-            app:icon="@drawable/ic_broom_24px"
+            app:icon="@drawable/ic_broom"
             app:iconTint="?attr/colorOnSecondary"
-            app:srcCompat="@drawable/ic_broom_24px"/>
+            app:srcCompat="@drawable/ic_broom"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_open_element_list"

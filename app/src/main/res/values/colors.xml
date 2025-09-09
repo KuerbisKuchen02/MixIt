@@ -24,9 +24,9 @@
 
     <!-- Light Error -->
     <color name="md_theme_light_error">#EB6F7C</color>
-    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_onError">#000000</color>
     <color name="md_theme_light_errorContainer">#EB6F7C</color>
-    <color name="md_theme_light_onErrorContainer">#FFFFFF</color>
+    <color name="md_theme_light_onErrorContainer">#000000</color>
 
     <!-- Dark Primary -->
     <color name="md_theme_dark_primary">#7C4A99</color>

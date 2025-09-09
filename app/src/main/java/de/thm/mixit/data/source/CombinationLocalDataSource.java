@@ -8,8 +8,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.CombinationDao;
-import de.thm.mixit.data.entities.Combination;
+import de.thm.mixit.BuildConfig;
+import de.thm.mixit.data.dao.CombinationDao;
+import de.thm.mixit.data.entity.Combination;
 import de.thm.mixit.data.exception.CombinationException;
 import de.thm.mixit.data.model.Result;
 
@@ -24,20 +25,20 @@ import de.thm.mixit.data.model.Result;
 public class CombinationLocalDataSource {
 
     private static final String TAG = CombinationLocalDataSource.class.getSimpleName();
-    private final CombinationDao combinationDAO;
+    private final CombinationDao combinationDao;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     /**
      * Constructs a new {@code CombinationLocalDataSource} with the given {@link CombinationDao}.
-     * @param combinationDAO The Data Access Object used to perform database operation
+     * @param combinationDao The data access object used to perform database operation
      *                   on {@link Combination} objects.
      */
-    public CombinationLocalDataSource(CombinationDao combinationDAO) {
-        this.combinationDAO = combinationDAO;
+    public CombinationLocalDataSource(CombinationDao combinationDao) {
+        this.combinationDao = combinationDao;
     }
 
     /**
-     * Asynchronously retrieves all Combination records from the database.
+     * Asynchronously retrieves all combination records from the database.
      * <p>
      * The query runs on a background thread, and the results are delivered
      * via the provided {@link Consumer} interface once loading is complete.
@@ -47,7 +48,7 @@ public class CombinationLocalDataSource {
      */
     public void getAll(Consumer<List<Combination>> callback) {
         executor.execute(() -> {
-            List<Combination> combinations = combinationDAO.getAll();
+            List<Combination> combinations = combinationDao.getAll();
             callback.accept(combinations);
         });
     }
@@ -65,13 +66,13 @@ public class CombinationLocalDataSource {
     public void findByCombination(String inputA, String inputB,
                                   Consumer<Combination> callback) {
         executor.execute(() -> {
-            Combination combination = combinationDAO.findByCombination(inputA, inputB);
+            Combination combination = combinationDao.findByCombination(inputA, inputB);
             callback.accept(combination);
         });
     }
 
     /**
-     * Asynchronously finds the Amount of the most occurring output id.
+     * Asynchronously finds the amount of the most occurring output id.
      * <p>
      * The query runs on a background thread, and the result is delivered
      * via the provided {@link Consumer} once the data is loaded.
@@ -80,10 +81,12 @@ public class CombinationLocalDataSource {
      */
     public void getAmountOfMostOccurringOutputId(Consumer<Integer> callback) {
         executor.execute(() -> {
-            Integer i = combinationDAO.getAmountOfMostOccurringOutputId();
+            Integer i = combinationDao.getAmountOfMostOccurringOutputId();
             if (i == null) {
                 i = 0;
-                Log.d(TAG, "getAmountOfMostOccurringOutputId returned null");
+                if(BuildConfig.DEBUG) {
+                    Log.d(TAG, "getAmountOfMostOccurringOutputId returned null");
+                }
             }
             callback.accept(i);
         });
@@ -98,14 +101,12 @@ public class CombinationLocalDataSource {
                                   Consumer<Result<Combination>> callback) {
         executor.execute(() -> {
             try {
-                combinationDAO.insertCombination(combination);
+                combinationDao.insertCombination(combination);
                 callback.accept(Result.success(combination));
             } catch (SQLiteConstraintException e) {
                 callback.accept(Result.failure(
-                        new CombinationException("Combination already exists in database!")));
+                        new CombinationException("Combination already exists in database!", e)));
             }
-
-
         });
     }
 
@@ -113,6 +114,6 @@ public class CombinationLocalDataSource {
      * Asynchronously deletes all Combination records from the database.
      */
     public void deleteAll() {
-        executor.execute(combinationDAO::deleteAll);
+        executor.execute(combinationDao::deleteAll);
     }
 }

@@ -14,7 +14,7 @@
 
 ## 🚀 Features
 ✅ Discover new words inside an endless free play mode.  
-✅ Try to reach a given goal word as fast as you can and in the least amount of time.  
+✅ Try to reach a given target word as fast as you can and in the least amount of time.  
 ✅ Got something else to do? No problem! The game saves your progress for you.  
 ✅ Stay motivated by unlocking 15 unique achievements!  
 ✅ Play the game in dark- or light mode.  

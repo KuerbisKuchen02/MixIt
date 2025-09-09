@@ -6,8 +6,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import de.thm.mixit.data.daos.ElementDao;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.dao.ElementDao;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * Local data source for accessing and modifying {@link Element} data.
@@ -23,11 +23,11 @@ public class ElementLocalDataSource {
 
     /**
      * Constructs a new {@code ElementLocalDataSource} with the given {@link ElementDao}.
-     * @param elementDAO The Data Access Object used to perform database operation
+     * @param elementDao The Data Access Object used to perform database operation
      *                   on {@link Element} objects.
      */
-    public ElementLocalDataSource(ElementDao elementDAO) {
-        this.elementDAO = elementDAO;
+    public ElementLocalDataSource(ElementDao elementDao) {
+        this.elementDAO = elementDao;
     }
 
     /**
@@ -91,7 +91,7 @@ public class ElementLocalDataSource {
     }
 
     /**
-     * Asynchronously deletes all Elements and recreates the four starter-elements.
+     * Asynchronously deletes all Elements and inserts the four starter elements.
      */
     public void reset() {
         executor.execute(() -> {
@@ -100,16 +100,9 @@ public class ElementLocalDataSource {
                     new Element("Wasser", "\uD83D\uDCA7"),
                     new Element("Erde", "\uD83C\uDF0D"),
                     new Element("Feuer", "\uD83D\uDD25"),
-                    new Element("Luft", "\uD83C\uDF2C\uFE0F")
+                    new Element("Luft", "\uD83C\uDF2C️")
             );
             elementDAO.insertAll(elements);
         });
-    }
-
-    /**
-     * Asynchronously deletes all Element records from the database.
-     */
-    public void deleteAll() {
-        executor.execute(elementDAO::deleteAll);
     }
 }

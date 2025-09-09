@@ -32,7 +32,7 @@ import de.thm.mixit.BuildConfig;
  * Also see: <a href="https://issuetracker.google.com/issues/115701827">Google Issue Tracker</a>
  * <p>
  * Solution:<br>
- * Insert a null-dummy list item in the oldList.
+ * Insert a null-dummy item in the oldList.
  * After diffResult.dispatchUpdatesTo is done,
  * replace the null-dummies with the newList items at same positions.
  * Also see: <a href="https://stackoverflow.com/questions/56670162/how-to-fix-incorrect-position-i-get-when-dispatching-an-update-to-listupdatecall">StackOverflow</a>
@@ -52,6 +52,14 @@ public class GenericListUpdateCallback<T> implements ListUpdateCallback {
     private final GenericListChangeHandler<T> handler;
     private int inserts = 0;
 
+    /**
+     * Convert the first list ({@code oldItems}) to the second list ({@code newItems})
+     * by applying the differences calculated by {@link androidx.recyclerview.widget.DiffUtil}.
+     * Update events are dispatched to the {@code handler}.
+     * @param oldItems old list that should be updated
+     * @param newItems new list that describes the target state
+     * @param handler callback methods called on list events
+     */
     public GenericListUpdateCallback(List<T> oldItems, List<T> newItems,
                                      GenericListChangeHandler<T> handler) {
         this.oldItems = oldItems;
@@ -59,6 +67,11 @@ public class GenericListUpdateCallback<T> implements ListUpdateCallback {
         this.handler = handler;
     }
 
+    /**
+     * Replace the null-dummies with the actual values.
+     * <p>
+     * This method MUST be called after invoking `dispatchUpdatesTo()`.
+     */
     public void finishInserts() {
         if (inserts <= 0) return;
 

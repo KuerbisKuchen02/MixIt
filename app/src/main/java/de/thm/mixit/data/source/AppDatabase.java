@@ -8,10 +8,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import de.thm.mixit.data.daos.CombinationDao;
-import de.thm.mixit.data.daos.ElementDao;
-import de.thm.mixit.data.entities.Combination;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.dao.CombinationDao;
+import de.thm.mixit.data.dao.ElementDao;
+import de.thm.mixit.data.entity.Combination;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * Abstract Room database class
@@ -26,7 +26,7 @@ import de.thm.mixit.data.entities.Element;
 public abstract class AppDatabase extends RoomDatabase {
 
     /**
-     * Room Databases are fairly expensive. Therefore, use the Singleton pattern to
+     * Room databases are fairly expensive. Therefore, use the Singleton pattern to
      * only create one instance of AppDatabase for each game mode.
      * @param context The application context.
      * @param isArcade Whether the db is containing data of endless or arcade mode.
@@ -53,13 +53,12 @@ public abstract class AppDatabase extends RoomDatabase {
                     })
                     .build();
         }
-
         return db;
     }
 
     /**
      * Deletes all {@link Combination}s and {@link Element}s and populate the database with the
-     * initial four elements. Should only be called when the App has been freshly installed
+     * initial four elements. Should only be called when the app has been freshly installed
      * inside {@code onCreate()}.
      */
     private static void resetDatabase(SupportSQLiteDatabase db) {

@@ -1,5 +1,6 @@
 package de.thm.mixit.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thm.mixit.R;
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 
 /**
  * Filterable recycler view adapter for element entities
+ * FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
+ *
  * @author Josia Menger
  */
 public class ElementRecyclerViewAdapter extends
@@ -64,16 +67,18 @@ public class ElementRecyclerViewAdapter extends
         return filteredElements.size();
     }
 
-
     /**
      * Set the elements to the new list and reset the filter
      * @param elements new elements
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void setElements(List<Element> elements) {
         this.elements = elements;
         this.filteredElements.clear();
-        // on initial call elements might be null
-        if(elements != null) this.filteredElements.addAll(elements);
+
+        // On initial call filtered elements might be null
+        if (elements != null) this.filteredElements.addAll(elements);
+
         notifyDataSetChanged();
     }
 
@@ -82,12 +87,14 @@ public class ElementRecyclerViewAdapter extends
      * <p>
      * if the query is empty or only contains whitespaces the complete list is shown
      * <p>
-     * FIXME: Use DiffUtil or notifyItemChanged/Inserted/Removed to improve performance
      * @param query String to filter by
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void filter(String query) {
         filteredElements.clear();
         String q = query.toLowerCase().trim();
+
+        // When the query is empty, show the complete list
         if (q.isEmpty()) {
             filteredElements.addAll(elements);
             notifyDataSetChanged();
@@ -99,9 +106,15 @@ public class ElementRecyclerViewAdapter extends
                 filteredElements.add(element);
             }
         }
+
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder which holds a reference to one AchievementCard view and binds data to it
+     *
+     * @author Josia Menger
+     */
     public static class ElementViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;

@@ -19,7 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.thm.mixit.data.entities.Element;
+import de.thm.mixit.data.entity.Element;
 import de.thm.mixit.data.model.ElementChip;
 
 /**
@@ -123,7 +123,8 @@ public class GenericListUpdateCallbackTest {
         assertEquals("Erde", workingList.get(0).getElement().name);
     }
 
-    private GenericListUpdateCallback<ElementChip> dispatchUpdatesToResult(List<ElementChip> expected) {
+    private GenericListUpdateCallback<ElementChip> dispatchUpdatesToResult(
+            List<ElementChip> expected) {
         DiffUtil.DiffResult diffResult =
                 DiffUtil.calculateDiff(new ElementDiffCallback(workingList, expected));
         GenericListUpdateCallback<ElementChip> callback =

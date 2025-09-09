@@ -2,23 +2,23 @@ package de.thm.mixit.data.repository;
 
 import android.content.Context;
 
-import de.thm.mixit.data.entities.Statistic;
-import de.thm.mixit.data.source.StatisticDataSource;
+import de.thm.mixit.data.entity.Statistic;
+import de.thm.mixit.data.source.StatisticLocalDataSource;
 
 /**
  * Repository class that provides access to Statistics data.
  * <p>
  * Acts as a single source of truth for Statistics data by delegating
- * data operations to a {@link StatisticDataSource}.
+ * data operations to a {@link StatisticLocalDataSource}.
  *
  * @author Jannik Heimann
  */
 public class StatisticRepository {
 
-    private final StatisticDataSource datasource;
+    private final StatisticLocalDataSource localDataSource;
 
-    private StatisticRepository(StatisticDataSource datasource) {
-        this.datasource = datasource;
+    private StatisticRepository(StatisticLocalDataSource localDataSource) {
+        this.localDataSource = localDataSource;
     }
 
     /**
@@ -29,7 +29,7 @@ public class StatisticRepository {
      * @author Jannik Heimann
      */
     public static StatisticRepository create(Context context) {
-        return new StatisticRepository(new StatisticDataSource(context));
+        return new StatisticRepository(new StatisticLocalDataSource(context));
     }
 
     /**
@@ -39,7 +39,7 @@ public class StatisticRepository {
      * @author Jannik Heimann
      */
     public Statistic loadStatistic() {
-        return datasource.loadStatistic();
+        return localDataSource.loadStatistic();
     }
 
     /**
@@ -48,19 +48,11 @@ public class StatisticRepository {
      * @author Jannik Heimann
      */
     public void saveStatistic(Statistic statistic) {
-        datasource.saveStatistic(statistic);
+        localDataSource.saveStatistic(statistic);
     }
-
-    /**
-     * Whether there is an existing saved Statistic.
-     * @return boolean
-     *
-     * @author Jannik Heimann
-     */
-    public boolean hasSavedStatistic() { return datasource.hasSavedStatistic(); }
 
     /**
      * Deletes the saved Statistic.
      */
-    public void deleteSavedStatistic() { datasource.deleteSavedStatistic(); }
+    public void deleteSavedStatistic() { localDataSource.deleteSavedStatistic(); }
 }
