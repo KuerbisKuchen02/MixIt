@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import de.thm.mixit.R;
 import de.thm.mixit.data.repository.AchievementRepository;
+import de.thm.mixit.data.repository.CombinationRepository;
 import de.thm.mixit.data.repository.ElementRepository;
 import de.thm.mixit.data.repository.GameStateRepository;
 import de.thm.mixit.data.repository.StatisticRepository;
@@ -41,8 +42,14 @@ public class ResetProgressDialogFragment extends DialogFragment {
 
     private static final String TAG = ResetProgressDialogFragment.class.getSimpleName();
     GameStateRepository gameStateRepository;
+    ElementRepository elementRepository;
+    GameStateRepository arcadeGameStateRepository;
+    ElementRepository arcadeElementRepository;
     StatisticRepository statisticRepository;
     AchievementRepository achievementRepository;
+    CombinationRepository combinationRepository;
+    CombinationRepository arcadeCombinationRepository;
+
 
     /**
      * Creates the dialog with a custom layout.
@@ -61,6 +68,14 @@ public class ResetProgressDialogFragment extends DialogFragment {
         Context context = requireContext();
 
         gameStateRepository = GameStateRepository.create(context,false);
+        elementRepository = ElementRepository.create(context, false);
+        combinationRepository = CombinationRepository.create(context, false);
+        arcadeGameStateRepository = GameStateRepository.create(context,true);
+        arcadeElementRepository = ElementRepository.create(context, true);
+        arcadeCombinationRepository = CombinationRepository.create(context, true);
+
+
+
         statisticRepository = StatisticRepository.create(context);
         achievementRepository = AchievementRepository.create(context);
 
@@ -98,11 +113,17 @@ public class ResetProgressDialogFragment extends DialogFragment {
 
         confirm.setOnClickListener((View _view) -> {
             if (Objects.requireNonNull(input.getText()).toString().equals(REQUIRED)) {
-                gameStateRepository.deleteSavedGameState();
-                ElementRepository elementRepository =
-                        ElementRepository.create(context, false);
+                // Reset free play
                 elementRepository.reset();
+                gameStateRepository.deleteSavedGameState();
+                combinationRepository.deleteAll();
 
+                // Reset arcade
+                arcadeElementRepository.reset();
+                arcadeGameStateRepository.deleteSavedGameState();
+                arcadeCombinationRepository.deleteAll();
+
+                // Reset statistics and achievements
                 statisticRepository.deleteSavedStatistic();
                 achievementRepository.deleteSavedAchievements();
 
