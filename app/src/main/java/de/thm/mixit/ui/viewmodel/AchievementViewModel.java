@@ -196,7 +196,7 @@ public class AchievementViewModel extends ViewModel {
                 new ProgressAchievement(7, R.string.achievement_name_challenge_accepted,
                         R.string.achievement_desc_challenge_accepted, 0, 10),
                 new ProgressAchievement(8, R.string.achievement_name_again_really,
-                        R.string.achievement_desc_again_really, 0, 15),
+                        R.string.achievement_desc_again_really, 0, 5),
                 new BinaryAchievement(9, R.string.achievement_name_winner,
                         R.string.achievement_desc_winner, false),
                 new BinaryAchievement(10, R.string.achievement_name_fast_as_fuck_boy,
