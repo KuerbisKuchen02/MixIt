@@ -79,6 +79,19 @@ public class ElementListFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // set search to empty text so element list will update on it's own
+        binding.autoTextGameItemListSearch.setText("");
+    }
+
+    /**
+     * Creates and configures a {@link FlexboxLayoutManager} for arranging items
+     * with wrapping and content which is aligned left.
+     *
+     * @return a configured {@link FlexboxLayoutManager} instance.
+     */
     private FlexboxLayoutManager getLayoutManager() {
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
         layoutManager.setFlexWrap(FlexWrap.WRAP);
@@ -87,13 +100,14 @@ public class ElementListFragment extends Fragment {
         return layoutManager;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // set search to empty text so element list will update on it's own
-        binding.autoTextGameItemListSearch.setText("");
-    }
-
+    /**
+     * Creates a {@link TextWatcher} for the search input field.
+     * <p>
+     * Updates the ViewModels search query on text change and dynamically switches
+     * the search/cancel icons based on if the input is empty.
+     *
+     * @return a {@link TextWatcher} that handles search field changes.
+     */
     private TextWatcher getTextWatcher() {
         return new TextWatcher() {
             private final AutoCompleteTextView view = binding.autoTextGameItemListSearch;

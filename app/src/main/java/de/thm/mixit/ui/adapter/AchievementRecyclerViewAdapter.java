@@ -28,16 +28,7 @@ import de.thm.mixit.data.entity.ProgressAchievement;
 public class AchievementRecyclerViewAdapter extends
         RecyclerView.Adapter<AchievementRecyclerViewAdapter.AchievementCardViewHolder> {
 
-    private List<Achievement> achievements = new ArrayList<>();
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void setElements(List<Achievement> newAchievements) {
-        achievements.clear();
-        if (newAchievements != null) {
-            achievements.addAll(newAchievements);
-        }
-        notifyDataSetChanged();
-    }
+    private final List<Achievement> achievements = new ArrayList<>();
 
     @NonNull
     @Override
@@ -63,6 +54,18 @@ public class AchievementRecyclerViewAdapter extends
         return achievements.size();
     }
 
+    /**
+     * Set the achievements to the new list
+     * @param achievements new achievements
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    public void setElements(List<Achievement> achievements) {
+        this.achievements.clear();
+        if (achievements != null) {
+            this.achievements.addAll(achievements);
+        }
+        notifyDataSetChanged();
+    }
 
     public static class AchievementCardViewHolder extends RecyclerView.ViewHolder {
         TextView name;

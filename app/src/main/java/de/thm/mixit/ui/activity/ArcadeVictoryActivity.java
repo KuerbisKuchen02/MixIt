@@ -115,9 +115,34 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
         Log.i(TAG, "ArcadeVictoryActivity was created");
     }
 
+    /**
+     * Handle clicking on the new game button to go to the game and create a new game
+     * @param view  The view which received the click
+     */
+    public void onNewGameButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "New game button clicked");
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
+        intent.putExtra(GameActivity.EXTRA_NEW_GAME, true);
+        startActivity(intent);
+    }
 
-    // Konfetti using https://github.com/DanielMartinus/Konfetti
-    private void parade() {
+    /**
+     * Handle clicking on the return button to return to the main menu
+     * @param view  The view which received the click
+     */
+    public void onReturnButtonClicked(View view){
+        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Configures and starts confetti to be shown inside the activity.
+     * Reference <a href="https://github.com/DanielMartinus/Konfetti" />this public repository</a>
+     * for further details.
+     */
+    private void startConfetti() {
         EmitterConfig emitterConfig = new Emitter(5, TimeUnit.SECONDS).perSecond(30);
         konfettiView.start(
                 new PartyFactory(emitterConfig)
@@ -135,48 +160,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
                         .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
                         .setSpeedBetween(10f, 30f)
                         .position(new Position.Relative(1.0, 0.5))
-                        .build());
+                        .build()
+        );
     }
-
-    private void rain() {
-        EmitterConfig emitterConfig = new Emitter(5, TimeUnit.SECONDS).perSecond(100);
-        konfettiView.start(
-                new PartyFactory(emitterConfig)
-                        .angle(Angle.BOTTOM)
-                        .spread(Spread.ROUND)
-                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
-                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
-                        .setSpeedBetween(0f, 15f)
-                        .position(new Position.Relative(0.0, 0.0).between(new Position.Relative(1.0, 0.0)))
-                        .build());
-    }
-
-    private void explode() {
-        EmitterConfig emitterConfig = new Emitter(100L, TimeUnit.MILLISECONDS).max(100);
-        konfettiView.start(
-                new PartyFactory(emitterConfig)
-                        .spread(360)
-                        .shapes(Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE, drawableShape))
-                        .colors(Arrays.asList(0xfce18a, 0xff726d, 0xf4306d, 0xb48def))
-                        .setSpeedBetween(0f, 30f)
-                        .position(new Position.Relative(0.5, 0.3))
-                        .build());
-    }
-
-    public void onNewGameButtonClicked(View view){
-        if(BuildConfig.DEBUG) Log.d(TAG, "New game button clicked");
-        Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
-        intent.putExtra(GameActivity.EXTRA_NEW_GAME, true);
-        startActivity(intent);
-    }
-
-    public void onReturnButtonClicked(View view){
-        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-
-
 }

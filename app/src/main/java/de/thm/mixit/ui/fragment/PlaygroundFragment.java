@@ -141,6 +141,34 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         }
     }
 
+    @Override
+    public void onItemInserted(ElementChip item, int position) {
+        playground.addView(createElement(item));
+    }
+
+    @Override
+    public void onItemRemoved(ElementChip item, int position) {
+        View view = playground.findViewWithTag(item.getId());
+        if (view != null) {
+            playground.removeView(view);
+        }
+    }
+
+    @Override
+    public void onItemChanged(ElementChip item, int position) {
+        View view = playground.findViewWithTag(item.getId());
+        if (view != null) {
+            view.setX(item.getX());
+            view.setY(item.getY());
+        }
+    }
+
+    /**
+     * Logs the given error, maps it to a user-friendly message, and shows it in a Snackbar.
+     * Cancels the current combination if the error is a {@link CombinationException}.
+     *
+     * @param error the error to handle, ignored if {@code null}.
+     */
     private void handleError(Throwable error) {
         if (error == null) return;
         Log.d(TAG, "An error occurred " + error);
@@ -185,28 +213,13 @@ public class PlaygroundFragment extends Fragment implements GenericListChangeHan
         }
     }
 
-    @Override
-    public void onItemInserted(ElementChip item, int position) {
-        playground.addView(createElement(item));
-    }
-
-    @Override
-    public void onItemRemoved(ElementChip item, int position) {
-        View view = playground.findViewWithTag(item.getId());
-        if (view != null) {
-            playground.removeView(view);
-        }
-    }
-
-    @Override
-    public void onItemChanged(ElementChip item, int position) {
-        View view = playground.findViewWithTag(item.getId());
-        if (view != null) {
-            view.setX(item.getX());
-            view.setY(item.getY());
-        }
-    }
-
+    /**
+     * Creates a {@link TextView} representing the given {@link ElementChip},
+     * positions it on the playground, and attaches a touch listener for interaction.
+     *
+     * @param chip  the element chip to render
+     * @return      the created view for the chip
+     */
     @SuppressLint("ClickableViewAccessibility")
     private View createElement(ElementChip chip) {
         TextView view = (TextView) inflater.inflate(R.layout.item_element_chip,

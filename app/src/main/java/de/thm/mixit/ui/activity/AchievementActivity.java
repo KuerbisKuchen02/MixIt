@@ -45,17 +45,23 @@ public class AchievementActivity extends AppCompatActivity {
 
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
-    }
 
-    public void onBackButtonClicked(View view){
-        if(BuildConfig.DEBUG) Log.d(TAG, "Return button clicked");
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        Log.i(TAG, "AchievementActivity was created");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         viewModel.saveAchievements();
+    }
+
+    /**
+     * Is called when the back button in the activity has been clicked on
+     * @param view  The view which received the click
+     */
+    public void onBackButtonClicked(View view){
+        if (BuildConfig.DEBUG) Log.d(TAG, "Return button was clicked");
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
