@@ -74,8 +74,8 @@
         <item>dark</item>
     </string-array>
     <string name="dialog_reset_progress_description">
-        This option resets your current progress in free play.
-        You will start again with the 4 basic terms. Achievements will be reset as well.
+        This option resets your current progress in the game.
+        You will start again with the 4 basic elements. Achievements will be reset as well.
         This cannot be undone. Type \"MixIt\" to confirm!
     </string>
     <string name="dialog_reset_progress_title">ATTENTION</string>

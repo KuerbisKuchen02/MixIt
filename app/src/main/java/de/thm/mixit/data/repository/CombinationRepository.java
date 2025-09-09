@@ -99,4 +99,11 @@ public class CombinationRepository {
         }
         localDataSource.insertCombination(combination, callback);
     }
+
+    /**
+     * Deletes all Combination entries from the data source.
+     */
+    public void deleteAll() {
+        localDataSource.deleteAll();
+    }
 }
