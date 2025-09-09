@@ -46,10 +46,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
     public static final String EXTRA_NUM_TURNS = "numTurns";
     public static final String EXTRA_PASSED_TIME = "playedTime";
     private Element targetWord;
-    private int numTurns = -1;
-    private long passedTime = -1;
-
-    private KonfettiView konfettiView;
+    private KonfettiView confettiView;
     private Shape.DrawableShape drawableShape;
 
 
@@ -98,23 +95,21 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
         TextView numTurnsView = findViewById(R.id.text_arc_vic_turns);
         numTurnsView.setText(numTurns + "");
 
-        long hours = (passedTime / (1000 * 60 * 60)) % 24;
-        long minutes = (passedTime / (1000 * 60)) % 60;
-        long seconds = (passedTime / 1000) % 60;
-
-        String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        // Calculate the time which was needed to reach the goal word. passedTime is in seconds.
+        long hours = (passedTime / 3600) % 24;
+        long minutes = (passedTime / 60) % 60;
+        long seconds = passedTime % 60;
 
         TextView passedTimeView = findViewById(R.id.text_arc_vic_time);
-        passedTimeView.setText(time);
+        passedTimeView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
 
-        // Konfetti
+        // Create the confetti view and start the confetti
         final Drawable drawable =
                 ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_plus);
         this.drawableShape = ImageUtil.loadDrawable(drawable, true, true);
+        this.confettiView = findViewById(R.id.konfetti_arc_vic);
 
-        this.konfettiView = findViewById(R.id.konfetti_arc_vic);
-
-        parade();
+        startConfetti();
 
         Log.i(TAG, "ArcadeVictoryActivity was created");
     }
@@ -148,7 +143,8 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
      */
     private void startConfetti() {
         EmitterConfig emitterConfig = new Emitter(5, TimeUnit.SECONDS).perSecond(30);
-        konfettiView.start(
+        confettiView.start(
+                // Start confetti from the left border
                 new PartyFactory(emitterConfig)
                         .angle(Angle.RIGHT - 45)
                         .spread(Spread.SMALL)
