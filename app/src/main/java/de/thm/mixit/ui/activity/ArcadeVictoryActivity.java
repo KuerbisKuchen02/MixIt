@@ -74,7 +74,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Target word was not received");
         }
 
-        int numTurns = -1;
+        int numTurns;
         if (intent.hasExtra(EXTRA_NUM_TURNS)) {
             numTurns = Objects.requireNonNull(intent.getExtras()).getInt(EXTRA_NUM_TURNS);
         } else {
@@ -82,7 +82,7 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Number of turns was not received");
         }
 
-        long passedTime = -1;
+        long passedTime;
         if (intent.hasExtra(EXTRA_PASSED_TIME)) {
             passedTime = Objects.requireNonNull(intent.getExtras()).getLong(EXTRA_PASSED_TIME);
         } else {
@@ -126,7 +126,6 @@ public class ArcadeVictoryActivity extends AppCompatActivity {
         if(BuildConfig.DEBUG) Log.d(TAG, "New game button clicked");
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
-        intent.putExtra(GameActivity.EXTRA_NEW_GAME, true);
         startActivity(intent);
     }
 

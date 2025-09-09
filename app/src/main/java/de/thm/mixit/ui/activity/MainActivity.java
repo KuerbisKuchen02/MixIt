@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Arcade Button was clicked.");
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GameActivity.EXTRA_IS_ARCADE, true);
-        intent.putExtra(GameActivity.EXTRA_NEW_GAME, !gameStateRepository.hasSavedGameState());
         startActivity(intent);
     }
 
