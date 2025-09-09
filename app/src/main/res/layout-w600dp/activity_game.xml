@@ -66,6 +66,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
         android:clickable="true"
+        android:contentDescription="@string/ui_desc_back_button"
         android:onClick="onBackButtonClicked"
         app:backgroundTint="?attr/colorPrimaryContainer"
         app:borderWidth="0dp"

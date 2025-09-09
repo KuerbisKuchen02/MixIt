@@ -83,4 +83,7 @@
     <string name="mix_it">MixIt</string>
     <string name="reset_success">Reset successfully!</string>
     <string name="dialog_reset_progress_close_button">Close Reset Progress Dialog</string>
+    <string name="ui_desc_back_button">This button navigates to the previous page</string>
+    <string name="ui_desc_trash_can_button">This button deletes the saved arcade game</string>
+    <string name="ui_desc_settings_button">This button goes to the settings of the game</string>
 </resources>

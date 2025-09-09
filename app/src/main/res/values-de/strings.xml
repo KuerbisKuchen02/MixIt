@@ -84,4 +84,7 @@
     <string name="arcade_victory_time">Zeit</string>
     <string name="arcade_victory_turns">Züge</string>
     <string name="arcade_victory_target_word">Zielwort</string>
+    <string name="ui_desc_back_button">Dieser Button kehrt zur vorherigen Ansicht zurück</string>
+    <string name="ui_desc_trash_can_button">Dieser Button löscht den gespeicherten Arcade Spielstand</string>
+    <string name="ui_desc_settings_button">Dieser Button öffnet die Einstellungen des Spiels</string>
 </resources>
